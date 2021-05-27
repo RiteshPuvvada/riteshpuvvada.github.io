@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<meta name="theme-color" content="#494f5c">
+	<meta name="msapplication-TileColor" content="#494f5c">
+<meta itemprop="name" content="SQL Injection">
+<meta itemprop="description" content="What is SQL injection? SQL injection is a web security vulnerability that allows an attacker to interfere with the queries that an application makes to its database. It generally allows an attacker to view data that they are not normally able to retrieve. This might include data belonging to other users, or any other data that the application itself is able to access. In many cases, an attacker can modify or delete this data, causing persistent changes to the application&rsquo;s content or behavior."><meta itemprop="datePublished" content="2021-05-19T16:41:12&#43;05:30" />
+<meta itemprop="dateModified" content="2021-05-19T16:41:12&#43;05:30" />
+<meta itemprop="wordCount" content="680">
+<meta itemprop="keywords" content="SQL injection,Exploit,Writeup,THM,RiteshPuvvada," /><meta property="og:title" content="SQL Injection" />
+<meta property="og:description" content="What is SQL injection? SQL injection is a web security vulnerability that allows an attacker to interfere with the queries that an application makes to its database. It generally allows an attacker to view data that they are not normally able to retrieve. This might include data belonging to other users, or any other data that the application itself is able to access. In many cases, an attacker can modify or delete this data, causing persistent changes to the application&rsquo;s content or behavior." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://riteshpuvvada.github.io/posts/sql_writeup/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2021-05-19T16:41:12&#43;05:30" />
+<meta property="article:modified_time" content="2021-05-19T16:41:12&#43;05:30" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="SQL Injection"/>
+<meta name="twitter:description" content="What is SQL injection? SQL injection is a web security vulnerability that allows an attacker to interfere with the queries that an application makes to its database. It generally allows an attacker to view data that they are not normally able to retrieve. This might include data belonging to other users, or any other data that the application itself is able to access. In many cases, an attacker can modify or delete this data, causing persistent changes to the application&rsquo;s content or behavior."/>
+
+	<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+	<link rel="manifest" href="/site.webmanifest">
+	<link rel="mask-icon" href="/safari-pinned-tab.svg" color="">
+	<link rel="shortcut icon" href="/favicon.ico">
+
+	<title>SQL Injection</title>
+	<link rel="stylesheet" href="https://riteshpuvvada.github.io/css/style.min.eac77496566fd7d5768fd650ddb0b2b181ca6a2d7c5fdd6fe6b8ba4bf47e566f.css" integrity="sha256-6sd0llZv19V2j9ZQ3bCysYHKai18X91v5ri6S/R+Vm8=" crossorigin="anonymous">
+	
+</head>
+
+<body id="page">
+	
+	<header id="site-header" class="animated slideInUp">
+		<div class="hdr-wrapper section-inner">
+			<div class="hdr-left">
+				<div class="site-branding">
+					<a href="https://riteshpuvvada.github.io/">Nightmare</a>
+				</div>
+				<nav class="site-nav hide-in-mobile">
+					
+				<a href="https://riteshpuvvada.github.io/about">About</a>
+				<a href="https://riteshpuvvada.github.io/posts">Blog</a>
+				<a href="https://riteshpuvvada.github.io/contact">Contact</a>
+
+				</nav>
+			</div>
+			<div class="hdr-right hdr-icons">
+				<span class="hdr-social hide-in-mobile"><a href="https://www.linkedin.com/in/ritesh-puvvada-656489196/" target="_blank" rel="noopener me" title="Linkedin"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg></a><a href="https://www.instagram.com/riteshpuvvada/" target="_blank" rel="noopener me" title="Instagram"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.5" y2="6.5"></line></svg></a><a href="https://github.com/RiteshPuvvada" target="_blank" rel="noopener me" title="Github"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg></a><a href="mailto:riteshpuvvada@outlook.com" target="_blank" rel="noopener me" title="Email"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg></a><a href="https://stackoverflow.com/users/14728649/ritesh" target="_blank" rel="noopener me" title="Stackoverflow"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.913 16.041v6.848h17.599v-6.848M7.16 18.696h8.925M7.65 13.937l8.675 1.8M9.214 9.124l8.058 3.758M12.086 4.65l6.849 5.66M15.774 1.111l5.313 7.162"/></svg></a></span><button id="menu-btn" class="hdr-btn" title="Menu"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg></button>
+			</div>
+		</div>
+	</header>
+	<div id="mobile-menu" class="animated fast">
+		<ul>
+			<li><a href="https://riteshpuvvada.github.io/about">About</a></li>
+			<li><a href="https://riteshpuvvada.github.io/posts">Blog</a></li>
+			<li><a href="https://riteshpuvvada.github.io/contact">Contact</a></li>
+		</ul>
+	</div>
+
+
+	<main class="site-main section-inner animated fadeIn faster">
+		<article class="thin">
+			<header class="post-header">
+				<div class="post-meta"><span>May 19, 2021</span></div>
+				<h1>SQL Injection</h1>
+			</header>
+			<div class="content">
+				<h3 id="what-is-sql-injection">What is SQL injection?<a href="#what-is-sql-injection" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>SQL injection is a web security vulnerability that allows an attacker to interfere with the queries that an application makes to its database. It generally allows an attacker to view data that they are not normally able to retrieve. This might include data belonging to other users, or any other data that the application itself is able to access. In many cases, an attacker can modify or delete this data, causing persistent changes to the application&rsquo;s content or behavior.</p>
+<p>In some situations, an attacker can escalate an SQL injection attack to compromise the underlying server or other back-end infrastructure, or perform a denial-of-service attack.</p>
+<p><img src="/img/blog/sql.png" alt="img"></p>
+<h3 id="what-is-the-impact-of-a-sql-injection">What is the impact of a SQL injection?<a href="#what-is-the-impact-of-a-sql-injection" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>A successful SQL injection attack can result in unauthorized access to sensitive data, such as passwords, credit card details, or personal user information. In recent years, many high-profile data breaches have been the result of SQL injection attacks, leading to reputational damage and regulatory fines. In some cases, an attacker can obtain a persistent backdoor into an organization&rsquo;s systems, leading to a long-term compromise that can go unnoticed for an extended period.</p>
+<h3 id="sql-injection-examples">SQL injection examples<a href="#sql-injection-examples" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>There are a wide variety of SQL injection vulnerabilities, attacks, and techniques, which arise in different situations. Some common SQL injection examples include:</p>
+<ul>
+<li><code>Retrieving hidden data</code>, where you can modify an SQL query to return additional results.</li>
+<li><code>Subverting application logic</code>, where you can change a query to interfere with the application&rsquo;s logic.</li>
+<li><code>UNION attacks</code>, where you can retrieve data from different database tables.</li>
+<li><code>Examining the database</code>, where you can extract information about the version and structure of the database.</li>
+<li><code>Blind SQL injection</code>, where the results of a query you control are not returned in the application&rsquo;s responses.</li>
+</ul>
+<h4 id="retrieving-hidden-data">Retrieving hidden data<a href="#retrieving-hidden-data" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h4>
+<blockquote>
+<p>Consider a application that displays results in different categories.</p>
+</blockquote>
+<pre><code>https://website.com/items?category=Fruits
+</code></pre><blockquote>
+<p>This causes the application to make an SQL query to retrieve details.</p>
+</blockquote>
+<pre><code>SELECT * FROM products WHERE category = 'Gifts' AND released = 1
+</code></pre><blockquote>
+<p>It returns all the details from the database, attacker construct a SQL query like.</p>
+</blockquote>
+<pre><code>https://website.com/items?category=Fruits'--
+
+!Query 
+Select * From items where category = 'Fruits'--' AND released = 1
+</code></pre><p>You can study more about <strong>Retrieving hidden data</strong> on <a href="https://portswigger.net/web-security/sql-injection#retrieving-hidden-data">PortSwigger</a></p>
+<h4 id="subverting-application-logic">Subverting application logic<a href="#subverting-application-logic" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h4>
+<blockquote>
+<p>Suppose a application has login page where user can enter his username and password for example:</p>
+</blockquote>
+<pre><code>Username = Anonymous
+Password = 12345
+</code></pre><blockquote>
+<p>The application checks <code>SELECT * FROM users WHERE username = 'Anonymous' AND password = '12345'</code> If the query returns the details of a user, then the login is successful.</p>
+</blockquote>
+<p>Here, an attacker make a simple change by using SQL comment sequence <code>--</code> to remove the password check, so he has full access to login as any user. For example</p>
+<pre><code>Username = admin'--
+Password = 
+!Blank password
+
+The query be like
+SELECT * FROM users WHERE username = 'admin'--' AND password = ''
+</code></pre><blockquote>
+<p>The attacker can login easily as admin</p>
+</blockquote>
+<p>You can study more about <strong>Subverting application logic</strong> on <a href="https://portswigger.net/web-security/sql-injection#subverting-application-logic">PortSwigger</a></p>
+<h4 id="union-attacks">UNION attacks<a href="#union-attacks" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h4>
+<blockquote>
+<p>If the application is vulnerable to SQL injection, the <code>UNION</code> can used to retrieve data from other tables within the database.</p>
+</blockquote>
+<pre><code>SELECT a, b FROM table1 UNION SELECT c, d FROM table2
+</code></pre><p>You can study more about <strong>UNION attacks</strong> on <a href="https://portswigger.net/web-security/sql-injection/union-attacks">PortSwigger</a></p>
+<h4 id="examining-the-database">Examining the database<a href="#examining-the-database" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h4>
+<blockquote>
+<p>When an attacker exploiting SQL injection vulnerability, it is necessary to gather information about the type of database.</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">Database type</th>
+<th style="text-align:center">Query</th>
+<th style="text-align:center">Payload</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">Microsoft, MySQL</td>
+<td style="text-align:center"><code>SELECT @@version</code></td>
+<td style="text-align:center"><code>' UNION SELECT @@version--</code></td>
+</tr>
+<tr>
+<td style="text-align:center">Oracle</td>
+<td style="text-align:center"><code>SELECT * FROM v$version</code></td>
+<td style="text-align:center"><code>' UNION SELECT * FROM v$version </code></td>
+</tr>
+<tr>
+<td style="text-align:center">PostgreSQL</td>
+<td style="text-align:center"><code>SELECT version()</code></td>
+<td style="text-align:center"><code>' UNION SELECT version() </code></td>
+</tr>
+</tbody>
+</table>
+<p>You can study more about <strong>Examining the database</strong> on <a href="https://portswigger.net/web-security/sql-injection/examining-the-database">PortSwigger</a></p>
+<h4 id="blind-sql-injection">Blind SQL injection<a href="#blind-sql-injection" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h4>
+<blockquote>
+<p>Blind SQL injection asks the database true or false questions and determines the answer based on the applications response. This attack is often used when the web application is configured to show generic error messages, but has not mitigated the code that is vulnerable to SQL injection.</p>
+</blockquote>
+<p>You can study more about <strong>Blind SQL injection</strong> on <a href="https://portswigger.net/web-security/sql-injection/blind">PortSwigger</a> and <a href="https://owasp.org/www-community/attacks/Blind_SQL_Injection">OWASP</a></p>
+<p><em><strong>Get your hands dirty on SQL injection with TryHackMe</strong></em></p>
+<ul>
+<li><a href="https://tryhackme.com/room/sqlilab">Link to the room</a></li>
+<li>A detail writeup of SQL injection room <a href="https://riteshpuvvada.medium.com/sql-injection-lab-735ec68b3be5">My writeup</a></li>
+<li>Checkout my THM profile <a href="https://tryhackme.com/p/RiteshPuvvada">Profile</a></li>
+</ul>
+
+			</div>
+			<hr class="post-end">
+			<footer class="post-info">
+				<p>
+					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg><span class="tag"><a href="https://riteshpuvvada.github.io/tags/sql-injection">SQL injection</a></span><span class="tag"><a href="https://riteshpuvvada.github.io/tags/exploit">Exploit</a></span><span class="tag"><a href="https://riteshpuvvada.github.io/tags/writeup">Writeup</a></span><span class="tag"><a href="https://riteshpuvvada.github.io/tags/thm">THM</a></span><span class="tag"><a href="https://riteshpuvvada.github.io/tags/riteshpuvvada">RiteshPuvvada</a></span>
+				</p>
+				<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>680 Words</p>
+				<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>2021-05-19 16:41 &#43;0530</p>
+			</footer>
+		</article>
+		<div class="post-nav thin">
+			<a class="next-post" href="https://riteshpuvvada.github.io/posts/bypassing_upload_filters/">
+				<span class="post-nav-label"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-left"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>&nbsp;Newer</span><br><span>Bypassing Upload Filters</span>
+			</a>
+		</div>
+		<div id="comments" class="thin">
+</div>
+	</main>
+
+	<footer id="site-footer" class="section-inner thin animated fadeIn faster">
+		<p>&copy; 2021 <a href="https://riteshpuvvada.github.io/">Ritesh Puvvada</a> &#183; <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a></p>
+		<p>
+			Made with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> &#183; Theme <a href="https://github.com/Track3/hermit" target="_blank" rel="noopener">Hermit</a> &#183; <a href="https://riteshpuvvada.github.io/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a>
+		</p>
+	</footer>
+
+
+
+	<script src="https://riteshpuvvada.github.io/js/bundle.min.7d8545daa55d62427355498dd8da13f98ff79a7938ce7d2a5e2ae1ec0de3beb8.js" integrity="sha256-fYVF2qVdYkJzVUmN2NoT+Y/3mnk4zn0qXirh7A3jvrg=" crossorigin="anonymous"></script>
+	
+
+</body>
+
+</html>

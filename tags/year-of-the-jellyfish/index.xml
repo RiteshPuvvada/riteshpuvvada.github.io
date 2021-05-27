@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Year-of-the-Jellyfish on Nightmare</title>
+    <link>https://riteshpuvvada.github.io/tags/year-of-the-jellyfish/</link>
+    <description>Recent content in Year-of-the-Jellyfish on Nightmare</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
+    <lastBuildDate>Thu, 20 May 2021 12:05:40 +0530</lastBuildDate><atom:link href="https://riteshpuvvada.github.io/tags/year-of-the-jellyfish/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Bypassing Upload Filters</title>
+      <link>https://riteshpuvvada.github.io/posts/bypassing_upload_filters/</link>
+      <pubDate>Thu, 20 May 2021 12:05:40 +0530</pubDate>
+      
+      <guid>https://riteshpuvvada.github.io/posts/bypassing_upload_filters/</guid>
+      <description>One of the challenging factors to a Hacker in a web application attack is the file upload. The first step in every attack is to get some code and inject it to the system to be attacked. The attack needs to find an uncomplicated and flawless path to get the code executed. Using a file upload attacker achieves his first step.
+Examples Attacks on application platforms  Upload .jsp file into web tree - jsp code executed as the web user Upload .</description>
+    </item>
+    
+  </channel>
+</rss>

