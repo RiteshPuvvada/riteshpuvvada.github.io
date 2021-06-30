@@ -2,6 +2,30 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://riteshpuvvada.github.io/</loc>
+    <lastmod>2021-06-30T11:41:54+05:30</lastmod>
+  </url><url>
+    <loc>https://riteshpuvvada.github.io/posts/</loc>
+    <lastmod>2021-06-30T11:41:54+05:30</lastmod>
+  </url><url>
+    <loc>https://riteshpuvvada.github.io/tags/rce/</loc>
+    <lastmod>2021-06-30T11:41:54+05:30</lastmod>
+  </url><url>
+    <loc>https://riteshpuvvada.github.io/posts/ssti/</loc>
+    <lastmod>2021-06-30T11:41:54+05:30</lastmod>
+  </url><url>
+    <loc>https://riteshpuvvada.github.io/tags/ssti/</loc>
+    <lastmod>2021-06-30T11:41:54+05:30</lastmod>
+  </url><url>
+    <loc>https://riteshpuvvada.github.io/tags/</loc>
+    <lastmod>2021-06-30T11:41:54+05:30</lastmod>
+  </url><url>
+    <loc>https://riteshpuvvada.github.io/tags/template-injection/</loc>
+    <lastmod>2021-06-30T11:41:54+05:30</lastmod>
+  </url><url>
+    <loc>https://riteshpuvvada.github.io/tags/vulnerability/</loc>
+    <lastmod>2021-06-30T11:41:54+05:30</lastmod>
+  </url><url>
     <loc>https://riteshpuvvada.github.io/tags/bypassing/</loc>
     <lastmod>2021-05-20T12:05:40+05:30</lastmod>
   </url><url>
@@ -11,16 +35,7 @@
     <loc>https://riteshpuvvada.github.io/tags/data/</loc>
     <lastmod>2021-05-20T12:05:40+05:30</lastmod>
   </url><url>
-    <loc>https://riteshpuvvada.github.io/</loc>
-    <lastmod>2021-05-20T12:05:40+05:30</lastmod>
-  </url><url>
-    <loc>https://riteshpuvvada.github.io/posts/</loc>
-    <lastmod>2021-05-20T12:05:40+05:30</lastmod>
-  </url><url>
     <loc>https://riteshpuvvada.github.io/tags/riteshpuvvada/</loc>
-    <lastmod>2021-05-20T12:05:40+05:30</lastmod>
-  </url><url>
-    <loc>https://riteshpuvvada.github.io/tags/</loc>
     <lastmod>2021-05-20T12:05:40+05:30</lastmod>
   </url><url>
     <loc>https://riteshpuvvada.github.io/tags/thm/</loc>

@@ -7,7 +7,43 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-    <lastBuildDate>Thu, 20 May 2021 12:05:40 +0530</lastBuildDate><atom:link href="https://riteshpuvvada.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 30 Jun 2021 11:41:54 +0530</lastBuildDate><atom:link href="https://riteshpuvvada.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>RCE</title>
+      <link>https://riteshpuvvada.github.io/tags/rce/</link>
+      <pubDate>Wed, 30 Jun 2021 11:41:54 +0530</pubDate>
+      
+      <guid>https://riteshpuvvada.github.io/tags/rce/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>SSTI</title>
+      <link>https://riteshpuvvada.github.io/tags/ssti/</link>
+      <pubDate>Wed, 30 Jun 2021 11:41:54 +0530</pubDate>
+      
+      <guid>https://riteshpuvvada.github.io/tags/ssti/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Template-Injection</title>
+      <link>https://riteshpuvvada.github.io/tags/template-injection/</link>
+      <pubDate>Wed, 30 Jun 2021 11:41:54 +0530</pubDate>
+      
+      <guid>https://riteshpuvvada.github.io/tags/template-injection/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Vulnerability</title>
+      <link>https://riteshpuvvada.github.io/tags/vulnerability/</link>
+      <pubDate>Wed, 30 Jun 2021 11:41:54 +0530</pubDate>
+      
+      <guid>https://riteshpuvvada.github.io/tags/vulnerability/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>Bypassing</title>
       <link>https://riteshpuvvada.github.io/tags/bypassing/</link>
@@ -59,33 +95,6 @@
       <pubDate>Thu, 20 May 2021 12:05:40 +0530</pubDate>
       
       <guid>https://riteshpuvvada.github.io/tags/writeup/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Year-of-the-Jellyfish</title>
-      <link>https://riteshpuvvada.github.io/tags/year-of-the-jellyfish/</link>
-      <pubDate>Thu, 20 May 2021 12:05:40 +0530</pubDate>
-      
-      <guid>https://riteshpuvvada.github.io/tags/year-of-the-jellyfish/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Exploit</title>
-      <link>https://riteshpuvvada.github.io/tags/exploit/</link>
-      <pubDate>Wed, 19 May 2021 16:41:12 +0530</pubDate>
-      
-      <guid>https://riteshpuvvada.github.io/tags/exploit/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>SQL injection</title>
-      <link>https://riteshpuvvada.github.io/tags/sql-injection/</link>
-      <pubDate>Wed, 19 May 2021 16:41:12 +0530</pubDate>
-      
-      <guid>https://riteshpuvvada.github.io/tags/sql-injection/</guid>
       <description></description>
     </item>
     

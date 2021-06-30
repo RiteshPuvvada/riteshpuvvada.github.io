@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>SSTI on Nightmare</title>
+    <link>https://riteshpuvvada.github.io/tags/ssti/</link>
+    <description>Recent content in SSTI on Nightmare</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
+    <lastBuildDate>Wed, 30 Jun 2021 11:41:54 +0530</lastBuildDate><atom:link href="https://riteshpuvvada.github.io/tags/ssti/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Server-Side Template Injection</title>
+      <link>https://riteshpuvvada.github.io/posts/ssti/</link>
+      <pubDate>Wed, 30 Jun 2021 11:41:54 +0530</pubDate>
+      
+      <guid>https://riteshpuvvada.github.io/posts/ssti/</guid>
+      <description>Server-Side Template Injection (SSTI) is an exploit in which the attacker can take advantage of an insecure template engine to inject a malicious payload into a template, which is then executed server-side.
+What is a template engine? A template engine enables you to use static template files in your application. At runtime, the template engine replaces variables in a template file with actual values, and transforms the template into an HTML file sent to the client.</description>
+    </item>
+    
+  </channel>
+</rss>

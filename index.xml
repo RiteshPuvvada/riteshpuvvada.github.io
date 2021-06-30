@@ -7,7 +7,17 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-    <lastBuildDate>Thu, 20 May 2021 12:05:40 +0530</lastBuildDate><atom:link href="https://riteshpuvvada.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 30 Jun 2021 11:41:54 +0530</lastBuildDate><atom:link href="https://riteshpuvvada.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Server-Side Template Injection</title>
+      <link>https://riteshpuvvada.github.io/posts/ssti/</link>
+      <pubDate>Wed, 30 Jun 2021 11:41:54 +0530</pubDate>
+      
+      <guid>https://riteshpuvvada.github.io/posts/ssti/</guid>
+      <description>Server-Side Template Injection (SSTI) is an exploit in which the attacker can take advantage of an insecure template engine to inject a malicious payload into a template, which is then executed server-side.
+What is a template engine? A template engine enables you to use static template files in your application. At runtime, the template engine replaces variables in a template file with actual values, and transforms the template into an HTML file sent to the client.</description>
+    </item>
+    
     <item>
       <title>Bypassing Upload Filters</title>
       <link>https://riteshpuvvada.github.io/posts/bypassing_upload_filters/</link>
