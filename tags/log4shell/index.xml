@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>RCE on Nightmare</title>
-    <link>https://riteshpuvvada.github.io/tags/rce/</link>
-    <description>Recent content in RCE on Nightmare</description>
+    <title>Log4Shell on Nightmare</title>
+    <link>https://riteshpuvvada.github.io/tags/log4shell/</link>
+    <description>Recent content in Log4Shell on Nightmare</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-    <lastBuildDate>Sun, 19 Dec 2021 15:30:58 +0530</lastBuildDate><atom:link href="https://riteshpuvvada.github.io/tags/rce/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 19 Dec 2021 15:30:58 +0530</lastBuildDate><atom:link href="https://riteshpuvvada.github.io/tags/log4shell/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Log4Shell 0-Day Vulnerability 💀 (CVE-2021-44228)</title>
       <link>https://riteshpuvvada.github.io/posts/log4j/</link>
@@ -16,16 +16,6 @@
       <guid>https://riteshpuvvada.github.io/posts/log4j/</guid>
       <description>Log4Shell (CVE-2021-44228) is a zero-day vulnerability in Apache Log4j 2, a popular Java logging framework. It is a remote code execution (RCE) vulnerability involving arbitrary code execution earning a severity score of 10/10.
  What is LDAP Server &amp;amp; How Does it Works? The LDAP (Lightweight Directory Access Protocol) is a open, vendor-neutral, software protocol used for directory service authentication.Organizations store usernames, passwords, email addresses, printer connections, and other static information inside the directories.</description>
-    </item>
-    
-    <item>
-      <title>Server-Side Template Injection</title>
-      <link>https://riteshpuvvada.github.io/posts/ssti/</link>
-      <pubDate>Wed, 30 Jun 2021 11:41:54 +0530</pubDate>
-      
-      <guid>https://riteshpuvvada.github.io/posts/ssti/</guid>
-      <description>Server-Side Template Injection (SSTI) is an exploit in which the attacker can take advantage of an insecure template engine to inject a malicious payload into a template, which is then executed server-side.
-What is a template engine? A template engine enables you to use static template files in your application. At runtime, the template engine replaces variables in a template file with actual values, and transforms the template into an HTML file sent to the client.</description>
     </item>
     
   </channel>

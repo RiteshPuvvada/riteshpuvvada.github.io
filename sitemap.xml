@@ -2,22 +2,55 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://riteshpuvvada.github.io/tags/0-day-vulnerability/</loc>
+    <lastmod>2021-12-19T15:30:58+05:30</lastmod>
+  </url><url>
+    <loc>https://riteshpuvvada.github.io/tags/apache-log4j-exploit/</loc>
+    <lastmod>2021-12-19T15:30:58+05:30</lastmod>
+  </url><url>
+    <loc>https://riteshpuvvada.github.io/tags/cve-2021-44228/</loc>
+    <lastmod>2021-12-19T15:30:58+05:30</lastmod>
+  </url><url>
+    <loc>https://riteshpuvvada.github.io/tags/jndi/</loc>
+    <lastmod>2021-12-19T15:30:58+05:30</lastmod>
+  </url><url>
+    <loc>https://riteshpuvvada.github.io/tags/ldap/</loc>
+    <lastmod>2021-12-19T15:30:58+05:30</lastmod>
+  </url><url>
+    <loc>https://riteshpuvvada.github.io/tags/log4shell/</loc>
+    <lastmod>2021-12-19T15:30:58+05:30</lastmod>
+  </url><url>
+    <loc>https://riteshpuvvada.github.io/posts/log4j/</loc>
+    <lastmod>2021-12-19T15:30:58+05:30</lastmod>
+  </url><url>
     <loc>https://riteshpuvvada.github.io/</loc>
-    <lastmod>2021-06-30T11:41:54+05:30</lastmod>
+    <lastmod>2021-12-19T15:30:58+05:30</lastmod>
+  </url><url>
+    <loc>https://riteshpuvvada.github.io/tags/poc/</loc>
+    <lastmod>2021-12-19T15:30:58+05:30</lastmod>
   </url><url>
     <loc>https://riteshpuvvada.github.io/posts/</loc>
-    <lastmod>2021-06-30T11:41:54+05:30</lastmod>
+    <lastmod>2021-12-19T15:30:58+05:30</lastmod>
   </url><url>
     <loc>https://riteshpuvvada.github.io/tags/rce/</loc>
-    <lastmod>2021-06-30T11:41:54+05:30</lastmod>
+    <lastmod>2021-12-19T15:30:58+05:30</lastmod>
+  </url><url>
+    <loc>https://riteshpuvvada.github.io/tags/riteshpuvvada/</loc>
+    <lastmod>2021-12-19T15:30:58+05:30</lastmod>
+  </url><url>
+    <loc>https://riteshpuvvada.github.io/tags/</loc>
+    <lastmod>2021-12-19T15:30:58+05:30</lastmod>
+  </url><url>
+    <loc>https://riteshpuvvada.github.io/tags/thm/</loc>
+    <lastmod>2021-12-19T15:30:58+05:30</lastmod>
+  </url><url>
+    <loc>https://riteshpuvvada.github.io/tags/writeup/</loc>
+    <lastmod>2021-12-19T15:30:58+05:30</lastmod>
   </url><url>
     <loc>https://riteshpuvvada.github.io/posts/ssti/</loc>
     <lastmod>2021-06-30T11:41:54+05:30</lastmod>
   </url><url>
     <loc>https://riteshpuvvada.github.io/tags/ssti/</loc>
-    <lastmod>2021-06-30T11:41:54+05:30</lastmod>
-  </url><url>
-    <loc>https://riteshpuvvada.github.io/tags/</loc>
     <lastmod>2021-06-30T11:41:54+05:30</lastmod>
   </url><url>
     <loc>https://riteshpuvvada.github.io/tags/template-injection/</loc>
@@ -35,16 +68,7 @@
     <loc>https://riteshpuvvada.github.io/tags/data/</loc>
     <lastmod>2021-05-20T12:05:40+05:30</lastmod>
   </url><url>
-    <loc>https://riteshpuvvada.github.io/tags/riteshpuvvada/</loc>
-    <lastmod>2021-05-20T12:05:40+05:30</lastmod>
-  </url><url>
-    <loc>https://riteshpuvvada.github.io/tags/thm/</loc>
-    <lastmod>2021-05-20T12:05:40+05:30</lastmod>
-  </url><url>
     <loc>https://riteshpuvvada.github.io/tags/upload/</loc>
-    <lastmod>2021-05-20T12:05:40+05:30</lastmod>
-  </url><url>
-    <loc>https://riteshpuvvada.github.io/tags/writeup/</loc>
     <lastmod>2021-05-20T12:05:40+05:30</lastmod>
   </url><url>
     <loc>https://riteshpuvvada.github.io/tags/year-of-the-jellyfish/</loc>
@@ -60,6 +84,8 @@
     <lastmod>2021-05-19T16:41:12+05:30</lastmod>
   </url><url>
     <loc>https://riteshpuvvada.github.io/about/</loc>
+  </url><url>
+    <loc>https://riteshpuvvada.github.io/tags/aboutme/</loc>
   </url><url>
     <loc>https://riteshpuvvada.github.io/contact/</loc>
   </url>

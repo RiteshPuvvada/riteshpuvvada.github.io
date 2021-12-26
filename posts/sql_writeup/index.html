@@ -94,8 +94,8 @@
 </code></pre><blockquote>
 <p>This causes the application to make an SQL query to retrieve details.</p>
 </blockquote>
-<pre><code>SELECT * FROM products WHERE category = 'Gifts' AND released = 1
-</code></pre><blockquote>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">SELECT * FROM products WHERE <span class="nv">category</span> <span class="o">=</span> <span class="s1">&#39;Gifts&#39;</span> AND <span class="nv">released</span> <span class="o">=</span> <span class="m">1</span>
+</code></pre></div><blockquote>
 <p>It returns all the details from the database, attacker construct a SQL query like.</p>
 </blockquote>
 <pre><code>https://website.com/items?category=Fruits'--
@@ -127,8 +127,8 @@ SELECT * FROM users WHERE username = 'admin'--' AND password = ''
 <blockquote>
 <p>If the application is vulnerable to SQL injection, the <code>UNION</code> can used to retrieve data from other tables within the database.</p>
 </blockquote>
-<pre><code>SELECT a, b FROM table1 UNION SELECT c, d FROM table2
-</code></pre><p>You can study more about <strong>UNION attacks</strong> on <a href="https://portswigger.net/web-security/sql-injection/union-attacks">PortSwigger</a></p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">SELECT a, b FROM table1 UNION SELECT c, d FROM table2
+</code></pre></div><p>You can study more about <strong>UNION attacks</strong> on <a href="https://portswigger.net/web-security/sql-injection/union-attacks">PortSwigger</a></p>
 <h4 id="examining-the-database">Examining the database<a href="#examining-the-database" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h4>
 <blockquote>
 <p>When an attacker exploiting SQL injection vulnerability, it is necessary to gather information about the type of database.</p>

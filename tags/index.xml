@@ -7,65 +7,83 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-    <lastBuildDate>Wed, 30 Jun 2021 11:41:54 +0530</lastBuildDate><atom:link href="https://riteshpuvvada.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 19 Dec 2021 15:30:58 +0530</lastBuildDate><atom:link href="https://riteshpuvvada.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>0-day vulnerability</title>
+      <link>https://riteshpuvvada.github.io/tags/0-day-vulnerability/</link>
+      <pubDate>Sun, 19 Dec 2021 15:30:58 +0530</pubDate>
+      
+      <guid>https://riteshpuvvada.github.io/tags/0-day-vulnerability/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Apache Log4j exploit</title>
+      <link>https://riteshpuvvada.github.io/tags/apache-log4j-exploit/</link>
+      <pubDate>Sun, 19 Dec 2021 15:30:58 +0530</pubDate>
+      
+      <guid>https://riteshpuvvada.github.io/tags/apache-log4j-exploit/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>CVE-2021-44228</title>
+      <link>https://riteshpuvvada.github.io/tags/cve-2021-44228/</link>
+      <pubDate>Sun, 19 Dec 2021 15:30:58 +0530</pubDate>
+      
+      <guid>https://riteshpuvvada.github.io/tags/cve-2021-44228/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>JNDI</title>
+      <link>https://riteshpuvvada.github.io/tags/jndi/</link>
+      <pubDate>Sun, 19 Dec 2021 15:30:58 +0530</pubDate>
+      
+      <guid>https://riteshpuvvada.github.io/tags/jndi/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>LDAP</title>
+      <link>https://riteshpuvvada.github.io/tags/ldap/</link>
+      <pubDate>Sun, 19 Dec 2021 15:30:58 +0530</pubDate>
+      
+      <guid>https://riteshpuvvada.github.io/tags/ldap/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Log4Shell</title>
+      <link>https://riteshpuvvada.github.io/tags/log4shell/</link>
+      <pubDate>Sun, 19 Dec 2021 15:30:58 +0530</pubDate>
+      
+      <guid>https://riteshpuvvada.github.io/tags/log4shell/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>PoC</title>
+      <link>https://riteshpuvvada.github.io/tags/poc/</link>
+      <pubDate>Sun, 19 Dec 2021 15:30:58 +0530</pubDate>
+      
+      <guid>https://riteshpuvvada.github.io/tags/poc/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>RCE</title>
       <link>https://riteshpuvvada.github.io/tags/rce/</link>
-      <pubDate>Wed, 30 Jun 2021 11:41:54 +0530</pubDate>
+      <pubDate>Sun, 19 Dec 2021 15:30:58 +0530</pubDate>
       
       <guid>https://riteshpuvvada.github.io/tags/rce/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>SSTI</title>
-      <link>https://riteshpuvvada.github.io/tags/ssti/</link>
-      <pubDate>Wed, 30 Jun 2021 11:41:54 +0530</pubDate>
-      
-      <guid>https://riteshpuvvada.github.io/tags/ssti/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Template-Injection</title>
-      <link>https://riteshpuvvada.github.io/tags/template-injection/</link>
-      <pubDate>Wed, 30 Jun 2021 11:41:54 +0530</pubDate>
-      
-      <guid>https://riteshpuvvada.github.io/tags/template-injection/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Vulnerability</title>
-      <link>https://riteshpuvvada.github.io/tags/vulnerability/</link>
-      <pubDate>Wed, 30 Jun 2021 11:41:54 +0530</pubDate>
-      
-      <guid>https://riteshpuvvada.github.io/tags/vulnerability/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Bypassing</title>
-      <link>https://riteshpuvvada.github.io/tags/bypassing/</link>
-      <pubDate>Thu, 20 May 2021 12:05:40 +0530</pubDate>
-      
-      <guid>https://riteshpuvvada.github.io/tags/bypassing/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Data</title>
-      <link>https://riteshpuvvada.github.io/tags/data/</link>
-      <pubDate>Thu, 20 May 2021 12:05:40 +0530</pubDate>
-      
-      <guid>https://riteshpuvvada.github.io/tags/data/</guid>
-      <description></description>
-    </item>
-    
-    <item>
       <title>RiteshPuvvada</title>
       <link>https://riteshpuvvada.github.io/tags/riteshpuvvada/</link>
-      <pubDate>Thu, 20 May 2021 12:05:40 +0530</pubDate>
+      <pubDate>Sun, 19 Dec 2021 15:30:58 +0530</pubDate>
       
       <guid>https://riteshpuvvada.github.io/tags/riteshpuvvada/</guid>
       <description></description>
@@ -74,27 +92,9 @@
     <item>
       <title>THM</title>
       <link>https://riteshpuvvada.github.io/tags/thm/</link>
-      <pubDate>Thu, 20 May 2021 12:05:40 +0530</pubDate>
+      <pubDate>Sun, 19 Dec 2021 15:30:58 +0530</pubDate>
       
       <guid>https://riteshpuvvada.github.io/tags/thm/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Upload</title>
-      <link>https://riteshpuvvada.github.io/tags/upload/</link>
-      <pubDate>Thu, 20 May 2021 12:05:40 +0530</pubDate>
-      
-      <guid>https://riteshpuvvada.github.io/tags/upload/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Writeup</title>
-      <link>https://riteshpuvvada.github.io/tags/writeup/</link>
-      <pubDate>Thu, 20 May 2021 12:05:40 +0530</pubDate>
-      
-      <guid>https://riteshpuvvada.github.io/tags/writeup/</guid>
       <description></description>
     </item>
     

