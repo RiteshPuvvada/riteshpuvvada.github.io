@@ -7,11 +7,11 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-    <lastBuildDate>Sun, 19 Dec 2021 15:30:58 +0530</lastBuildDate><atom:link href="https://riteshpuvvada.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 26 Dec 2021 20:19:15 +0530</lastBuildDate><atom:link href="https://riteshpuvvada.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>0-day vulnerability</title>
       <link>https://riteshpuvvada.github.io/tags/0-day-vulnerability/</link>
-      <pubDate>Sun, 19 Dec 2021 15:30:58 +0530</pubDate>
+      <pubDate>Sun, 26 Dec 2021 20:19:15 +0530</pubDate>
       
       <guid>https://riteshpuvvada.github.io/tags/0-day-vulnerability/</guid>
       <description></description>
@@ -20,7 +20,7 @@
     <item>
       <title>Apache Log4j exploit</title>
       <link>https://riteshpuvvada.github.io/tags/apache-log4j-exploit/</link>
-      <pubDate>Sun, 19 Dec 2021 15:30:58 +0530</pubDate>
+      <pubDate>Sun, 26 Dec 2021 20:19:15 +0530</pubDate>
       
       <guid>https://riteshpuvvada.github.io/tags/apache-log4j-exploit/</guid>
       <description></description>
@@ -29,7 +29,7 @@
     <item>
       <title>CVE-2021-44228</title>
       <link>https://riteshpuvvada.github.io/tags/cve-2021-44228/</link>
-      <pubDate>Sun, 19 Dec 2021 15:30:58 +0530</pubDate>
+      <pubDate>Sun, 26 Dec 2021 20:19:15 +0530</pubDate>
       
       <guid>https://riteshpuvvada.github.io/tags/cve-2021-44228/</guid>
       <description></description>
@@ -38,7 +38,7 @@
     <item>
       <title>JNDI</title>
       <link>https://riteshpuvvada.github.io/tags/jndi/</link>
-      <pubDate>Sun, 19 Dec 2021 15:30:58 +0530</pubDate>
+      <pubDate>Sun, 26 Dec 2021 20:19:15 +0530</pubDate>
       
       <guid>https://riteshpuvvada.github.io/tags/jndi/</guid>
       <description></description>
@@ -47,7 +47,7 @@
     <item>
       <title>LDAP</title>
       <link>https://riteshpuvvada.github.io/tags/ldap/</link>
-      <pubDate>Sun, 19 Dec 2021 15:30:58 +0530</pubDate>
+      <pubDate>Sun, 26 Dec 2021 20:19:15 +0530</pubDate>
       
       <guid>https://riteshpuvvada.github.io/tags/ldap/</guid>
       <description></description>
@@ -56,7 +56,7 @@
     <item>
       <title>Log4Shell</title>
       <link>https://riteshpuvvada.github.io/tags/log4shell/</link>
-      <pubDate>Sun, 19 Dec 2021 15:30:58 +0530</pubDate>
+      <pubDate>Sun, 26 Dec 2021 20:19:15 +0530</pubDate>
       
       <guid>https://riteshpuvvada.github.io/tags/log4shell/</guid>
       <description></description>
@@ -65,7 +65,7 @@
     <item>
       <title>PoC</title>
       <link>https://riteshpuvvada.github.io/tags/poc/</link>
-      <pubDate>Sun, 19 Dec 2021 15:30:58 +0530</pubDate>
+      <pubDate>Sun, 26 Dec 2021 20:19:15 +0530</pubDate>
       
       <guid>https://riteshpuvvada.github.io/tags/poc/</guid>
       <description></description>
@@ -74,7 +74,7 @@
     <item>
       <title>RCE</title>
       <link>https://riteshpuvvada.github.io/tags/rce/</link>
-      <pubDate>Sun, 19 Dec 2021 15:30:58 +0530</pubDate>
+      <pubDate>Sun, 26 Dec 2021 20:19:15 +0530</pubDate>
       
       <guid>https://riteshpuvvada.github.io/tags/rce/</guid>
       <description></description>
@@ -83,7 +83,7 @@
     <item>
       <title>RiteshPuvvada</title>
       <link>https://riteshpuvvada.github.io/tags/riteshpuvvada/</link>
-      <pubDate>Sun, 19 Dec 2021 15:30:58 +0530</pubDate>
+      <pubDate>Sun, 26 Dec 2021 20:19:15 +0530</pubDate>
       
       <guid>https://riteshpuvvada.github.io/tags/riteshpuvvada/</guid>
       <description></description>
@@ -92,7 +92,7 @@
     <item>
       <title>THM</title>
       <link>https://riteshpuvvada.github.io/tags/thm/</link>
-      <pubDate>Sun, 19 Dec 2021 15:30:58 +0530</pubDate>
+      <pubDate>Sun, 26 Dec 2021 20:19:15 +0530</pubDate>
       
       <guid>https://riteshpuvvada.github.io/tags/thm/</guid>
       <description></description>

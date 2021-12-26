@@ -7,11 +7,11 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-    <lastBuildDate>Sun, 19 Dec 2021 15:30:58 +0530</lastBuildDate><atom:link href="https://riteshpuvvada.github.io/tags/poc/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 26 Dec 2021 20:19:15 +0530</lastBuildDate><atom:link href="https://riteshpuvvada.github.io/tags/poc/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Log4Shell 0-Day Vulnerability 💀 (CVE-2021-44228)</title>
       <link>https://riteshpuvvada.github.io/posts/log4j/</link>
-      <pubDate>Sun, 19 Dec 2021 15:30:58 +0530</pubDate>
+      <pubDate>Sun, 26 Dec 2021 20:19:15 +0530</pubDate>
       
       <guid>https://riteshpuvvada.github.io/posts/log4j/</guid>
       <description>Log4Shell (CVE-2021-44228) is a zero-day vulnerability in Apache Log4j 2, a popular Java logging framework. It is a remote code execution (RCE) vulnerability involving arbitrary code execution earning a severity score of 10/10.
